@@ -16,22 +16,22 @@ const ZapIcon = () => (
 // Mock products for MVP matching the list page
 const MOCK_PRODUCTS: Product[] = [
   {
-    id: "m1", name: "Bota Chelsea Noir", slug: "bota-chelsea-noir", brand: "Aria Premium", base_price: "450", is_new: true,
+    id: 991, name: "Bota Chelsea Noir", slug: "bota-chelsea-noir", brand: "Aria Premium", base_price: 450, is_new: true,
     images: [
-      { url: "https://images.unsplash.com/photo-1605733513597-a8f8341084e6?q=80&w=1000", is_main: true },
-      { url: "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?q=80&w=1000", is_main: false }
+      { id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1605733513597-a8f8341084e6?q=80&w=1000" },
+      { id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?q=80&w=1000" }
     ],
     description: "La bota definitiva para el estilo urbano. Calidad premium con acabados artesanales.",
-    stock: 10, category_id: "1", variants: [
-      { id: 101, product_id: "m1", size: "38", color: "Negro", stock: 5, price: "450", is_active: true },
-      { id: 102, product_id: "m1", size: "39", color: "Negro", stock: 3, price: "450", is_active: true }
-    ], created_at: "", updated_at: ""
+    category_id: 1, variants: [
+      { id: 101, product_id: 991, size: "38", color: "Negro", price: 450, is_active: true },
+      { id: 102, product_id: 991, size: "39", color: "Negro", price: 450, is_active: true }
+    ], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: ""
   },
   {
-    id: "m2", name: "Sneaker Urban White", slug: "sneaker-urban-white", brand: "Aria Premium", base_price: "320", is_new: false,
-    images: [{ url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000", is_main: true }],
+    id: 992, name: "Sneaker Urban White", slug: "sneaker-urban-white", brand: "Aria Premium", base_price: 320, is_new: false,
+    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000" }],
     description: "Comodidad y diseño en cada paso. Un clásico renovado para tu colección.",
-    stock: 10, category_id: "2", variants: [], created_at: "", updated_at: ""
+    category_id: 2, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: ""
   }
 ];
 

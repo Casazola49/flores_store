@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,28 +11,28 @@ import type { Product, Category } from "@/types";
 // High quality placeholders for MVP
 const MOCK_PRODUCTS: Product[] = [
   {
-    id: "m1", name: "Bota Chelsea Noir", slug: "bota-chelsea-noir", brand: "Flores", base_price: "450", is_new: true,
-    images: [{ url: "https://images.unsplash.com/photo-1605733513597-a8f8341084e6?q=80&w=800", is_main: true }],
-    description: "", stock: 10, category_id: "1", variants: [], created_at: "", updated_at: ""
+    id: 991, name: "Bota Chelsea Noir", slug: "bota-chelsea-noir", brand: "Flores", base_price: 450, is_new: true,
+    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1605733513597-a8f8341084e6?q=80&w=800" }],
+    description: "", category_id: 1, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: ""
   },
   {
-    id: "m2", name: "Sneaker Urban White", slug: "sneaker-urban-white", brand: "Flores", base_price: "320", is_new: false,
-    images: [{ url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800", is_main: true }],
-    description: "", stock: 10, category_id: "2", variants: [], created_at: "", updated_at: ""
+    id: 992, name: "Sneaker Urban White", slug: "sneaker-urban-white", brand: "Flores", base_price: 320, is_new: false,
+    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800" }],
+    description: "", category_id: 2, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: ""
   },
   {
-    id: "m3", name: "Taco Stiletto Gold", slug: "taco-stiletto-gold", brand: "Flores", base_price: "580", is_new: true,
-    images: [{ url: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800", is_main: true }],
-    description: "", stock: 10, category_id: "3", variants: [], created_at: "", updated_at: ""
+    id: 993, name: "Taco Stiletto Gold", slug: "taco-stiletto-gold", brand: "Flores", base_price: 580, is_new: true,
+    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800" }],
+    description: "", category_id: 3, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: ""
   },
   {
-    id: "m4", name: "Mocasin Elegance", slug: "mocasin-elegance", brand: "Flores", base_price: "420", is_new: false,
-    images: [{ url: "https://images.unsplash.com/photo-1531310197839-ccf54634509e?q=80&w=800", is_main: true }],
-    description: "", stock: 10, category_id: "4", variants: [], created_at: "", updated_at: ""
+    id: 994, name: "Mocasin Elegance", slug: "mocasin-elegance", brand: "Flores", base_price: 420, is_new: false,
+    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1531310197839-ccf54634509e?q=80&w=800" }],
+    description: "", category_id: 4, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: ""
   }
 ];
 
-export default function ProductosPage() {
+function ProductosPage() {
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get("category");
   const isNew = searchParams.get("is_new") === "true";
@@ -162,5 +162,13 @@ export default function ProductosPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductosPageWrapper() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Cargando...</div>}>
+      <ProductosPage />
+    </Suspense>
   );
 }
