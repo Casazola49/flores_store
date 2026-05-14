@@ -24,8 +24,9 @@ export default function Login() {
       const res = await adminApi.login({ username, password });
       setAuth(res.data.token, res.data.user);
       router.push("/admin/dashboard");
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Error al conectar con el servidor");
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setError((err as any).response?.data?.message || "Error al conectar con el servidor");
     } finally {
       setLoading(false);
     }

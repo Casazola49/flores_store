@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ShoppingBag, Zap } from "lucide-react";
+import { ArrowRight, Zap } from "lucide-react";
 import { publicApi } from "@/lib/api";
 import type { Product } from "@/types";
 import ImageCategoryGrid from "@/components/store/ImageCategoryGrid";
@@ -39,12 +39,13 @@ export default function Home() {
       {/* Hero Section - Estilo Aria Liquidación */}
       <section className="relative h-[70vh] w-full bg-black flex items-center overflow-hidden">
         <div className="absolute inset-0 opacity-80">
-          <Image
-            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2000"
-            alt="Aria Hero"
-            fill
-            priority
-            className="object-cover"
+          <video
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="object-cover w-full h-full"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useState } from "react";
@@ -54,7 +55,7 @@ export default function NuevoProductoPage() {
         slug,
         short_desc: formData.description.substring(0, 100) + '...',
         base_price: parseFloat(formData.base_price),
-        compare_price: formData.compare_price ? parseFloat(formData.compare_price) : null
+        compare_price: formData.compare_price ? parseFloat(formData.compare_price) : undefined
       });
 
       const productId = productRes.data.id;
