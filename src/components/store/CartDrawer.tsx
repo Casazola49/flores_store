@@ -126,13 +126,22 @@ export default function CartDrawer() {
               <span className="text-[10px] tracking-[0.4em] uppercase text-gray-500">Subtotal</span>
               <span className="text-lg font-medium tracking-wider">Bs. {subtotal().toFixed(2)}</span>
             </div>
-            <Link 
-              href="/carrito" 
-              onClick={closeCart}
-              className="block w-full bg-black text-white py-6 text-[10px] tracking-[0.5em] uppercase text-center hover:bg-black/80 transition-all"
+            <button 
+              onClick={() => {
+                const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "59170000000";
+                const messageItems = items.map(item => 
+                  `• ${item.product_name}${item.size ? ` (Talla: ${item.size})` : ''} x${item.quantity} - Bs. ${(item.price * item.quantity).toFixed(2)}`
+                ).join('%0A');
+                
+                const fullMessage = `¡Hola! Flores Studio.%0AQuiero realizar el siguiente pedido:%0A%0A${messageItems}%0A%0A*Total: Bs. ${subtotal().toFixed(2)}*%0A%0A¿Me confirman disponibilidad?`;
+                
+                window.open(`https://wa.me/${phoneNumber}?text=${fullMessage}`, '_blank');
+                closeCart();
+              }}
+              className="block w-full bg-black text-white py-6 text-[10px] tracking-[0.5em] uppercase text-center hover:bg-black/90 transition-all font-black"
             >
-              Completar Pedido
-            </Link>
+              Completar Pedido por WhatsApp
+            </button>
           </div>
         )}
       </div>
