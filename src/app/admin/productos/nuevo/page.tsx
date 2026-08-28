@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Upload, X } from "lucide-react";
+import { ArrowLeft, Save, Upload, X, Video } from "lucide-react";
 import Link from "next/link";
 import { adminApi } from "@/lib/api";
 
@@ -12,6 +12,8 @@ export default function NuevoProductoPage() {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+const [videoFile, setVideoFile] = useState<File | null>(null);
+const [videoPreview, setVideoPreview] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     name: "",
@@ -43,7 +45,20 @@ export default function NuevoProductoPage() {
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    setVideoFile(file);
+    setVideoPreview(URL.createObjectURL(file));
+  }
+};
+
+const removeVideo = () => {
+  setVideoFile(null);
+  setVideoPreview(null);
+};
+
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -75,7 +90,12 @@ export default function NuevoProductoPage() {
         await adminApi.uploadProductImage(productId, file);
       }
 
-      alert("¡Producto creado con éxito!");
+      // 4. Subir video opcional del producto (Cloudinary, resourceType video)
+if (videoFile) {
+  await adminApi.setProductVideo(productId, videoFile);
+}
+
+alert("¡Producto creado con éxito!");
       router.push("/admin/inventario");
       
     } catch (err) {
@@ -263,7 +283,34 @@ export default function NuevoProductoPage() {
           )}
         </div>
 
-        {/* Acciones */}
+        {/* Sección: Video opcional del producto (Cloudinary, hover-video) */}
+<div className="bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-200">
+  <h2 className="font-bold text-lg mb-6 border-b border-gray-100 pb-4">Video de Producto (Opcional)</h2>
+  <p className="text-xs text-gray-400 mb-4">Sube un clip .mp4 corto para previsualización al pasar el cursor (hover-video). Se enviará a Cloudinary.</p>
+  <label className="btn btn-outline cursor-pointer inline-flex items-center gap-2">
+    <Video size={16} /> Subir Video
+    <input
+      type="file"
+      accept="video/*"
+      onChange={handleVideoChange}
+      className="hidden"
+    />
+  </label>
+  {videoPreview && (
+    <div className="mt-4 relative inline-block">
+      <video src={videoPreview} className="h-40 rounded-lg border border-gray-200" controls muted playsInline />
+      <button
+        type="button"
+        onClick={removeVideo}
+        className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600"
+      >
+        <X size={14} />
+      </button>
+    </div>
+  )}
+</div>
+
+{/* Acciones */}
         <div className="flex justify-end gap-4 pt-4">
           <Link href="/admin/inventario" className="btn bg-gray-100 text-gray-700 hover:bg-gray-200">
             Cancelar

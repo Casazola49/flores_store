@@ -50,6 +50,7 @@ export interface Product {
   is_featured: boolean;
   is_new: boolean;
   is_active: boolean;
+  video_url?: string;
   tags?: string[];
   meta_title?: string;
   meta_desc?: string;

@@ -25,7 +25,8 @@ export default defineSchema({
     is_featured: v.boolean(),
     is_new: v.boolean(),
     is_active: v.boolean(),
-    tags: v.array(v.string()),
+    video_url: v.optional(v.string()),
+        tags: v.array(v.string()),
     sort_order: v.number(),
     images: v.array(
       v.object({

@@ -9,6 +9,7 @@ import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 import type { Product, Category } from "@/types";
 
+// TODO Fase B: migrar a CMS y eliminar progresivo
 // High quality placeholders for MVP
 const MOCK_PRODUCTS: Product[] = [
   {

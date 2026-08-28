@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Flame, Clock, ArrowRight, Star, Diamond } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Product, Category } from "@/types";
 import { useCMSStore } from "@/lib/store";
+import VideoBanner from "@/components/store/VideoBanner";
+import ProductCard, { HotProduct } from "@/components/store/ProductCard";
 
 const renderTitle = (title: string) => {
   return title.split("\n").map((line, idx) => (
@@ -40,17 +41,6 @@ const BRAND_LOGOS = [
   { name: "Skechers", src: "/homepage_carrusel/skechers.png" }
 ];
 
-type HotProduct = {
-  id: number;
-  name: string;
-  price: number;
-  originalPrice: number;
-  stock: number;
-  views: number;
-  img: string;
-  slug: string;
-  isNew: boolean;
-};
 
 function toHot(p: any): HotProduct {
   return {
@@ -61,6 +51,7 @@ function toHot(p: any): HotProduct {
     stock: p.variants?.reduce((s: number, v: any) => s + (v.stock ?? 0), 0) ?? 0,
     views: 12,
     img: p.images?.[0]?.url ?? "",
+    videoUrl: p.video_url,
     slug: p.slug,
     isNew: p.is_new,
   };
@@ -116,38 +107,6 @@ function CountdownTimer({ endHour = 24 }: { endHour?: number }) {
   );
 }
 
-function StockBadge({ stock }: { stock: number }) {
-  if (stock === 0) {
-    return (
-      <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-wider text-neutral-500">
-        <span className="w-2 h-2 rounded-full bg-neutral-600 inline-block animate-pulse" />
-        Agotado
-      </span>
-    );
-  }
-  if (stock <= 2) {
-    return (
-      <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-wider text-[#EF4444] animate-pulse">
-        <span className="w-2 h-2 rounded-full bg-[#EF4444] inline-block shadow-[0_0_10px_#EF4444]" />
-        ¡Último par restante!
-      </span>
-    );
-  }
-  if (stock <= 5) {
-    return (
-      <span className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider text-amber-500">
-        <span className="w-2 h-2 rounded-full bg-amber-500 inline-block shadow-[0_0_8px_#F59E0B]" />
-        Pocas unidades
-      </span>
-    );
-  }
-  return (
-    <span className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider text-emerald-500">
-      <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shadow-[0_0_8px_#10B981]" />
-      Stock disponible
-    </span>
-  );
-}
 
 export default function HomeClient() {
   const [popupVisible, setPopupVisible] = useState(false);
@@ -201,53 +160,28 @@ export default function HomeClient() {
             if (idx !== activeBannerIdx) return null;
             return (
               <div key={b.id} className="absolute inset-0 w-full h-full">
-                {b.video_url ? (
-                  <video
-                    src={b.video_url}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover opacity-50 scale-105"
-                  />
-                ) : (
-                  <Image
-                    src={b.image_url || "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1800"}
-                    alt={b.title || "Flores Store Banner"}
-                    fill
-                    priority
-                    className="object-cover opacity-50 animate-slow-zoom scale-110"
-                    style={{ objectPosition: "center 30%" }}
-                  />
-                )}
+                    <VideoBanner
+                      src={b.video_url}
+                      poster={b.image_url}
+                      alt={b.title || "Flores Store Banner"}
+                      className="opacity-50 scale-105"
+                      objectPosition="center 30%"
+                    />
               </div>
             );
           })
         ) : (
           <div className="absolute inset-0 w-full h-full">
-            {sections.hero_video_url ? (
-              <video
-                src={sections.hero_video_url}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover opacity-50 scale-105"
-              />
-            ) : (
-              <Image
-                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1800"
-                alt="Flores Store Premium"
-                fill
-                priority
-                className="object-cover opacity-50 animate-slow-zoom scale-110"
-                style={{ objectPosition: "center 30%" }}
-              />
+                    <VideoBanner
+                      src={sections.hero_video_url}
+                      alt="Flores Store Premium"
+                      className="opacity-50 scale-105"
+                      objectPosition="center 30%"
+                    />
+              </div>
             )}
-          </div>
-        )}
-        
-        {/* Cinematic Overlays */}
+
+            {/* Cinematic Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent z-10" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))] z-10" />
@@ -443,67 +377,9 @@ export default function HomeClient() {
                     <div className="h-6 skeleton w-1/2" />
                   </div>
                 ))
-              : hotProducts.map(p => {
-                  const disc = p.originalPrice > p.price
-                    ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)
-                    : 0;
-                  return (
-                    <Link key={p.id} href={`/productos/${p.slug}`} className="group block relative">
-                      <div className="relative aspect-[3/4] bg-[#0E0E0E] overflow-hidden mb-5 border border-white/5 group-hover:border-[#9B1C1C]/40 transition-all duration-500 rounded-none shadow-lg">
-                        {p.img ? (
-                          <Image
-                            src={p.img}
-                            alt={p.name}
-                            fill
-                            sizes="(max-width: 768px) 50vw, 25vw"
-                            className="object-cover group-hover:scale-[1.03] transition-transform duration-700 opacity-70 group-hover:opacity-100 filter brightness-[0.92] group-hover:brightness-100"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-white/5 text-[9px] font-black uppercase tracking-widest">Sin Imagen</div>
-                        )}
-                        
-                        {/* Tags Premium */}
-                        <div className="absolute top-4 left-4 flex flex-col gap-1.5 z-20">
-                          {disc > 0 && (
-                            <span className="bg-[#9B1C1C] text-white text-[8px] font-black px-2.5 py-1.5 uppercase tracking-widest rounded-none shadow-md">
-                              -{disc}% OFF
-                            </span>
-                          )}
-                          {p.isNew && (
-                            <span className="bg-white text-black text-[8px] font-black px-2.5 py-1.5 uppercase tracking-widest rounded-none shadow-md">
-                              NUEVO
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Inside borders hover visual decoration */}
-                        <div className="absolute inset-0 border border-white/0 group-hover:border-white/10 transition-all duration-500 pointer-events-none z-10 m-2" />
-
-                        {/* Hover Overlay bottom sliding */}
-                        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black via-black/80 to-transparent z-20 flex justify-center">
-                          <span className="border border-white/20 text-white text-[8.5px] font-black uppercase tracking-[0.3em] px-4 py-2 bg-black/60 backdrop-blur-md rounded-none">
-                            Ver Detalles
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2 px-1">
-                        <h3 className="text-[11px] font-serif font-bold uppercase tracking-wider text-white/70 group-hover:text-white transition-colors truncate">
-                          {p.name}
-                        </h3>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-xl font-bold tracking-tight text-white">Bs. {p.price}</span>
-                          {disc > 0 && (
-                            <span className="text-xs text-white/30 line-through font-bold">Bs. {p.originalPrice}</span>
-                          )}
-                        </div>
-                        <div className="pt-1">
-                          <StockBadge stock={p.stock} />
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })
+              : hotProducts.map(p => (
+                <ProductCard key={p.id} product={p} />
+              ))
             }
           </div>
 
@@ -526,23 +402,12 @@ export default function HomeClient() {
 
       {/* ── BÓVEDA VIP (Corregido alineación a la derecha e inline styles) ────────────── */}
       <section className="relative overflow-hidden bg-[#0A0A0A] border-y border-white/5" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
-        {sections.vip_vault_video_url ? (
-          <video
-            src={sections.vip_vault_video_url}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover opacity-15 scale-105"
-          />
-        ) : (
-          <Image
-            src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1600"
-            alt="VIP Vault"
-            fill
-            className="object-cover opacity-15 scale-110 animate-slow-zoom"
-          />
-        )}
+            <VideoBanner
+              src={sections.vip_vault_video_url}
+              poster="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1600"
+              alt="VIP Vault"
+              className="opacity-15 scale-105"
+            />
         
         {/* Artistic Light Effects */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent z-10" />
@@ -614,19 +479,16 @@ export default function HomeClient() {
               const img = c.image_url || CAT_FALLBACK[c.slug] || CAT_FALLBACK.default;
               return (
                 <Link key={c.id} href={`/productos?category=${c.slug}`} className="group relative aspect-[4/5] overflow-hidden bg-black block border border-white/5 rounded-none shadow-lg">
-                  {/* Background poster image */}
-                  <Image src={img} alt={c.name} fill sizes="(max-width: 768px) 50vw, 20vw" className="object-cover opacity-30 group-hover:opacity-40 transition-all duration-1000 scale-100 group-hover:scale-105" />
-                  
-                  {c.video_url && (
-                    <video
-                      src={c.video_url}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-75 group-hover:scale-105 transition-all duration-1000"
-                    />
-                  )}
+                      <VideoBanner
+                        src={c.video_url}
+                        poster={img}
+                        alt={c.name}
+                        className={
+                          c.video_url
+                            ? "opacity-40 group-hover:opacity-75 group-hover:scale-105 transition-all duration-1000"
+                            : "opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-1000"
+                        }
+                      />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10" />
                   
                   <div className="absolute bottom-0 left-0 right-0 p-5 z-20">

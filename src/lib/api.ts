@@ -59,7 +59,8 @@ const mapProduct = (p: any): Product => {
     is_featured: p.is_featured,
     is_new: p.is_new,
     is_active: p.is_active,
-    tags: p.tags || [],
+    video_url: p.video_url,
+        tags: p.tags || [],
     sort_order: p.sort_order || 0,
     images: (p.images || []).map((img: any, idx: number) => ({
       id: idx + 1,
@@ -315,7 +316,37 @@ export const adminApi = {
     return { data: addResult };
   },
 
-  updateVariant: async (variantId: number | string, data: any) => {
+  setProductVideo: async (productId: number | string, file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const uploadResult = await res.json();
+  if (!res.ok) throw new Error(uploadResult.error || "Error al subir video");
+
+  // Cloudinary devuelve resource_type: "video" para .mp4.
+  const token = localStorage.getItem("flores_admin_token") || "";
+  const setResult = await convexClient.mutation(convexApi.products.setProductVideo, {
+    token,
+    productId: String(productId),
+    url: uploadResult.url,
+  });
+  return { data: setResult };
+},
+
+clearProductVideo: async (productId: number | string) => {
+  const token = localStorage.getItem("flores_admin_token") || "";
+  const res = await convexClient.mutation(convexApi.products.setProductVideo, {
+    token,
+    productId: String(productId),
+    url: "",
+  });
+  return { data: res };
+},
+
+updateVariant: async (variantId: number | string, data: any) => {
     const token = localStorage.getItem("flores_admin_token") || "";
     const productsRes = await convexClient.query(convexApi.products.getProductsAdmin, { token, limit: 1000 });
     const product = productsRes.data.find((p: any) => (p.variants || []).some((v: any) => v.id === String(variantId)));

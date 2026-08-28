@@ -1,24 +1,47 @@
+/*
+ * Flores Store — Fase A design-token unification (Crimson, mujer-first / unisex).
+ *
+ * Single source of truth for the palette, type, radius and motion primitives.
+ * Components must consume these tokens via `var(--color-*)` / Tailwind token
+ * utilities — do NOT hardcode hex values (see DESIGN.md "Do's and Don'ts").
+ *
+ * ─── Light Front-End Checklist audit (this unification fixes) ───
+ * Top 3 a11y / perf findings corrected by this rewrite:
+ *   1. FOCUS VISIBLE — the old `button { outline: none }` killed the keyboard
+ *      focus indicator. Restored with a high-contrast `:focus-visible` double
+ *      ring (bg + crimson) that stays ≥3:1 on both light and dark surfaces.
+ *   2. REDUCED MOTION — infinite decorative animations (pulse-red, glow-pulse,
+ *      slow-zoom, ticker, shimmer, pulse) and smooth-scroll now honor
+ *      `prefers-reduced-motion: reduce` so motion-sensitive users are not
+ *      trapped in looping motion.
+ *   3. NO YELLOW/ARIA — removed the gold `.premium-gradient-gold` (#FFE082 →
+ *      #FFB300) which contradicted the "no amarillo Aria" brand decision.
+ *      Residual: hardcoded `#FFB300` star ratings in HomeClient.tsx:687 and
+ *      `Aria Liquidación` copy in (store)/page.tsx metadata are tracked for
+ *      Fase B migration to `var(--color-accent)`.
+ */
+
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap');
 @import "tailwindcss";
 
 :root {
   --color-primary: #0A0A0A;
   --color-bg: #FFFFFF;
-  --color-surface: #F5F5F5;
+  --color-surface: #F5F3EF;          /* cold bone — NOT warm beige */
   --color-dark-surface: #111111;
   --color-border: #E0E0E0;
   --color-text: #0A0A0A;
   --color-text-muted: #6B6B6B;
 
-  /* ACCENT: Deep Crimson Red — Urgencia + Premium */
+  /* ACCENT: Flores Crimson — urgencia + premium, mujer-first / unisex */
   --color-accent: #9B1C1C;
-  --color-accent-bright: #DC2626;
+  --color-accent-bright: #C1272D;
   --color-accent-light: #FEE2E2;
 
   --font-serif: 'Playfair Display', 'Georgia', serif;
   --font-sans: 'DM Sans', 'Helvetica Neue', sans-serif;
 
-  /* Arquitectura sharp — zero radius */
+  /* Architecture: sharp — zero radius everywhere */
   --radius-none: 0px;
   --radius-sm: 0px;
   --radius-md: 0px;
@@ -54,6 +77,24 @@ a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 button { cursor: pointer; border: none; outline: none; font-family: inherit; background: none; }
 
+/* ─── Focus visibility (WCAG 2.2 — 2.4.7 / 1.4.11) ───
+   Double ring: inner = page bg (keeps contrast on dark surfaces),
+   outer = brand crimson. Keyboard-only via :focus-visible. */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent);
+}
+
+/* ─── Reduced motion (WCAG 2.2 — 2.3.3) ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #f0f0f0; }
@@ -85,7 +126,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; bac
   right: 32px;
   width: 56px;
   height: 56px;
-  background: #25D366;
+  background: #25D366;                 /* WhatsApp brand green — keep */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -216,12 +257,6 @@ tr:hover td { background: var(--color-surface); }
   -webkit-text-fill-color: transparent;
 }
 
-.premium-gradient-gold {
-  background: linear-gradient(135deg, #FFE082, #FFB300);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 /* Overriding skeleton for dark theme */
 .skeleton {
   background: linear-gradient(90deg, #111111 25%, #1a1a1a 50%, #111111 75%) !important;
@@ -230,7 +265,7 @@ tr:hover td { background: var(--color-surface); }
 
 .bg-luxury-grid {
   background-size: 40px 40px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
 }
@@ -345,7 +380,3 @@ tr:hover td { background: var(--color-surface); }
 .animate-glow-pulse {
   animation: glow-pulse 2s infinite ease-in-out;
 }
-
-
-
-

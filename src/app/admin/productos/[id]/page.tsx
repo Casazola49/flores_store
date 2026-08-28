@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import {
   ArrowLeft, Save, Upload, X, Trash2, Plus, AlertTriangle,
-  Package, Tag, CheckCircle
+  Package, Tag, CheckCircle, Video
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -148,6 +148,9 @@ export default function EditarProductoPage() {
   const [saved, setSaved] = useState(false);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
+const [videoFile, setVideoFile] = useState<File | null>(null);
+const [videoPreview, setVideoPreview] = useState<string | null>(null);
+const [uploadingVideo, setUploadingVideo] = useState(false);
   const [categories, setCategories] = useState<{ id: number | string; name: string }[]>([]);
 
   // Modal states
@@ -297,7 +300,35 @@ export default function EditarProductoPage() {
     setNewPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
   };
 
-  if (loading) {
+  const handleVideoUploadChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  setUploadingVideo(true);
+  try {
+    await adminApi.setProductVideo(productId, file);
+    const preview = URL.createObjectURL(file);
+    setVideoPreview(preview);
+    setProduct((prev) => (prev ? { ...prev, video_url: preview } : null));
+  } catch (err) {
+    alert("Error al subir el video.");
+    console.error(err);
+  } finally {
+    setUploadingVideo(false);
+  }
+};
+
+const handleRemoveVideo = async () => {
+  try {
+    await adminApi.clearProductVideo(productId);
+    setVideoPreview(null);
+    setProduct((prev) => (prev ? { ...prev, video_url: "" } : null));
+  } catch (err) {
+    alert("Error al quitar el video.");
+    console.error(err);
+  }
+};
+
+if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="h-8 skeleton rounded w-48 mb-8" />
@@ -554,7 +585,44 @@ export default function EditarProductoPage() {
           </label>
         </div>
 
-        {/* Actions */}
+        {/* Video de Producto (Opcional) */}
+<div className="bg-white p-6 rounded-xl border border-gray-100">
+  <h2 className="font-bold text-base mb-5 border-b border-gray-100 pb-3">Video del Producto (Opcional)</h2>
+  <p className="text-xs text-gray-400 mb-4">Clip .mp4 corto para previsualización al pasar el cursor (hover-video). Se envía a Cloudinary.</p>
+
+  {product.video_url || videoPreview ? (
+    <div className="relative inline-block mb-4">
+      <video
+        src={videoPreview || product.video_url || ""}
+        className="h-48 rounded-lg border border-gray-200 bg-gray-100"
+        controls
+        muted
+        playsInline
+      />
+      <button
+        type="button"
+        onClick={handleRemoveVideo}
+        disabled={uploadingVideo}
+        className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600"
+      >
+        <X size={14} />
+      </button>
+    </div>
+  ) : (
+    <label className="btn btn-outline cursor-pointer inline-flex items-center gap-2 text-sm">
+      <Video size={15} /> Subir video
+      <input
+        type="file"
+        accept="video/*"
+        disabled={uploadingVideo}
+        onChange={handleVideoUploadChange}
+        className="hidden"
+      />
+    </label>
+  )}
+</div>
+
+{/* Actions */}
         <div className="flex items-center justify-between pt-2 pb-8">
           <Link href="/admin/productos" className="btn bg-gray-100 text-gray-700 hover:bg-gray-200 text-sm">
             Cancelar

@@ -416,6 +416,26 @@ export const removeProductImage = mutation({
   },
 });
 
+export const setProductVideo = mutation({
+  args: {
+    token: v.string(),
+    productId: v.string(),
+    url: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await checkAuth(ctx.db, args.token);
+
+    const docId = ctx.db.normalizeId("products", args.productId);
+    if (!docId) throw new Error("ID de producto inválido");
+
+    const product = await ctx.db.get(docId);
+    if (!product) throw new Error("Producto no encontrado");
+
+    await ctx.db.patch(docId, { video_url: args.url });
+    return { success: true };
+  },
+});
+
 export const adjustStock = mutation({
   args: {
     token: v.string(),
