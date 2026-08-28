@@ -21,7 +21,8 @@ export default function CartPage() {
   if (!mounted) return null;
 
   const handleWhatsAppCheckout = () => {
-    const phoneNumber = sections.whatsapp_number || "59170000000";
+    // TODO(#4): Unificar el formato del mensaje con CartDrawer.buildWhatsAppMessage (misma fuente y fallback de numero).
+    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || sections.whatsapp_number || "59170000000";
     
     let message = `¡Hola! Me gustaría realizar el siguiente pedido en Flores:\n\n`;
     
@@ -94,7 +95,7 @@ export default function CartPage() {
                   <div className="col-span-6 flex items-center gap-4 w-full">
                     <div className="relative w-24 h-32 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
                       {item.product_image ? (
-                        <Image src={item.product_image} alt={item.product_name} fill className="object-cover" />
+                        <Image src={item.product_image} alt={item.product_name} fill sizes="80px" className="object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-300">Img</div>
                       )}

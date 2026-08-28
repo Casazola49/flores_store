@@ -21,7 +21,7 @@ export default function StoreLayout({
       <Navbar />
 
       {/* Main content padded to clear fixed bars */}
-      <main className="min-h-screen bg-[var(--color-bg)]" style={{ paddingTop: 0 }}>
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--color-bg)]" style={{ paddingTop: 0 }}>
         {children}
       </main>
 

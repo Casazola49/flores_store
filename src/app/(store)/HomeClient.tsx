@@ -161,6 +161,7 @@ export default function HomeClient() {
             return (
               <div key={b.id} className="absolute inset-0 w-full h-full">
                     <VideoBanner
+                      priority
                       src={b.video_url}
                       poster={b.image_url}
                       alt={b.title || "Flores Banner"}
@@ -173,6 +174,7 @@ export default function HomeClient() {
         ) : (
           <div className="absolute inset-0 w-full h-full">
                     <VideoBanner
+                      priority
                       src={sections.hero_video_url}
                       alt="Flores Premium"
                       className="opacity-50 scale-105"

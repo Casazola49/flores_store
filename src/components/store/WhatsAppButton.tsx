@@ -16,7 +16,8 @@ export default function WhatsAppButton() {
   if (!mounted) return null;
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
-  const phoneNumber = sections.whatsapp_number || "59170000000";
+  // TODO(#4): Unificar la fuente del numero con CartDrawer/carrito (mismo fallback "59170000000").
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || sections.whatsapp_number || "59170000000";
 
   // Si hay items en el carrito, abre el drawer para completar el pedido
   const handleClick = () => {

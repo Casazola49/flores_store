@@ -82,6 +82,35 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; bac
   box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent);
 }
 
+/* ─── Skip link (WCAG 2.4.1 Bypass Blocks) ───
+   First focusable element of <body>. Off-screen until focus, then
+   slides into view at top-left. Ring mirrors :focus-visible. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  transform: translateY(-120%);
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 0;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
 /* ─── Reduced motion (WCAG 2.2 — 2.3.3) ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

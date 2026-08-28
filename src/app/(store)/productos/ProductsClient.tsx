@@ -1,58 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
-import type { Product, Category } from "@/types";
 
-// TODO Fase B: migrar a CMS y eliminar progresivo
-// High quality placeholders for MVP
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: 991 as any, name: "Chelsea Noir", slug: "bota-chelsea-noir", brand: "Aria", base_price: 450, is_new: true,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1605733513597-a8f8341084e6?q=80&w=800" }],
-    description: "Elegancia atemporal en cuero genuino.", category_id: 1, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: ["exclusivo"]
-  },
-  {
-    id: 992 as any, name: "Urban Velocity", slug: "sneaker-urban-white", brand: "Aria", base_price: 320, is_new: false,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800" }],
-    description: "Comodidad suprema para el día a día.", category_id: 2, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: []
-  },
-  {
-    id: 993 as any, name: "Stiletto Oro", slug: "taco-stiletto-gold", brand: "Aria", base_price: 580, is_new: true,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800" }],
-    description: "Impacto visual y altura para tus eventos.", category_id: 3, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: []
-  },
-  {
-    id: 994 as any, name: "Mocasin Arch", slug: "mocasin-elegance", brand: "Aria", base_price: 420, is_new: false,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1531310197839-ccf54634509e?q=80&w=800" }],
-    description: "El toque clásico para un look profesional.", category_id: 4, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: []
-  },
-  {
-    id: 995 as any, name: "Desert Muse", slug: "sandalia-desert-sand", brand: "Aria", base_price: 280, is_new: true,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1562273103-91206777044a?q=80&w=800" }],
-    description: "Frescura y estilo para el verano.", category_id: 5, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: []
-  },
-  {
-    id: 996 as any, name: "Combat Rugged", slug: "bota-militar-rugged", brand: "Aria", base_price: 490, is_new: false,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1520639889410-d042466df810?q=80&w=800" }],
-    description: "Resistencia y carácter en cada paso.", category_id: 1, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: []
-  },
-  {
-    id: 997 as any, name: "Loafer Studio", slug: "loafer-studio", brand: "Aria", base_price: 390, is_new: true,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=800" }],
-    description: "Minimalismo estructural.", category_id: 4, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: []
-  },
-  {
-    id: 998 as any, name: "Heel Platinum", slug: "heel-platinum", brand: "Aria", base_price: 620, is_new: true,
-    images: [{ id: 1, product_id: 1, sort_order: 1, is_primary: true, url: "https://images.unsplash.com/photo-1515347648415-0f53bbca466d?q=80&w=800" }],
-    description: "Reflectividad y lujo.", category_id: 3, variants: [], is_featured: false, is_active: true, sort_order: 1, created_at: "", updated_at: "", tags: ["exclusivo"]
-  }
-];
+// TODO(dev-fallback): fallback de mocks retirado — Convex es fuente de verdad.
+// Si Convex está vacío en desarrollo local, poblar via seed/dashboard en lugar de
+// reintroducir mocks en cliente. Para un fallback temporal solo-dev, definir
+// const FALLBACK_PRODUCTS: Product[] = [] y usarlo guardado tras process.env.NODE_ENV !== "production".
 
 export default function ProductsClient() {
   const searchParams = useSearchParams();
@@ -73,13 +30,10 @@ export default function ProductsClient() {
 
   const categories = categoriesData || [];
   const rawProducts = productsResult?.data || [];
-  
-  // Si la BD tiene productos, usa los de la BD; de lo contrario usa mocks filtrados por exclusivo si corresponde
-  const products = rawProducts.length > 0 
-    ? (rawProducts as any[]) 
-    : (isExclusive 
-        ? MOCK_PRODUCTS.filter(p => p.tags && p.tags.includes("exclusivo")) 
-        : MOCK_PRODUCTS);
+
+  // Fuente de verdad: Convex. Sin fallback activo — si la BD está vacía se muestra empty state.
+  // TODO(dev-fallback): solo para desarrollo local, poblar Convex con seed en lugar de mocks en cliente.
+  const products = rawProducts as any[];
         
   const loading = productsResult === undefined || categoriesData === undefined;
 
@@ -186,6 +140,8 @@ export default function ProductsClient() {
                         src={product.images?.[0]?.url || "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800"} 
                         alt={product.name}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
+                        loading="lazy"
                         className="object-cover group-hover:scale-105 transition-transform duration-1000"
                       />
                       {product.is_new && (

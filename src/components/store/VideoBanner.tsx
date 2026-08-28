@@ -18,6 +18,8 @@ interface VideoBannerProps {
   withOverlays?: boolean;
   /** Whether to autoplay. Categories should be false to avoid mass autoplay. */
   autoplay?: boolean;
+  /** When true, marks the poster image as priority (eager + fetchPriority high) for LCP; below-fold usages should omit it and stay lazy. */
+  priority?: boolean;
 }
 
 // Neutral fallback so a missing source never collapses the hero / sections.
@@ -32,6 +34,7 @@ export default function VideoBanner({
   objectPosition,
   withOverlays = false,
   autoplay = true,
+  priority = false,
 }: VideoBannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -62,7 +65,9 @@ export default function VideoBanner({
           src={poster || FALLBACK}
           alt={alt || ""}
           fill
-          priority
+          sizes="100vw"
+          priority={priority}
+              {...(priority ? { fetchPriority: "high" } : { loading: "lazy" })}
           className={`object-cover ${className ?? ""}`}
           style={objectPosition ? { objectPosition } : undefined}
         />
