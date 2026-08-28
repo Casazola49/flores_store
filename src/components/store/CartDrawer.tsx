@@ -1,50 +1,12 @@
 "use client";
 
-import { useCartStore } from "@/lib/store";
+import { useCartStore, useCMSStore } from "@/lib/store";
 import { X, Minus, Plus, ShoppingBag, ArrowRight, ArrowLeft, MessageCircle, CheckCircle, Check } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { buildOrderMessage, getWhatsAppNumber, openWhatsApp } from "@/lib/whatsapp";
 
-// ── Helpers ───────────────────────────────────────────────────
-function buildWhatsAppMessage(
-  items: ReturnType<typeof useCartStore.getState>["items"],
-  subtotal: number,
-  customer: { name: string; phone: string; city: string; deliveryType: string; address: string }
-): string {
-  const productLines = items
-    .map(item => {
-      const variant = [item.size && `Talla ${item.size}`, item.color && item.color]
-        .filter(Boolean)
-        .join(" / ");
-      const lineTotal = (item.price * item.quantity).toFixed(0);
-      return `• ${item.product_name}${variant ? ` (${variant})` : ""} x${item.quantity} — Bs. ${lineTotal}`;
-    })
-    .join("\n");
-
-  const deliveryLine =
-    customer.deliveryType === "envio"
-      ? `🚚 *Envío a:* ${customer.address}, ${customer.city}`
-      : `🏬 *Retiro en tienda* — ${customer.city}`;
-
-  const msg = [
-    `🛍️ *NUEVO PEDIDO — FLORES STORE*`,
-    ``,
-    `👤 *Cliente:* ${customer.name}`,
-    `📱 *Teléfono:* ${customer.phone}`,
-    deliveryLine,
-    ``,
-    `📦 *PRODUCTOS:*`,
-    productLines,
-    ``,
-    `━━━━━━━━━━━━━━━━━━`,
-    `💰 *TOTAL: Bs. ${subtotal.toFixed(0)}*`,
-    `━━━━━━━━━━━━━━━━━━`,
-    ``,
-    `¿Pueden confirmar disponibilidad y coordinar la entrega? 🙏`,
-  ].join("\n");
-
-  return encodeURIComponent(msg);
-}
+// Helpers moved to @/lib/whatsapp — single source of truth (TODO#4)
 
 // ── Stepper Config ────────────────────────────────────────────
 const STEPS = [
@@ -62,6 +24,7 @@ type Step = "cart" | "checkout" | "sent";
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, updateQuantity, removeItem, subtotal } = useCartStore();
+  const { sections } = useCMSStore();
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>("cart");
   const [customer, setCustomer] = useState({
@@ -106,11 +69,10 @@ export default function CartDrawer() {
     if (!customer.city.trim()) return setFormError("Indica tu ciudad.");
     if (customer.deliveryType === "envio" && !customer.address.trim()) return setFormError("Ingresa tu dirección de entrega.");
 
-    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "59170000000";
-    const message = buildWhatsAppMessage(items, subtotal(), customer);
+    const phoneNumber = getWhatsAppNumber(sections.whatsapp_number);
+    const message = buildOrderMessage(items, subtotal(), customer);
 
-    const win = window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
-    if (!win) {
+    if (!openWhatsApp(phoneNumber, message)) {
       setFormError("No pudimos abrir WhatsApp — permití pop-ups y reintentá.");
       return;
     }

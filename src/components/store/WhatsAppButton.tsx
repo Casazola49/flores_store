@@ -2,6 +2,7 @@
 
 import { useCartStore, useCMSStore } from "@/lib/store";
 import { useEffect, useState } from "react";
+import { buildGenericInquiryMessage, getWhatsAppNumber, openWhatsApp } from "@/lib/whatsapp";
 
 export default function WhatsAppButton() {
   const { items, openCart } = useCartStore();
@@ -16,16 +17,15 @@ export default function WhatsAppButton() {
   if (!mounted) return null;
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
-  // TODO(#4): Unificar la fuente del numero con CartDrawer/carrito (mismo fallback "59170000000").
-  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || sections.whatsapp_number || "59170000000";
+  const phoneNumber = getWhatsAppNumber(sections.whatsapp_number);
 
   // Si hay items en el carrito, abre el drawer para completar el pedido
   const handleClick = () => {
     if (totalItems > 0) {
       openCart();
     } else {
-      const msg = encodeURIComponent("¡Hola! Estoy interesado en los productos de Flores. ¿Me pueden ayudar?");
-      window.open(`https://wa.me/${phoneNumber}?text=${msg}`, "_blank");
+      const msg = buildGenericInquiryMessage();
+      openWhatsApp(phoneNumber, msg);
     }
   };
 

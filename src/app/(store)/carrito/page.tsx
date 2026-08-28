@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Minus, Plus, X, ArrowLeft, Send } from "lucide-react";
+import { buildOrderMessage, getWhatsAppNumber, openWhatsApp } from "@/lib/whatsapp";
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotal, clearCart } = useCartStore();
@@ -21,33 +22,9 @@ export default function CartPage() {
   if (!mounted) return null;
 
   const handleWhatsAppCheckout = () => {
-    // TODO(#4): Unificar el formato del mensaje con CartDrawer.buildWhatsAppMessage (misma fuente y fallback de numero).
-    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || sections.whatsapp_number || "59170000000";
-    
-    let message = `¡Hola! Me gustaría realizar el siguiente pedido en Flores:\n\n`;
-    
-    items.forEach((item, index) => {
-      message += `${index + 1}. *${item.product_name}*\n`;
-      if (item.size) message += `   - Talla: ${item.size}\n`;
-      if (item.color) message += `   - Color: ${item.color}\n`;
-      message += `   - Cantidad: ${item.quantity}\n`;
-      message += `   - Precio Unitario: Bs. ${item.price.toFixed(2)}\n`;
-      message += `   - Subtotal: Bs. ${(item.price * item.quantity).toFixed(2)}\n\n`;
-    });
-
-    message += `*Total a pagar: Bs. ${subtotal().toFixed(2)}*\n\n`;
-    
-    if (notes) {
-      message += `*Notas adicionales:*\n${notes}\n\n`;
-    }
-
-    message += `Por favor, confírmenme la disponibilidad y los datos para el pago/envío. ¡Gracias!`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
-    // Abrir WhatsApp en nueva pestaña
-    window.open(whatsappUrl, '_blank');
+    const phoneNumber = getWhatsAppNumber(sections.whatsapp_number);
+    const encodedMessage = buildOrderMessage(items, subtotal(), null, notes);
+    openWhatsApp(phoneNumber, encodedMessage);
     
     // Opcional: limpiar carrito después de unos segundos asumiendo que compró
     // setTimeout(() => clearCart(), 5000);
