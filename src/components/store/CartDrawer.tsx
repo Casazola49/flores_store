@@ -116,7 +116,7 @@ export default function CartDrawer() {
                 <h2 className="text-lg font-black uppercase tracking-tight">Mi Carrito</h2>
                 <p className="text-xs text-gray-400 font-semibold mt-0.5">{items.length} {items.length === 1 ? "producto" : "productos"}</p>
               </div>
-              <button aria-label="Cerrar carrito" onClick={closeCart} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+              <button aria-label="Cerrar carrito" onClick={closeCart} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
                 <X size={18} />
               </button>
             </div>
@@ -181,14 +181,14 @@ export default function CartDrawer() {
                           <div className="flex items-center border border-gray-200 rounded-none overflow-hidden">
                             <button
                               onClick={() => updateQuantity(item.variant_id, item.quantity - 1)}
-                              className="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
+                              className="w-11 h-11 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
                             >
                               <Minus size={11} />
                             </button>
                             <span className="w-8 text-center text-xs font-black">{item.quantity}</span>
                             <button
                               onClick={() => updateQuantity(item.variant_id, item.quantity + 1)}
-                              className="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
+                              className="w-11 h-11 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
                             >
                               <Plus size={11} />
                             </button>
@@ -228,7 +228,7 @@ export default function CartDrawer() {
           <>
             {/* Header */}
             <div className="flex items-center gap-4 px-8 py-6 border-b border-neutral-100">
-              <button onClick={() => setStep("cart")} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+              <button onClick={() => setStep("cart")} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
                 <ArrowLeft size={18} />
               </button>
               <div>

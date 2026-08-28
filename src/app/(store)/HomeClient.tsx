@@ -187,7 +187,7 @@ export default function HomeClient() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))] z-10" />
 
         {/* Spaced Hero Container padding */}
-        <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12" style={{ paddingTop: "14rem", paddingBottom: "14rem" }}>
+        <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
           <div className="max-w-4xl">
             <div className="overflow-hidden mb-8 animate-slide-up">
               <span className="inline-flex items-center gap-3 text-[var(--color-accent)] text-xs font-black tracking-[0.45em] uppercase">
@@ -302,7 +302,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── BRAND TICKER CON IMÁGENES (Mucho más ancho, logos con padding-x masivo, y mas grande) ── */}
-      <div className="bg-black/95 overflow-hidden border-y border-white/5 relative z-10" style={{ paddingTop: "8rem", paddingBottom: "8rem" }}>
+      <div className="bg-black/95 overflow-hidden border-y border-white/5 relative z-10 py-12 md:py-16" >
         <div className="absolute left-0 top-0 bottom-0 w-64 bg-gradient-to-r from-[var(--color-text)] to-transparent z-20 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[var(--color-text)] to-transparent z-20 pointer-events-none" />
         
@@ -325,7 +325,7 @@ export default function HomeClient() {
       </div>
 
       {/* ── SECCIÓN HOT DROPS — (Hot Drops subido levemente y botón explorar centrado) ──── */}
-      <section className="bg-transparent relative overflow-hidden border-b border-white/5" style={{ paddingTop: "11rem", paddingBottom: "13rem" }}>
+      <section className="bg-transparent relative overflow-hidden border-b border-white/5 py-16 md:py-24">
         {/* Glow decorativo de fondo */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/5 blur-[140px] rounded-full pointer-events-none" />
         
@@ -401,7 +401,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── BÓVEDA VIP (Corregido alineación a la derecha e inline styles) ────────────── */}
-      <section className="relative overflow-hidden bg-[var(--color-text)] border-y border-white/5" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
+      <section className="relative overflow-hidden bg-[var(--color-text)] border-y border-white/5 py-20 md:py-28">
             <VideoBanner
               src={sections.vip_vault_video_url}
               poster="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1600"
@@ -460,7 +460,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── CATEGORÍAS — Estilo Brutalista Premium (Con espaciados de sección y elementos ampliados) ── */}
-      <section className="bg-transparent border-b border-white/5" style={{ paddingTop: "14rem", paddingBottom: "14rem" }}>
+      <section className="bg-transparent border-b border-white/5 py-16 md:py-24">
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Spaced categories header mb-36 md:mb-52 */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6" style={{ marginBottom: "8rem" }}>
@@ -508,7 +508,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── TESTIMONIOS OSCUROS — (Surgido arriba, centrado y recuadros más grandes/espaciados) ──── */}
-      <section className="bg-transparent border-b border-white/5 relative overflow-hidden" style={{ paddingTop: "10rem", paddingBottom: "16rem" }}>
+      <section className="bg-transparent border-b border-white/5 relative overflow-hidden py-16 md:py-24">
         {/* Muted background glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-accent)]/5 blur-[150px] rounded-full pointer-events-none" />
         
@@ -576,7 +576,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── NEWSLETTER VIP — Spaced layout, design buttons (Espacio vertical masivo de 16rem) ── */}
-      <section className="bg-[var(--color-dark-surface)] text-white border-b border-white/5 relative overflow-hidden" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
+      <section className="bg-[var(--color-dark-surface)] text-white border-b border-white/5 relative overflow-hidden py-16 md:py-24">
         <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-[var(--color-accent)]/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10">
@@ -627,7 +627,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── SECCIÓN REDES SOCIALES — Animadas, Tematizadas y Centradas ──────────────────── */}
-      <section className="bg-[var(--color-text)] border-t border-white/5 relative overflow-hidden" style={{ paddingTop: "12rem", paddingBottom: "12rem" }}>
+      <section className="bg-[var(--color-text)] border-t border-white/5 relative overflow-hidden py-16 md:py-24">
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/5 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10 text-center">
