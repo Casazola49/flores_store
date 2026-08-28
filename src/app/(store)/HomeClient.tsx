@@ -83,11 +83,11 @@ function CountdownTimer({ endHour = 24 }: { endHour?: number }) {
   if (!mounted) {
     return (
       <div className="flex items-center gap-2.5 font-mono">
-        <span className="bg-[#121212] border border-[#9B1C1C]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="bg-[#121212] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
         <span className="text-white/30 font-black text-xl">:</span>
-        <span className="bg-[#121212] border border-[#9B1C1C]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="bg-[#121212] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
         <span className="text-white/30 font-black text-xl">:</span>
-        <span className="bg-[#121212] border border-[#9B1C1C]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="bg-[#121212] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
       </div>
     );
   }
@@ -97,10 +97,10 @@ function CountdownTimer({ endHour = 24 }: { endHour?: number }) {
     <div className="flex items-center gap-2.5 font-mono">
       {[pad(time.h), pad(time.m), pad(time.s)].map((v, i) => (
         <span key={i} className="flex items-center gap-2.5">
-          <span className="bg-black border border-[#9B1C1C]/40 text-[#EF4444] text-xl md:text-2xl font-black px-3.5 py-2.5 min-w-[3.2rem] text-center rounded-none shadow-inner shadow-black/80 drop-shadow-[0_0_8px_rgba(239,68,68,0.35)]">
+          <span className="bg-black border border-[var(--color-accent)]/40 text-[var(--color-accent-bright)] text-xl md:text-2xl font-black px-3.5 py-2.5 min-w-[3.2rem] text-center rounded-none shadow-inner shadow-black/80 drop-shadow-[0_0_8px_rgba(239,68,68,0.35)]">
             {v}
           </span>
-          {i < 2 && <span className="text-[#9B1C1C] font-black text-xl animate-pulse">:</span>}
+          {i < 2 && <span className="text-[var(--color-accent)] font-black text-xl animate-pulse">:</span>}
         </span>
       ))}
     </div>
@@ -163,7 +163,7 @@ export default function HomeClient() {
                     <VideoBanner
                       src={b.video_url}
                       poster={b.image_url}
-                      alt={b.title || "Flores Store Banner"}
+                      alt={b.title || "Flores Banner"}
                       className="opacity-50 scale-105"
                       objectPosition="center 30%"
                     />
@@ -174,7 +174,7 @@ export default function HomeClient() {
           <div className="absolute inset-0 w-full h-full">
                     <VideoBanner
                       src={sections.hero_video_url}
-                      alt="Flores Store Premium"
+                      alt="Flores Premium"
                       className="opacity-50 scale-105"
                       objectPosition="center 30%"
                     />
@@ -190,8 +190,8 @@ export default function HomeClient() {
         <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12" style={{ paddingTop: "14rem", paddingBottom: "14rem" }}>
           <div className="max-w-4xl">
             <div className="overflow-hidden mb-8 animate-slide-up">
-              <span className="inline-flex items-center gap-3 text-[#9B1C1C] text-xs font-black tracking-[0.45em] uppercase">
-                <span className="w-6 h-[1.5px] bg-[#9B1C1C]" /> Flores Studio & Aria Liquidación
+              <span className="inline-flex items-center gap-3 text-[var(--color-accent)] text-xs font-black tracking-[0.45em] uppercase">
+                <span className="w-6 h-[1.5px] bg-[var(--color-accent)]" /> Flores — Liquidación Real
               </span>
             </div>
             
@@ -199,7 +199,7 @@ export default function HomeClient() {
               <>
                 {/* Spaced title margin bottom */}
                 <h1 
-                  className="text-[40px] sm:text-[68px] md:text-[96px] lg:text-[108px] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow"
+                  className="text-[clamp(2.5rem,6vw,4.5rem)] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow"
                   style={{ marginBottom: "4rem" }}
                 >
                   {banners[activeBannerIdx].title ? renderTitle(banners[activeBannerIdx].title!) : "Cultura Exclusiva"}
@@ -243,10 +243,10 @@ export default function HomeClient() {
               <>
                 {/* Spaced title margin bottom */}
                 <h1 
-                  className="text-[40px] sm:text-[68px] md:text-[96px] lg:text-[108px] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow"
+                  className="text-[clamp(2.5rem,6vw,4.5rem)] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow"
                   style={{ marginBottom: "4rem" }}
                 >
-                  {sections.hero_title ? renderTitle(sections.hero_title) : <>Cultura<br /><span className="premium-gradient-text italic font-normal">Exclusiva</span><br />En Cada Paso</>}
+                  {sections.hero_title ? renderTitle(sections.hero_title) : renderTitle("Últimas Tallas\nEn Liquidación")}
                 </h1>
                 
                 {/* Spaced typography description text */}
@@ -254,7 +254,7 @@ export default function HomeClient() {
                   className="text-white/60 text-sm md:text-lg max-w-xl font-normal tracking-widest md:tracking-wide leading-loose animate-slide-up"
                   style={{ marginBottom: "6rem" }}
                 >
-                  {sections.hero_subtitle || "Curaduría de marcas globales a precios de liquidación en Cochabamba y envíos a todo Bolivia. Stock limitado: los mejores modelos se agotan rápido."}
+                  {sections.hero_subtitle || "Botas, tacos y zapatillas con stock real limitado. Precios de liquidación verificados, envíos 48h a todo Bolivia."}
                 </p>
                 
                 {/* Spaced buttons block */}
@@ -293,7 +293,7 @@ export default function HomeClient() {
             <p className="text-white text-5xl font-black tracking-tight mt-1">+500</p>
             <p className="text-white/40 text-[9px] uppercase tracking-[0.35em] font-black mt-2">Pares Únicos</p>
           </div>
-          <div className="bg-gradient-to-br from-[#9B1C1C] to-[#631010] px-10 py-7 transition-all duration-500 shadow-2xl shadow-[#9B1C1C]/15 border border-[#9B1C1C]/25">
+          <div className="bg-gradient-to-br from-[var(--color-accent)] to-[#631010] px-10 py-7 transition-all duration-500 shadow-2xl shadow-[var(--color-accent)]/15 border border-[var(--color-accent)]/25">
             <span className="font-mono text-[8px] text-white/70 tracking-widest block uppercase">[Liquidación Activa]</span>
             <p className="text-white text-5xl font-black tracking-tight mt-1">70%</p>
             <p className="text-white/80 text-[9px] uppercase tracking-[0.35em] font-black mt-2">Dcto Máximo</p>
@@ -327,7 +327,7 @@ export default function HomeClient() {
       {/* ── SECCIÓN HOT DROPS — (Hot Drops subido levemente y botón explorar centrado) ──── */}
       <section className="bg-transparent relative overflow-hidden border-b border-white/5" style={{ paddingTop: "11rem", paddingBottom: "13rem" }}>
         {/* Glow decorativo de fondo */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#9B1C1C]/5 blur-[140px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/5 blur-[140px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10">
           {/* Spaced header with inline style mb-36 md:mb-56 */}
@@ -335,10 +335,10 @@ export default function HomeClient() {
             <div className="max-w-xl">
               <div className="flex items-center gap-3 mb-6">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#DC2626] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#DC2626]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--color-accent)]"></span>
                 </span>
-                <span className="text-[10px] font-black tracking-[0.5em] uppercase text-[#9C2020]">Inventario En Vivo — Cochabamba</span>
+                <span className="text-[10px] font-black tracking-[0.5em] uppercase text-[var(--color-accent)]">Inventario En Vivo — Cochabamba</span>
               </div>
               
               {/* Spaced Hot Drops Title (Subido levemente: mt-2 mb-10) */}
@@ -355,14 +355,14 @@ export default function HomeClient() {
             </div>
 
             {/* Glowing countdown box using animate-glow-pulse */}
-            <div className="glass-card p-8 md:p-10 border border-[#9B1C1C]/45 flex flex-col items-start gap-4 min-w-[310px] shadow-2xl backdrop-blur-xl animate-glow-pulse relative">
+            <div className="glass-card p-8 md:p-10 border border-[var(--color-accent)]/45 flex flex-col items-start gap-4 min-w-[310px] shadow-2xl backdrop-blur-xl animate-glow-pulse relative">
               <div className="corner-decor corner-tl" />
               <div className="corner-decor corner-tr" />
               <div className="corner-decor corner-bl" />
               <div className="corner-decor corner-br" />
               
-              <p className="text-[9px] font-black tracking-[0.45em] uppercase text-[#EF4444] flex items-center gap-2">
-                <Clock size={12} className="text-[#9B1C1C] animate-spin" /> Finaliza pronto
+              <p className="text-[9px] font-black tracking-[0.45em] uppercase text-[var(--color-accent-bright)] flex items-center gap-2">
+                <Clock size={12} className="text-[var(--color-accent)] animate-spin" /> Finaliza pronto
               </p>
               <CountdownTimer endHour={parseInt(sections.countdown_end_hour || "24", 10)} />
             </div>
@@ -411,13 +411,13 @@ export default function HomeClient() {
         
         {/* Artistic Light Effects */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent z-10" />
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#9B1C1C]/5 blur-[160px] rounded-full z-10 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-[var(--color-accent)]/5 blur-[160px] rounded-full z-10 pointer-events-none" />
 
         {/* Shifting container slightly right with 12% padding-left and break-words to prevent cut-off */}
         <div className="relative z-20 max-w-[1400px] mx-auto px-8 sm:px-16 md:px-24" style={{ paddingLeft: "12%" }}>
           <div className="max-w-2xl text-left break-words">
             <div className="inline-flex items-center gap-3 glass-card px-4 py-2 mb-8 rounded-none border-white/10">
-              <Diamond size={13} className="text-[#9B1C1C] animate-pulse" />
+              <Diamond size={13} className="text-[var(--color-accent)] animate-pulse" />
               <span className="text-white text-[9px] font-black tracking-[0.55em] uppercase">Edición Privada</span>
             </div>
             
@@ -449,8 +449,8 @@ export default function HomeClient() {
                 Acceder A La Bóveda
               </Link>
               <div className="w-full sm:w-auto text-center sm:text-left">
-                <p className="text-[#9B1C1C] text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center sm:justify-start gap-2 animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#9B1C1C]" />
+                <p className="text-[var(--color-accent)] text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center sm:justify-start gap-2 animate-pulse">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
                   12 Accesos disponibles hoy
                 </p>
               </div>
@@ -467,7 +467,7 @@ export default function HomeClient() {
             <h2 className="text-4xl md:text-6xl font-serif font-black uppercase tracking-tighter text-white">
               Colección por <span className="text-white/30 italic font-normal">Categoría</span>
             </h2>
-            <Link href="/productos" className="text-[10px] font-black tracking-[0.4em] uppercase text-[#9B1C1C] border-b border-[#9B1C1C]/30 pb-2 hover:text-white hover:border-white transition-all duration-300 w-fit">
+            <Link href="/productos" className="text-[10px] font-black tracking-[0.4em] uppercase text-[var(--color-accent)] border-b border-[var(--color-accent)]/30 pb-2 hover:text-white hover:border-white transition-all duration-300 w-fit">
               Ver Todo
             </Link>
           </div>
@@ -493,10 +493,10 @@ export default function HomeClient() {
                   
                   <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
                     <span className="font-mono text-[8px] text-white/40 block tracking-widest mb-1">0{i+1} / COLLECTION</span>
-                    <h3 className="text-white font-serif font-black text-lg md:text-xl uppercase tracking-tighter group-hover:text-[#9B1C1C] transition-colors">{c.name}</h3>
+                    <h3 className="text-white font-serif font-black text-lg md:text-xl uppercase tracking-tighter group-hover:text-[var(--color-accent)] transition-colors">{c.name}</h3>
                   </div>
                   
-                  <div className="absolute top-4 right-4 w-8 h-8 bg-[#9B1C1C] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 rounded-none">
+                  <div className="absolute top-4 right-4 w-8 h-8 bg-[var(--color-accent)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0 rounded-none">
                     <ArrowRight size={14} className="text-white" />
                   </div>
                 </Link>
@@ -509,12 +509,12 @@ export default function HomeClient() {
       {/* ── TESTIMONIOS OSCUROS — (Surgido arriba, centrado y recuadros más grandes/espaciados) ──── */}
       <section className="bg-transparent border-b border-white/5 relative overflow-hidden" style={{ paddingTop: "10rem", paddingBottom: "16rem" }}>
         {/* Muted background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#9B1C1C]/5 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-accent)]/5 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10">
           {/* Centered header title with mb-36 md:mb-56 */}
           <div className="text-center" style={{ marginBottom: "8rem" }}>
-            <span className="text-[#9B1C1C] text-[10px] font-black tracking-[0.55em] uppercase mb-4 block animate-pulse">Garantía Flores Studio</span>
+            <span className="text-[var(--color-accent)] text-[10px] font-black tracking-[0.55em] uppercase mb-4 block animate-pulse">Garantía Flores</span>
             <h2 className="text-4xl md:text-6xl font-serif font-black uppercase tracking-tighter text-white">Experiencia de Nuestros Compradores</h2>
           </div>
           
@@ -526,7 +526,7 @@ export default function HomeClient() {
             ].map((t, i) => (
               <div 
                 key={i} 
-                className="relative bg-[#0D0D0D] border border-white/10 p-10 md:p-14 shadow-2xl flex flex-col justify-between rounded-none hover:border-[#9B1C1C]/40 transition-all duration-500"
+                className="relative bg-[#0D0D0D] border border-white/10 p-10 md:p-14 shadow-2xl flex flex-col justify-between rounded-none hover:border-[var(--color-accent)]/40 transition-all duration-500"
                 style={{ minHeight: "340px" }}
               >
                 {/* Tech corner decorations for the cards */}
@@ -539,14 +539,14 @@ export default function HomeClient() {
                   {/* Verified Shoe Specs Header */}
                   <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-8 text-[9px] font-mono tracking-widest text-white/40 uppercase">
                     <span>[ COMPRA VERIFICADA ]</span>
-                    <span className="bg-[#9B1C1C]/20 text-[#FFC107] px-2 py-0.5 border border-[#9B1C1C]/40 font-bold">
+                    <span className="bg-[var(--color-accent)]/20 text-[#FFC107] px-2 py-0.5 border border-[var(--color-accent)]/40 font-bold">
                       {t.model} / T: {t.size}
                     </span>
                   </div>
                   
                   <div className="flex gap-2 mb-8">
                     {[...Array(t.rating)].map((_, j) => (
-                      <Star key={j} size={12} fill="#FFB300" className="text-[#FFB300]" />
+                      <Star key={j} size={12} fill="var(--color-accent)" className="text-[var(--color-accent)]" />
                     ))}
                   </div>
                   <p className="text-sm md:text-base text-white/80 leading-loose mb-10 font-medium italic tracking-wide">"{t.text}"</p>
@@ -576,19 +576,19 @@ export default function HomeClient() {
 
       {/* ── NEWSLETTER VIP — Spaced layout, design buttons (Espacio vertical masivo de 16rem) ── */}
       <section className="bg-[#0B0B0B] text-white border-b border-white/5 relative overflow-hidden" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
-        <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-[#9B1C1C]/5 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-[var(--color-accent)]/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
             
             {/* Spaced title and description */}
             <div className="space-y-8">
-              <span className="text-[#9B1C1C] text-xs font-black tracking-[0.45em] uppercase block">
+              <span className="text-[var(--color-accent)] text-xs font-black tracking-[0.45em] uppercase block">
                 Acceso Anticipado
               </span>
               <h2 className="text-5xl md:text-7xl font-serif font-black uppercase tracking-tighter leading-tight mt-6" style={{ marginBottom: "4rem" }}>
                 Únete a la<br />
-                <span className="text-[#9B1C1C] italic font-normal">Lista VIP</span>
+                <span className="text-[var(--color-accent)] italic font-normal">Lista VIP</span>
               </h2>
               <p className="text-white/50 text-sm md:text-base max-w-md leading-relaxed font-medium tracking-wide">
                 Recibe notificaciones de nuevos drops y liquidaciones exclusivas de calzado 24 horas antes que el público general. Los mejores pares siempre se agotan en minutos.
@@ -605,7 +605,7 @@ export default function HomeClient() {
                 <input
                   type="email"
                   placeholder="Tu correo electrónico"
-                  className="bg-transparent w-full text-white placeholder:text-white/30 text-xs font-semibold uppercase tracking-[0.15em] outline-none focus:border-[#9B1C1C] transition-colors"
+                  className="bg-transparent w-full text-white placeholder:text-white/30 text-xs font-semibold uppercase tracking-[0.15em] outline-none focus:border-[var(--color-accent)] transition-colors"
                 />
               </div>
               
@@ -627,10 +627,10 @@ export default function HomeClient() {
 
       {/* ── SECCIÓN REDES SOCIALES — Animadas, Tematizadas y Centradas ──────────────────── */}
       <section className="bg-[#0A0A0A] border-t border-white/5 relative overflow-hidden" style={{ paddingTop: "12rem", paddingBottom: "12rem" }}>
-        <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-[#9B1C1C]/5 blur-[150px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/5 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10 text-center">
-          <span className="text-[#9B1C1C] text-xs font-black tracking-[0.55em] uppercase block mb-4">Comunidad Flores Studio</span>
+          <span className="text-[var(--color-accent)] text-xs font-black tracking-[0.55em] uppercase block mb-4">Comunidad Flores</span>
           <h2 className="text-4xl md:text-6xl font-serif font-black uppercase tracking-tighter text-white mb-8">
             Conéctate con <span className="premium-gradient-text italic font-normal">Nosotros</span>
           </h2>
@@ -721,7 +721,7 @@ export default function HomeClient() {
             <div className="corner-decor corner-br" />
             
             {/* Top accent border */}
-            <div className="h-1.5 w-full bg-[#9B1C1C]" />
+            <div className="h-1.5 w-full bg-[var(--color-accent)]" />
             
             <div className="bg-gradient-to-b from-[#111111] to-[#0A0A0A] p-8 text-white text-center border-b border-white/5 relative">
               <div className="absolute top-4 right-4">
@@ -734,7 +734,7 @@ export default function HomeClient() {
               </div>
               <p className="text-[9px] font-black tracking-[0.45em] uppercase mb-3 text-white/50">Invitación Especial</p>
               <p className="text-5xl font-serif font-black tracking-tight text-white">10% OFF</p>
-              <p className="text-[10px] font-black tracking-[0.25em] mt-3 text-[#9B1C1C] uppercase">En tu primer pedido de liquidación</p>
+              <p className="text-[10px] font-black tracking-[0.25em] mt-3 text-[var(--color-accent)] uppercase">En tu primer pedido de liquidación</p>
             </div>
             
             <div className="p-8 text-center space-y-6">
@@ -747,7 +747,7 @@ export default function HomeClient() {
               <input
                 type="email"
                 placeholder="tu@correo.com"
-                className="w-full bg-[#111111] border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-[#9B1C1C] focus:bg-black transition-all rounded-none"
+                className="w-full bg-[#111111] border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-[var(--color-accent)] focus:bg-black transition-all rounded-none"
               />
               
               <button

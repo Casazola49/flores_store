@@ -16,12 +16,10 @@
  *      trapped in looping motion.
  *   3. NO YELLOW/ARIA — removed the gold `.premium-gradient-gold` (#FFE082 →
  *      #FFB300) which contradicted the "no amarillo Aria" brand decision.
- *      Residual: hardcoded `#FFB300` star ratings in HomeClient.tsx:687 and
- *      `Aria Liquidación` copy in (store)/page.tsx metadata are tracked for
- *      Fase B migration to `var(--color-accent)`.
+ *      Fase B: fuentes vía next/font (sin @import) y los residuos
+ *      `#FFB300` stars + copy `Aria Liquidación` migrados a `var(--color-accent)`.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -38,8 +36,7 @@
   --color-accent-bright: #C1272D;
   --color-accent-light: #FEE2E2;
 
-  --font-serif: 'Playfair Display', 'Georgia', serif;
-  --font-sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+  /* --font-serif / --font-sans now provided by next/font (see app/layout.tsx) */
 
   /* Architecture: sharp — zero radius everywhere */
   --radius-none: 0px;

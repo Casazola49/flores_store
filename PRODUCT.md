@@ -42,9 +42,11 @@ Marca propia **Flores** (crimson, mujer-first) frente a la competencia de liquid
 
 - **Mujer-first pero unisex**: la nav destaca Mujer; el catálogo cubre toda la familia.
 - **Paleta Flores Crimson**: `--color-accent: #9B1C1C` es el principal. **Prohibido el amarillo Aria** (`#FFD700` / `#FFB300`). Anti-referencia explícita: arialiquidacion.com.
-- **Tipografía**: DM Sans (body) + Playfair Display (display acento, solo headlines premium, máx. 1–2 por página). Decisión de migrar a `next/font` (swap) en Fase B.
+- **Tipografía**: DM Sans (body) + Playfair Display (display acento, solo headlines premium, máx. 1–2 por página). Fuentes migradas a `next/font` (swap) en Fase B.
 - **Radius 0** en todos los componentes (lenguaje visual sharp).
 - **Persuasión ética obligatoria**: urgencia real (countdown de oferta real), escasez real (stock real), social proof verificado, precio ancla transparente. **Prohibido**: costos ocultos, trick questions, confirmshaming, forced continuity.
+
+- **Claim de urgencia honesta**: la comunicación de liquidación/escasez es real y verificable (stock limitado, precios de liquidación verificados, envíos ~48h a todo Bolivia). Nunca se presenta "Aria Liquidación" como marca propia; es anti-referencia de la competencia de liquidación amarilla.
 
 ## Evidence on Hand
 

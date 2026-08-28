@@ -1,5 +1,5 @@
 ---
-name: Flores Store — Flores Crimson
+name: Flores — Flores Crimson
 description: Sistema de diseño editorial crimson, mujer-first y unisex, para e-commerce de calzado premium-accesible.
 colors:
   primary: "#0A0A0A"
@@ -49,7 +49,7 @@ components:
     padding: "16px 36px"
 ---
 
-# Design System: Flores Store — Flores Crimson
+# Design System: Flores — Flores Crimson
 
 ## Overview
 
@@ -106,7 +106,7 @@ Paleta de un acento (carmín) sobre neutros fríos. Sin amarillo, sin beige cál
 ### Named Rules
 **The One-Voice Rule (type).** Playfair Display solo en headlines premium, máximo 1–2 por página. El cuerpo siempre es DM Sans.
 
-> Fase B: migrar la carga de fuentes a `next/font` (DM Sans + Playfair Display) con `display: swap` para eliminar el `@import` render-blocking y acercarse al presupuesto de ~120kB.
+> Fuentes cargadas vía next/font (DM Sans + Playfair Display) con display: swap — el @import render-blocking de Google Fonts se eliminó en Fase B y el sitio se acerca al presupuesto de ~120kB.
 
 ## Layout
 
@@ -153,7 +153,7 @@ Lenguaje **sharp**: todos los radios son `0px` (`--radius-none/sm/md/lg` = 0). B
 ## Do's and Don'ts
 
 ### Do:
-- **Do** consumir siempre los tokens (`var(--color-accent)`, `var(--color-surface)`…) — nunca hardcodees hex en componentes (Fase B: migrar `text-[#9B1C1C]` → token).
+- **Do** consumir siempre los tokens (`var(--color-accent)`, `var(--color-surface)`…) — nunca hardcodees hex en componentes (migrado a token en Fase B).
 - **Do** usa el carmín con disciplina (≤10% de pantalla) y el hueso frío `#F5F3EF` para superficies.
 - **Do** mantén radius 0 en todo lo nuevo.
 - **Do** respeta `prefers-reduced-motion`: el sitio ya desactiva animaciones infinitas y smooth-scroll bajo esa preferencia.
@@ -161,7 +161,7 @@ Lenguaje **sharp**: todos los radios son `0px` (`--radius-none/sm/md/lg` = 0). B
 - **Do** usa Playfair Display solo en 1–2 headlines premium por página.
 
 ### Don't:
-- **Don't** uses amarillo/dorado (`#FFD700`, `#FFB300`) — anti-referencia Aria. (Residual conocido: stars `#FFB300` en `HomeClient.tsx:687` → migrar a `var(--color-accent)` en Fase B.)
+- **Don't** uses amarillo/dorado (`#FFD700`, `#FFB300`) — anti-referencia Aria. (Residual conocido: stars `#FFB300` en `HomeClient.tsx:687` → migrado a `var(--color-accent)` en Fase B.)
 - **Don't** implementes dark patterns: sin costos ocultos, sin trick questions, sin confirmshaming, sin forced continuity.
 - **Don't** inventes urgencia/escasez: countdown solo si la oferta es real (fecha fin real); stock solo del CMS real; social proof solo verificado; precio tachado solo si fue el precio real (precio ancla transparente).
 - **Don't** uses parallax pesado; la Opción A "Cine Sutil" es 1 hero video + hover-video en cards + reveals suaves.
