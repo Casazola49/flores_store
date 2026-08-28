@@ -84,7 +84,7 @@ Paleta de un acento (carmín) sobre neutros fríos. Sin amarillo, sin beige cál
 - **Text Muted** (`#6B6B6B`): texto secundario (≈5.6:1 sobre blanco, pasa AA).
 
 ### Named Rules
-**The No-Yellow Rule.** El amarillo Aria (`#FFD700` / `#FFB300`) nunca aparece. Es anti-referencia de la competencia de liquidación barata. Cualquier uso de dorado/amarillo es un bug de marca.
+**The No-Yellow Rule.** El amarillo Aria (`#FFD700` / `#FFB300` / `#FFC107`) nunca aparece. Es anti-referencia de la competencia de liquidación barata. Cualquier uso de dorado/amarillo es un bug de marca.
 
 **The One-Voice Rule.** El acento carmín ocupa ≤10% de cada pantalla. Su rareza es el punto: donde aparece, importa.
 
@@ -161,7 +161,7 @@ Lenguaje **sharp**: todos los radios son `0px` (`--radius-none/sm/md/lg` = 0). B
 - **Do** usa Playfair Display solo en 1–2 headlines premium por página.
 
 ### Don't:
-- **Don't** uses amarillo/dorado (`#FFD700`, `#FFB300`) — anti-referencia Aria. (Residual conocido: stars `#FFB300` en `HomeClient.tsx:687` → migrado a `var(--color-accent)` en Fase B.)
+- **Don't** uses amarillo/dorado (`#FFD700`, `#FFB300`, `#FFC107`) — anti-referencia Aria. (Residuales ya migrados a token en Fase B/C — sin amarillos sueltos: stars `#FFB300` en `HomeClient.tsx` → `var(--color-accent)`; badge modelo/talla testimonios `#FFC107` en `HomeClient.tsx` → `var(--color-accent-light)` con texto `var(--color-text)`.)
 - **Don't** implementes dark patterns: sin costos ocultos, sin trick questions, sin confirmshaming, sin forced continuity.
 - **Don't** inventes urgencia/escasez: countdown solo si la oferta es real (fecha fin real); stock solo del CMS real; social proof solo verificado; precio tachado solo si fue el precio real (precio ancla transparente).
 - **Don't** uses parallax pesado; la Opción A "Cine Sutil" es 1 hero video + hover-video en cards + reveals suaves.

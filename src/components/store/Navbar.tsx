@@ -10,14 +10,14 @@ const MAIN_NAV = [
     name: "🔥 Drops",
     href: "/productos?is_new=true",
     badge: "NUEVO",
-    badgeColor: "#DC2626",
+    badgeColor: "var(--color-accent)",
     description: "Lo más fresco, antes que todos",
   },
   {
     name: "⏳ Últimas Tallas",
     href: "/productos?sale=true",
     badge: "URGENTE",
-    badgeColor: "#9B1C1C",
+    badgeColor: "var(--color-accent)",
     description: "Stock crítico — Se acaba hoy",
   },
   {
@@ -61,10 +61,10 @@ export default function Navbar() {
 
   // Explicit text color class based on state (fixes dark red/black text color on dark hero)
   const linkColorClass = scrolled || mobileOpen
-    ? "text-neutral-800 hover:text-[#9B1C1C]"
+    ? "text-neutral-800 hover:text-[var(--color-accent)]"
     : "text-white/80 hover:text-white";
 
-  const logoColor = scrolled || mobileOpen ? "#0A0A0A" : "#FFFFFF";
+  const logoColor = scrolled || mobileOpen ? "var(--color-text)" : "var(--color-bg)";
 
   return (
     <>
@@ -81,7 +81,7 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             className={`md:hidden p-2 -ml-2 transition-colors ${
-              scrolled || mobileOpen ? "text-[#0A0A0A]" : "text-white"
+              scrolled || mobileOpen ? "text-[var(--color-text)]" : "text-white"
             }`}
             onClick={() => setMobileOpen(v => !v)}
             aria-label="Menú"
@@ -97,7 +97,7 @@ export default function Navbar() {
                   href={link.href}
                   className={`flex items-center gap-1.5 text-[10px] font-black tracking-[0.15em] uppercase transition-all duration-300 whitespace-nowrap px-4 py-2 border rounded-none ${
                     scrolled || mobileOpen
-                      ? "border-neutral-200 text-neutral-800 hover:border-[#9B1C1C] hover:text-[#9B1C1C] hover:bg-[#9B1C1C]/5"
+                      ? "border-neutral-200 text-neutral-800 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/5"
                       : "border-white/10 text-white/80 hover:border-white hover:text-white hover:bg-white/5"
                   }`}
                 >
@@ -121,7 +121,7 @@ export default function Navbar() {
             className="absolute left-1/2 -translate-x-1/2 font-serif font-black text-3xl md:text-[2rem] tracking-tighter uppercase transition-all duration-500"
             style={{ color: logoColor }}
           >
-            Flores<span style={{ color: "#9B1C1C" }}>.</span>
+            Flores<span style={{ color: "var(--color-accent)" }}>.</span>
           </Link>
 
           {/* Right side */}
@@ -134,7 +134,7 @@ export default function Navbar() {
                   href={link.href}
                   className={`text-[10px] font-bold tracking-[0.25em] uppercase transition-all duration-300 whitespace-nowrap px-4 py-2 border rounded-none ${
                     scrolled || mobileOpen
-                      ? "border-neutral-200 text-neutral-800 hover:border-[#9B1C1C] hover:text-[#9B1C1C] hover:bg-[#9B1C1C]/5"
+                      ? "border-neutral-200 text-neutral-800 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/5"
                       : "border-white/10 text-white/80 hover:border-white hover:text-white hover:bg-white/5"
                   }`}
                 >
@@ -147,13 +147,13 @@ export default function Navbar() {
             <button
               onClick={openCart}
               className={`relative flex items-center transition-all duration-300 hover:scale-105 ${
-                scrolled || mobileOpen ? "text-[#0A0A0A] hover:text-[#9B1C1C]" : "text-white/80 hover:text-white"
+                scrolled || mobileOpen ? "text-[var(--color-text)] hover:text-[var(--color-accent)]" : "text-white/80 hover:text-white"
               }`}
               aria-label="Carrito"
             >
               <ShoppingBag size={20} strokeWidth={1.5} />
               {totalItems() > 0 && (
-                <span className="absolute -top-2 -right-3 bg-[#9B1C1C] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full">
+                <span className="absolute -top-2 -right-3 bg-[var(--color-accent)] text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full">
                   {totalItems()}
                 </span>
               )}
@@ -164,11 +164,11 @@ export default function Navbar() {
 
       {/* Mobile Fullscreen Menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-[49] bg-[#0A0A0A] text-white flex flex-col overflow-y-auto"
+        <div className="fixed inset-0 z-[49] bg-[var(--color-text)] text-white flex flex-col overflow-y-auto"
           style={{ paddingTop: "calc(36px + 64px)" }}>
           <div className="flex flex-col px-8 py-12 gap-0">
             {/* Priority links */}
-            <p className="text-[9px] font-bold tracking-[0.4em] uppercase text-[#9B1C1C] mb-8">
+            <p className="text-[9px] font-bold tracking-[0.4em] uppercase text-[var(--color-accent)] mb-8">
               Comprar Ahora
             </p>
             {MAIN_NAV.map((link) => (
@@ -179,7 +179,7 @@ export default function Navbar() {
                 className="group flex items-center justify-between py-6 border-b border-white/5"
               >
                 <div>
-                  <span className="text-3xl font-serif font-black tracking-tighter group-hover:text-[#9B1C1C] transition-colors">
+                  <span className="text-3xl font-serif font-black tracking-tighter group-hover:text-[var(--color-accent)] transition-colors">
                     {link.name}
                   </span>
                   <p className="text-xs text-white/40 mt-1 font-medium">{link.description}</p>

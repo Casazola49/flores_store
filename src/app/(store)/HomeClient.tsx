@@ -83,11 +83,11 @@ function CountdownTimer({ endHour = 24 }: { endHour?: number }) {
   if (!mounted) {
     return (
       <div className="flex items-center gap-2.5 font-mono">
-        <span className="bg-[#121212] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
         <span className="text-white/30 font-black text-xl">:</span>
-        <span className="bg-[#121212] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
         <span className="text-white/30 font-black text-xl">:</span>
-        <span className="bg-[#121212] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
       </div>
     );
   }
@@ -97,7 +97,7 @@ function CountdownTimer({ endHour = 24 }: { endHour?: number }) {
     <div className="flex items-center gap-2.5 font-mono">
       {[pad(time.h), pad(time.m), pad(time.s)].map((v, i) => (
         <span key={i} className="flex items-center gap-2.5">
-          <span className="bg-black border border-[var(--color-accent)]/40 text-[var(--color-accent-bright)] text-xl md:text-2xl font-black px-3.5 py-2.5 min-w-[3.2rem] text-center rounded-none shadow-inner shadow-black/80 drop-shadow-[0_0_8px_rgba(239,68,68,0.35)]">
+          <span className="bg-black border border-[var(--color-accent)]/40 text-[var(--color-accent-bright)] text-xl md:text-2xl font-black px-3.5 py-2.5 min-w-[3.2rem] text-center rounded-none shadow-inner shadow-black/80 drop-shadow-[0_0_8px_rgba(155,28,28,0.35)]">
             {v}
           </span>
           {i < 2 && <span className="text-[var(--color-accent)] font-black text-xl animate-pulse">:</span>}
@@ -150,10 +150,10 @@ export default function HomeClient() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#0A0A0A] bg-luxury-grid overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-[var(--color-text)] bg-luxury-grid overflow-hidden">
 
       {/* ── HERO CINEMÁTICO RESPONSIVO ───────────────────────── */}
-      <section className="relative min-h-[95vh] md:min-h-screen w-full bg-[#0A0A0A] flex items-center overflow-hidden border-b border-white/5">
+      <section className="relative min-h-[95vh] md:min-h-screen w-full bg-[var(--color-text)] flex items-center overflow-hidden border-b border-white/5">
         {/* Render dynamic banners or global fallback */}
         {banners.length > 0 ? (
           banners.map((b, idx) => {
@@ -182,8 +182,8 @@ export default function HomeClient() {
             )}
 
             {/* Cinematic Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-text)] via-[var(--color-text)]/40 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-text)] via-[var(--color-text)]/60 to-transparent z-10" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))] z-10" />
 
         {/* Spaced Hero Container padding */}
@@ -303,8 +303,8 @@ export default function HomeClient() {
 
       {/* ── BRAND TICKER CON IMÁGENES (Mucho más ancho, logos con padding-x masivo, y mas grande) ── */}
       <div className="bg-black/95 overflow-hidden border-y border-white/5 relative z-10" style={{ paddingTop: "8rem", paddingBottom: "8rem" }}>
-        <div className="absolute left-0 top-0 bottom-0 w-64 bg-gradient-to-r from-[#0A0A0A] to-transparent z-20 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[#0A0A0A] to-transparent z-20 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-64 bg-gradient-to-r from-[var(--color-text)] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[var(--color-text)] to-transparent z-20 pointer-events-none" />
         
         <div className="flex animate-ticker whitespace-nowrap gap-0 items-center">
           {[...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS].map((logo, i) => (
@@ -401,7 +401,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── BÓVEDA VIP (Corregido alineación a la derecha e inline styles) ────────────── */}
-      <section className="relative overflow-hidden bg-[#0A0A0A] border-y border-white/5" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
+      <section className="relative overflow-hidden bg-[var(--color-text)] border-y border-white/5" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
             <VideoBanner
               src={sections.vip_vault_video_url}
               poster="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1600"
@@ -410,7 +410,7 @@ export default function HomeClient() {
             />
         
         {/* Artistic Light Effects */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/95 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-text)] via-[var(--color-text)]/95 to-transparent z-10" />
         <div className="absolute top-0 right-0 w-1/2 h-full bg-[var(--color-accent)]/5 blur-[160px] rounded-full z-10 pointer-events-none" />
 
         {/* Shifting container slightly right with 12% padding-left and break-words to prevent cut-off */}
@@ -526,7 +526,7 @@ export default function HomeClient() {
             ].map((t, i) => (
               <div 
                 key={i} 
-                className="relative bg-[#0D0D0D] border border-white/10 p-10 md:p-14 shadow-2xl flex flex-col justify-between rounded-none hover:border-[var(--color-accent)]/40 transition-all duration-500"
+                className="relative bg-[var(--color-dark-surface)] border border-white/10 p-10 md:p-14 shadow-2xl flex flex-col justify-between rounded-none hover:border-[var(--color-accent)]/40 transition-all duration-500"
                 style={{ minHeight: "340px" }}
               >
                 {/* Tech corner decorations for the cards */}
@@ -539,7 +539,7 @@ export default function HomeClient() {
                   {/* Verified Shoe Specs Header */}
                   <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-8 text-[9px] font-mono tracking-widest text-white/40 uppercase">
                     <span>[ COMPRA VERIFICADA ]</span>
-                    <span className="bg-[var(--color-accent)]/20 text-[#FFC107] px-2 py-0.5 border border-[var(--color-accent)]/40 font-bold">
+                    <span className="bg-[var(--color-accent-light)] text-[var(--color-text)] px-2 py-0.5 border border-[var(--color-accent)]/40 font-bold">
                       {t.model} / T: {t.size}
                     </span>
                   </div>
@@ -575,7 +575,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── NEWSLETTER VIP — Spaced layout, design buttons (Espacio vertical masivo de 16rem) ── */}
-      <section className="bg-[#0B0B0B] text-white border-b border-white/5 relative overflow-hidden" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
+      <section className="bg-[var(--color-dark-surface)] text-white border-b border-white/5 relative overflow-hidden" style={{ paddingTop: "16rem", paddingBottom: "16rem" }}>
         <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-[var(--color-accent)]/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10">
@@ -626,7 +626,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── SECCIÓN REDES SOCIALES — Animadas, Tematizadas y Centradas ──────────────────── */}
-      <section className="bg-[#0A0A0A] border-t border-white/5 relative overflow-hidden" style={{ paddingTop: "12rem", paddingBottom: "12rem" }}>
+      <section className="bg-[var(--color-text)] border-t border-white/5 relative overflow-hidden" style={{ paddingTop: "12rem", paddingBottom: "12rem" }}>
         <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/5 blur-[150px] rounded-full pointer-events-none" />
         
         <div className="max-w-[1400px] mx-auto px-6 relative z-10 text-center">
@@ -644,7 +644,7 @@ export default function HomeClient() {
               href={`https://wa.me/${sections.whatsapp_number || "59176932485"}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative bg-[#0D0D0D] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-emerald-500/40 hover:shadow-[0_15px_35px_rgba(16,185,129,0.15)] rounded-none"
+              className="group relative bg-[var(--color-dark-surface)] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-emerald-500/40 hover:shadow-[0_15px_35px_rgba(16,185,129,0.15)] rounded-none"
             >
               <div className="corner-decor corner-tl" />
               <div className="corner-decor corner-tr" />
@@ -661,7 +661,7 @@ export default function HomeClient() {
               href={sections.social_facebook || "https://facebook.com"}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative bg-[#0D0D0D] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-blue-500/40 hover:shadow-[0_15px_35px_rgba(59,130,246,0.15)] rounded-none"
+              className="group relative bg-[var(--color-dark-surface)] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-blue-500/40 hover:shadow-[0_15px_35px_rgba(59,130,246,0.15)] rounded-none"
             >
               <div className="corner-decor corner-tl" />
               <div className="corner-decor corner-tr" />
@@ -678,7 +678,7 @@ export default function HomeClient() {
               href={sections.social_instagram || "https://instagram.com"}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative bg-[#0D0D0D] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-pink-500/40 hover:shadow-[0_15px_35px_rgba(236,72,153,0.15)] rounded-none"
+              className="group relative bg-[var(--color-dark-surface)] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-pink-500/40 hover:shadow-[0_15px_35px_rgba(236,72,153,0.15)] rounded-none"
             >
               <div className="corner-decor corner-tl" />
               <div className="corner-decor corner-tr" />
@@ -695,7 +695,7 @@ export default function HomeClient() {
               href={sections.social_tiktok || "https://tiktok.com"}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative bg-[#0D0D0D] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-cyan-400/40 hover:shadow-[0_15px_35px_rgba(34,211,238,0.15)] rounded-none"
+              className="group relative bg-[var(--color-dark-surface)] border border-white/10 p-10 flex flex-col items-center justify-center gap-4 transition-all duration-500 hover:-translate-y-2 hover:border-cyan-400/40 hover:shadow-[0_15px_35px_rgba(34,211,238,0.15)] rounded-none"
             >
               <div className="corner-decor corner-tl" />
               <div className="corner-decor corner-tr" />
@@ -713,7 +713,7 @@ export default function HomeClient() {
       {/* ── EMAIL POPUP — Premium Dark ─────────── */}
       {popupVisible && (
         <div className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-[#0A0A0A] border border-white/10 max-w-md w-full relative overflow-hidden animate-slide-down rounded-none shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)]">
+          <div className="bg-[var(--color-text)] border border-white/10 max-w-md w-full relative overflow-hidden animate-slide-down rounded-none shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)]">
             
             <div className="corner-decor corner-tl" />
             <div className="corner-decor corner-tr" />
@@ -723,7 +723,7 @@ export default function HomeClient() {
             {/* Top accent border */}
             <div className="h-1.5 w-full bg-[var(--color-accent)]" />
             
-            <div className="bg-gradient-to-b from-[#111111] to-[#0A0A0A] p-8 text-white text-center border-b border-white/5 relative">
+            <div className="bg-gradient-to-b from-[var(--color-dark-surface)] to-[var(--color-text)] p-8 text-white text-center border-b border-white/5 relative">
               <div className="absolute top-4 right-4">
                 <button 
                   onClick={dismissPopup}
@@ -747,7 +747,7 @@ export default function HomeClient() {
               <input
                 type="email"
                 placeholder="tu@correo.com"
-                className="w-full bg-[#111111] border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-[var(--color-accent)] focus:bg-black transition-all rounded-none"
+                className="w-full bg-[var(--color-dark-surface)] border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-[var(--color-accent)] focus:bg-black transition-all rounded-none"
               />
               
               <button

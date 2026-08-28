@@ -20,7 +20,7 @@ export default function Footer() {
     : displayWa;
 
   return (
-    <footer className="bg-[#0A0A0A] text-white pt-24 pb-12 border-t border-white/5 relative z-10">
+    <footer className="bg-[var(--color-text)] text-white pt-24 pb-12 border-t border-white/5 relative z-10">
       <div className="max-w-[1400px] mx-auto px-6">
 
         {/* Virtues Section (Trust Signals) - Large cards with shoe watermarks and hover animations */}
@@ -36,7 +36,7 @@ export default function Footer() {
           ].map((item, i) => (
             <div 
               key={i} 
-              className="group relative bg-[#0D0D0D] border border-white/10 p-10 min-h-[220px] shadow-xl flex flex-col justify-between items-start hover:border-[#9B1C1C]/40 hover:scale-[1.03] hover:shadow-[0_15px_35px_rgba(155,28,28,0.15)] transition-all duration-500 rounded-none overflow-hidden"
+              className="group relative bg-[var(--color-dark-surface)] border border-white/10 p-10 min-h-[220px] shadow-xl flex flex-col justify-between items-start hover:border-[var(--color-accent)]/40 hover:scale-[1.03] hover:shadow-[0_15px_35px_rgba(155,28,28,0.15)] transition-all duration-500 rounded-none overflow-hidden"
             >
               {/* Tech corner decorations for cards */}
               <div className="corner-decor corner-tl" />
@@ -45,7 +45,7 @@ export default function Footer() {
               <div className="corner-decor corner-br" />
               
               {/* Giant transparent shoe/virtue watermark */}
-              <span className="absolute bottom-4 right-6 text-[52px] font-black font-sans text-white/[0.015] group-hover:text-[#9B1C1C]/5 transition-colors duration-500 select-none pointer-events-none">
+              <span className="absolute bottom-4 right-6 text-[52px] font-black font-sans text-white/[0.015] group-hover:text-[var(--color-accent)]/5 transition-colors duration-500 select-none pointer-events-none">
                 {item.watermark}
               </span>
               
@@ -65,7 +65,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="space-y-8 lg:col-span-1">
             <h3 className="text-4xl font-serif font-black tracking-tighter uppercase">
-              Flores<span className="text-[#9B1C1C]">.</span>
+              Flores<span className="text-[var(--color-accent)]">.</span>
             </h3>
             {/* Muted regular sentence instead of crowded uppercase sentence */}
             <p className="text-white/50 text-xs font-medium tracking-wide leading-relaxed max-w-xs">
@@ -89,7 +89,7 @@ export default function Footer() {
                 <li key={l.label}>
                   <Link 
                     href={l.href} 
-                    className="text-xs font-semibold tracking-[0.18em] text-white/60 hover:text-[#9B1C1C] transition-colors duration-300 uppercase"
+                    className="text-xs font-semibold tracking-[0.18em] text-white/60 hover:text-[var(--color-accent)] transition-colors duration-300 uppercase"
                   >
                     {l.label}
                   </Link>
@@ -113,7 +113,7 @@ export default function Footer() {
                 <li key={l.label}>
                   <Link 
                     href={l.href} 
-                    className="text-xs font-semibold tracking-[0.18em] text-white/60 hover:text-[#9B1C1C] transition-colors duration-300 uppercase"
+                    className="text-xs font-semibold tracking-[0.18em] text-white/60 hover:text-[var(--color-accent)] transition-colors duration-300 uppercase"
                   >
                     {l.label}
                   </Link>
@@ -128,10 +128,10 @@ export default function Footer() {
             <ul className="space-y-6 text-xs font-semibold tracking-[0.18em] text-white/60 uppercase">
               <li>Cochabamba & Santa Cruz, Bolivia</li>
               <li>
-                <a href={`tel:${rawWa}`} className="hover:text-[#9B1C1C] transition-colors duration-300">{formattedWa}</a>
+                <a href={`tel:${rawWa}`} className="hover:text-[var(--color-accent)] transition-colors duration-300">{formattedWa}</a>
               </li>
               <li>
-                <a href="mailto:ventas@floresbolivia.com" className="hover:text-[#9B1C1C] transition-colors duration-300 lowercase font-medium">ventas@floresbolivia.com</a>
+                <a href="mailto:ventas@floresbolivia.com" className="hover:text-[var(--color-accent)] transition-colors duration-300 lowercase font-medium">ventas@floresbolivia.com</a>
               </li>
             </ul>
             
@@ -141,7 +141,7 @@ export default function Footer() {
                 {PAYMENT_METHODS.map(m => (
                   <span 
                     key={m} 
-                    className="relative bg-black border border-white/10 text-white/50 text-[9.5px] uppercase font-bold tracking-wider px-3.5 py-2 hover:border-[#9B1C1C]/45 hover:text-white transition-colors duration-300"
+                    className="relative bg-black border border-white/10 text-white/50 text-[9.5px] uppercase font-bold tracking-wider px-3.5 py-2 hover:border-[var(--color-accent)]/45 hover:text-white transition-colors duration-300"
                   >
                     <div className="corner-decor corner-tl" />
                     <div className="corner-decor corner-br" />

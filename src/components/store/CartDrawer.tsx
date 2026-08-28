@@ -132,7 +132,7 @@ export default function CartDrawer() {
                   </div>
                   <button
                     onClick={closeCart}
-                    className="text-xs tracking-widest uppercase border-b border-black pb-1 hover:text-[#9B1C1C] hover:border-[#9B1C1C] transition-all font-bold"
+                    className="text-xs tracking-widest uppercase border-b border-black pb-1 hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-all font-bold"
                   >
                     Ver Colección →
                   </button>
@@ -214,7 +214,7 @@ export default function CartDrawer() {
                 {/* CTA */}
                 <button
                   onClick={() => setStep("checkout")}
-                  className="w-full bg-[#9B1C1C] text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#7f1d1d] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-red-900/20"
+                  className="w-full bg-[var(--color-accent)] text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#7f1d1d] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-red-900/20"
                 >
                   Completar Pedido <ArrowRight size={14} />
                 </button>
@@ -255,7 +255,7 @@ export default function CartDrawer() {
                 </div>
                 <div className="border-t border-gray-200 mt-3 pt-3 flex justify-between">
                   <span className="text-xs font-bold text-gray-600">Total</span>
-                  <span className="text-sm font-black text-[#9B1C1C]">Bs. {subtotal().toFixed(0)}</span>
+                  <span className="text-sm font-black text-[var(--color-accent)]">Bs. {subtotal().toFixed(0)}</span>
                 </div>
               </div>
 
@@ -269,7 +269,7 @@ export default function CartDrawer() {
                     placeholder="Ej. María González"
                     value={customer.name}
                     onChange={e => setCustomer({ ...customer, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#9B1C1C] transition-colors font-semibold"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                   />
                 </div>
 
@@ -281,7 +281,7 @@ export default function CartDrawer() {
                     placeholder="Ej. 70000000"
                     value={customer.phone}
                     onChange={e => setCustomer({ ...customer, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#9B1C1C] transition-colors font-semibold"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                   />
                 </div>
 
@@ -293,7 +293,7 @@ export default function CartDrawer() {
                     placeholder="Ej. La Paz, Cochabamba, Santa Cruz..."
                     value={customer.city}
                     onChange={e => setCustomer({ ...customer, city: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#9B1C1C] transition-colors font-semibold"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                   />
                 </div>
 
@@ -305,7 +305,7 @@ export default function CartDrawer() {
                       onClick={() => setCustomer({ ...customer, deliveryType: "envio" })}
                       className={`py-3 px-4 rounded-xl border-2 text-xs font-black uppercase transition-all ${
                         customer.deliveryType === "envio"
-                          ? "border-[#9B1C1C] bg-[#9B1C1C] text-white"
+                          ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
                           : "border-gray-200 text-gray-600 hover:border-gray-300"
                       }`}
                     >
@@ -316,7 +316,7 @@ export default function CartDrawer() {
                       onClick={() => setCustomer({ ...customer, deliveryType: "retiro" })}
                       className={`py-3 px-4 rounded-xl border-2 text-xs font-black uppercase transition-all ${
                         customer.deliveryType === "retiro"
-                          ? "border-[#9B1C1C] bg-[#9B1C1C] text-white"
+                          ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
                           : "border-gray-200 text-gray-600 hover:border-gray-300"
                       }`}
                     >
@@ -333,7 +333,7 @@ export default function CartDrawer() {
                       placeholder="Ej. Av. Arce 1234, Zona Central"
                       value={customer.address}
                       onChange={e => setCustomer({ ...customer, address: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#9B1C1C] transition-colors font-semibold"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                     />
                   </div>
                 )}

@@ -18,8 +18,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "FLORES. | Calzados, Botas y Billeteras",
-  description: "La mejor selección de botas, billeteras y calzados de alta calidad en Bolivia. Envíos a todo el país.",
+  title: "Flores | Calzado Premium para Toda la Familia",
+  description: "Últimas tallas en botas, tacos y zapatillas. Liquidación real con stock limitado y envíos 48h a todo Bolivia.",
 };
 
 export default function RootLayout({
