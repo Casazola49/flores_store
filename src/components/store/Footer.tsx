@@ -75,7 +75,7 @@ export default function Footer() {
 
           {/* Catalog */}
           <div>
-            <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-8 text-white/30">[ Catálogo ]</h4>
+            <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-8 text-white/60">[ Catálogo ]</h4>
             {/* Spaced links list (space-y-6) */}
             <ul className="space-y-6">
               {[
@@ -100,7 +100,7 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-8 text-white/30">[ Ayuda ]</h4>
+            <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-8 text-white/60">[ Ayuda ]</h4>
             {/* Spaced links list (space-y-6) */}
             <ul className="space-y-6">
               {[
@@ -124,7 +124,7 @@ export default function Footer() {
 
           {/* Contact & Payment */}
           <div>
-            <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-8 text-white/30">[ Contacto ]</h4>
+            <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-8 text-white/60">[ Contacto ]</h4>
             <ul className="space-y-6 text-xs font-semibold tracking-[0.18em] text-white/60 uppercase">
               <li>Cochabamba & Santa Cruz, Bolivia</li>
               <li>
@@ -136,7 +136,7 @@ export default function Footer() {
             </ul>
             
             <div className="mt-12 animate-pulse-red">
-              <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-6 text-white/30">[ Métodos de Pago ]</h4>
+              <h4 className="text-[10px] tracking-[0.4em] font-black uppercase mb-6 text-white/60">[ Métodos de Pago ]</h4>
               <div className="flex flex-wrap gap-2.5">
                 {PAYMENT_METHODS.map(m => (
                   <span 
@@ -153,7 +153,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-10 flex flex-col md:flex-row items-center justify-between gap-6 text-[9.5px] font-bold tracking-[0.25em] uppercase text-white/30">
+        <div className="border-t border-white/10 pt-10 flex flex-col md:flex-row items-center justify-between gap-6 text-[9.5px] font-bold tracking-[0.25em] uppercase text-white/60">
           <p>© {new Date().getFullYear()} Flores Bolivia. Todos los derechos reservados.</p>
           <div className="flex gap-8">
             <Link href="/privacidad" className="hover:text-white/60 transition-colors duration-300">Privacidad</Link>

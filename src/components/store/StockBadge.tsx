@@ -11,16 +11,16 @@ export function StockBadge({ stock }: { stock: number }) {
   }
   if (stock <= 2) {
     return (
-      <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-wider text-[#EF4444] animate-pulse">
-        <span className="w-2 h-2 rounded-full bg-[#EF4444] inline-block shadow-[0_0_10px_#EF4444]" />
+      <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-wider text-[var(--color-accent)] animate-pulse">
+        <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] inline-block shadow-[0_0_10px_var(--color-accent)]" />
         ¡Último par restante!
       </span>
     );
   }
   if (stock <= 5) {
     return (
-      <span className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider text-amber-500">
-        <span className="w-2 h-2 rounded-full bg-amber-500 inline-block shadow-[0_0_8px_#F59E0B]" />
+      <span className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider text-[var(--color-accent)]">
+        <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] inline-block shadow-[0_0_8px_var(--color-accent)]" />
         Pocas unidades
       </span>
     );

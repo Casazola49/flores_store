@@ -83,11 +83,11 @@ function CountdownTimer({ endHour = 24 }: { endHour?: number }) {
   if (!mounted) {
     return (
       <div className="flex items-center gap-2.5 font-mono">
-        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
-        <span className="text-white/30 font-black text-xl">:</span>
-        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
-        <span className="text-white/30 font-black text-xl">:</span>
-        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/30 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/60 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="text-white/60 font-black text-xl">:</span>
+        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/60 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
+        <span className="text-white/60 font-black text-xl">:</span>
+        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/60 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
       </div>
     );
   }
@@ -426,7 +426,7 @@ export default function HomeClient() {
               className="text-4xl sm:text-6xl md:text-8xl font-serif font-black text-white uppercase tracking-tighter leading-[0.9] break-words"
               style={{ marginBottom: "5rem" }}
             >
-              {sections.vip_vault_title ? renderTitle(sections.vip_vault_title) : <>Bóveda<br /><span className="premium-gradient-gold italic font-normal">Privada</span></>}
+              {sections.vip_vault_title ? renderTitle(sections.vip_vault_title) : <>Bóveda<br /><span className="premium-gradient-text italic font-normal">Privada</span></>}
             </h2>
             
             {/* Spaced description margin bottom */}
@@ -465,7 +465,7 @@ export default function HomeClient() {
           {/* Spaced categories header mb-36 md:mb-52 */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6" style={{ marginBottom: "8rem" }}>
             <h2 className="text-4xl md:text-6xl font-serif font-black uppercase tracking-tighter text-white">
-              Colección por <span className="text-white/30 italic font-normal">Categoría</span>
+              Colección por <span className="text-white/60 italic font-normal">Categoría</span>
             </h2>
             <Link href="/productos" className="text-[10px] font-black tracking-[0.4em] uppercase text-[var(--color-accent)] border-b border-[var(--color-accent)]/30 pb-2 hover:text-white hover:border-white transition-all duration-300 w-fit">
               Ver Todo
@@ -483,6 +483,7 @@ export default function HomeClient() {
                         src={c.video_url}
                         poster={img}
                         alt={c.name}
+                        autoplay={false}
                         className={
                           c.video_url
                             ? "opacity-40 group-hover:opacity-75 group-hover:scale-105 transition-all duration-1000"
@@ -605,7 +606,7 @@ export default function HomeClient() {
                 <input
                   type="email"
                   placeholder="Tu correo electrónico"
-                  className="bg-transparent w-full text-white placeholder:text-white/30 text-xs font-semibold uppercase tracking-[0.15em] outline-none focus:border-[var(--color-accent)] transition-colors"
+                  className="bg-transparent w-full text-white placeholder:text-white/60 text-xs font-semibold uppercase tracking-[0.15em] outline-none focus:border-[var(--color-accent)] transition-colors"
                 />
               </div>
               
@@ -617,7 +618,7 @@ export default function HomeClient() {
                 Quiero Acceso Exclusivo →
               </button>
               
-              <p className="text-white/30 text-[9.5px] uppercase tracking-widest text-center">
+              <p className="text-white/60 text-[9.5px] uppercase tracking-widest text-center">
                 Envío de stock real en Bolivia. Cancela tu suscripción cuando quieras.
               </p>
             </div>
@@ -653,7 +654,7 @@ export default function HomeClient() {
               
               <span className="text-3xl text-emerald-500 group-hover:scale-110 transition-transform duration-300">💬</span>
               <span className="text-xs font-black uppercase tracking-[0.2em] text-white">WhatsApp</span>
-              <span className="text-[9px] font-mono text-white/30 tracking-widest mt-1">[ SOPORTE 24/7 ]</span>
+              <span className="text-[9px] font-mono text-white/60 tracking-widest mt-1">[ SOPORTE 24/7 ]</span>
             </a>
             
             {/* Facebook */}
@@ -670,7 +671,7 @@ export default function HomeClient() {
               
               <span className="text-3xl text-blue-500 group-hover:scale-110 transition-transform duration-300">👤</span>
               <span className="text-xs font-black uppercase tracking-[0.2em] text-white">Facebook</span>
-              <span className="text-[9px] font-mono text-white/30 tracking-widest mt-1">[ COMUNIDAD ]</span>
+              <span className="text-[9px] font-mono text-white/60 tracking-widest mt-1">[ COMUNIDAD ]</span>
             </a>
             
             {/* Instagram */}
@@ -687,7 +688,7 @@ export default function HomeClient() {
               
               <span className="text-3xl text-pink-500 group-hover:scale-110 transition-transform duration-300">📸</span>
               <span className="text-xs font-black uppercase tracking-[0.2em] text-white">Instagram</span>
-              <span className="text-[9px] font-mono text-white/30 tracking-widest mt-1">[ CATÁLOGO VISUAL ]</span>
+              <span className="text-[9px] font-mono text-white/60 tracking-widest mt-1">[ CATÁLOGO VISUAL ]</span>
             </a>
             
             {/* TikTok */}
@@ -704,7 +705,7 @@ export default function HomeClient() {
               
               <span className="text-3xl text-cyan-400 group-hover:scale-110 transition-transform duration-300">🎵</span>
               <span className="text-xs font-black uppercase tracking-[0.2em] text-white">TikTok</span>
-              <span className="text-[9px] font-mono text-white/30 tracking-widest mt-1">[ TENDENCIAS ]</span>
+              <span className="text-[9px] font-mono text-white/60 tracking-widest mt-1">[ TENDENCIAS ]</span>
             </a>
           </div>
         </div>
@@ -747,7 +748,7 @@ export default function HomeClient() {
               <input
                 type="email"
                 placeholder="tu@correo.com"
-                className="w-full bg-[var(--color-dark-surface)] border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-[var(--color-accent)] focus:bg-black transition-all rounded-none"
+                className="w-full bg-[var(--color-dark-surface)] border border-white/10 px-4 py-3 text-sm text-white placeholder:text-white/60 outline-none focus:border-[var(--color-accent)] focus:bg-black transition-all rounded-none"
               />
               
               <button
@@ -763,9 +764,9 @@ export default function HomeClient() {
               
               <button
                 onClick={dismissPopup}
-                className="text-[9.5px] text-white/30 hover:text-white/70 uppercase tracking-[0.15em] transition-colors font-bold block w-full"
+                className="text-[9.5px] text-white/60 hover:text-white/70 uppercase tracking-[0.15em] transition-colors font-bold block w-full"
               >
-                No, gracias. Prefiero pagar precio completo.
+                Ahora no
               </button>
             </div>
           </div>

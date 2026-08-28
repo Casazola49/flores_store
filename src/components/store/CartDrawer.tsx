@@ -116,7 +116,7 @@ export default function CartDrawer() {
                 <h2 className="text-lg font-black uppercase tracking-tight">Mi Carrito</h2>
                 <p className="text-xs text-gray-400 font-semibold mt-0.5">{items.length} {items.length === 1 ? "producto" : "productos"}</p>
               </div>
-              <button onClick={closeCart} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+              <button aria-label="Cerrar carrito" onClick={closeCart} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
                 <X size={18} />
               </button>
             </div>
@@ -142,7 +142,7 @@ export default function CartDrawer() {
                   {items.map((item) => (
                     <div key={item.variant_id} className="flex gap-4 pb-6 border-b border-gray-50 last:border-0">
                       {/* Image */}
-                      <div className="relative w-20 h-24 bg-gray-50 flex-shrink-0 rounded-lg overflow-hidden">
+                      <div className="relative w-20 h-24 bg-gray-50 flex-shrink-0 rounded-none overflow-hidden">
                         {item.product_image ? (
                           <Image src={item.product_image} alt={item.product_name} fill className="object-cover" sizes="80px" />
                         ) : (
@@ -178,7 +178,7 @@ export default function CartDrawer() {
 
                         <div className="flex items-center justify-between mt-3">
                           {/* Qty */}
-                          <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                          <div className="flex items-center border border-gray-200 rounded-none overflow-hidden">
                             <button
                               onClick={() => updateQuantity(item.variant_id, item.quantity - 1)}
                               className="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
@@ -214,7 +214,7 @@ export default function CartDrawer() {
                 {/* CTA */}
                 <button
                   onClick={() => setStep("checkout")}
-                  className="w-full bg-[var(--color-accent)] text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#7f1d1d] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-red-900/20"
+                  className="w-full bg-[var(--color-accent)] text-white py-4 rounded-none font-black uppercase tracking-widest text-xs hover:bg-[#7f1d1d] transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-red-900/20"
                 >
                   Completar Pedido <ArrowRight size={14} />
                 </button>
@@ -239,7 +239,7 @@ export default function CartDrawer() {
 
             <div className="flex-1 overflow-y-auto px-8 py-6">
               {/* Order summary (mini) */}
-              <div className="bg-gray-50 rounded-xl p-4 mb-6">
+              <div className="bg-gray-50 rounded-none p-4 mb-6">
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-3">Resumen del pedido</p>
                 <div className="space-y-1.5">
                   {items.map(item => (
@@ -262,38 +262,39 @@ export default function CartDrawer() {
               {/* Form */}
               <form id="checkout-form" onSubmit={handleCheckout} className="space-y-4">
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Nombre completo *</label>
+                  <label htmlFor="drawer-name" className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Nombre completo *</label>
                   <input
                     type="text"
                     required
                     placeholder="Ej. María González"
                     value={customer.name}
                     onChange={e => setCustomer({ ...customer, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">WhatsApp / Teléfono *</label>
+                  <label htmlFor="drawer-phone" className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">WhatsApp / Teléfono *</label>
                   <input
                     type="tel"
                     required
                     placeholder="Ej. 70000000"
                     value={customer.phone}
                     onChange={e => setCustomer({ ...customer, phone: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Ciudad *</label>
+                  <label htmlFor="drawer-city" className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Ciudad *</label>
                   <input
                     type="text"
                     required
-                    placeholder="Ej. La Paz, Cochabamba, Santa Cruz..."
+                    id="drawer-city"
+                        placeholder="Ej. La Paz, Cochabamba, Santa Cruz..."
                     value={customer.city}
                     onChange={e => setCustomer({ ...customer, city: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                   />
                 </div>
 
@@ -303,7 +304,7 @@ export default function CartDrawer() {
                     <button
                       type="button"
                       onClick={() => setCustomer({ ...customer, deliveryType: "envio" })}
-                      className={`py-3 px-4 rounded-xl border-2 text-xs font-black uppercase transition-all ${
+                      className={`py-3 px-4 rounded-none border-2 text-xs font-black uppercase transition-all ${
                         customer.deliveryType === "envio"
                           ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
                           : "border-gray-200 text-gray-600 hover:border-gray-300"
@@ -314,7 +315,7 @@ export default function CartDrawer() {
                     <button
                       type="button"
                       onClick={() => setCustomer({ ...customer, deliveryType: "retiro" })}
-                      className={`py-3 px-4 rounded-xl border-2 text-xs font-black uppercase transition-all ${
+                      className={`py-3 px-4 rounded-none border-2 text-xs font-black uppercase transition-all ${
                         customer.deliveryType === "retiro"
                           ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
                           : "border-gray-200 text-gray-600 hover:border-gray-300"
@@ -327,19 +328,20 @@ export default function CartDrawer() {
 
                 {customer.deliveryType === "envio" && (
                   <div>
-                    <label className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Dirección de entrega *</label>
+                    <label htmlFor="drawer-address" className="block text-[11px] font-black uppercase tracking-widest text-gray-500 mb-1.5">Dirección de entrega *</label>
                     <input
                       type="text"
-                      placeholder="Ej. Av. Arce 1234, Zona Central"
+                      id="drawer-address"
+                          placeholder="Ej. Av. Arce 1234, Zona Central"
                       value={customer.address}
                       onChange={e => setCustomer({ ...customer, address: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
                     />
                   </div>
                 )}
 
                 {formError && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-xs text-red-700 font-semibold">
+                  <div className="bg-red-50 border border-red-200 rounded-none px-4 py-3 text-xs text-red-700 font-semibold">
                     ⚠️ {formError}
                   </div>
                 )}
@@ -351,7 +353,7 @@ export default function CartDrawer() {
               <button
                 type="submit"
                 form="checkout-form"
-                className="w-full bg-[#25D366] text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#1eb558] transition-all duration-300 flex items-center justify-center gap-2.5 shadow-lg shadow-green-900/20"
+                className="w-full bg-[#25D366] text-white py-4 rounded-none font-black uppercase tracking-widest text-xs hover:bg-[#1eb558] transition-all duration-300 flex items-center justify-center gap-2.5 shadow-lg shadow-green-900/20"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -383,13 +385,13 @@ export default function CartDrawer() {
                   const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "59170000000";
                   window.open(`https://wa.me/${phoneNumber}`, "_blank");
                 }}
-                className="w-full bg-[#25D366] text-white py-3.5 rounded-xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-[#1eb558] transition-colors"
+                className="w-full bg-[#25D366] text-white py-3.5 rounded-none font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-[#1eb558] transition-colors"
               >
                 <MessageCircle size={14} /> Abrir WhatsApp
               </button>
               <button
                 onClick={closeCart}
-                className="w-full border border-gray-200 py-3.5 rounded-xl font-black uppercase tracking-widest text-xs text-gray-600 hover:bg-gray-50 transition-colors"
+                className="w-full border border-gray-200 py-3.5 rounded-none font-black uppercase tracking-widest text-xs text-gray-600 hover:bg-gray-50 transition-colors"
               >
                 Seguir comprando
               </button>

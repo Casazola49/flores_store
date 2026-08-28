@@ -16,6 +16,8 @@ interface VideoBannerProps {
   objectPosition?: string;
   /** When true, paints a subtle crimson-tinted gradient overlay using the brand accent token. */
   withOverlays?: boolean;
+  /** Whether to autoplay. Categories should be false to avoid mass autoplay. */
+  autoplay?: boolean;
 }
 
 // Neutral fallback so a missing source never collapses the hero / sections.
@@ -29,6 +31,7 @@ export default function VideoBanner({
   className,
   objectPosition,
   withOverlays = false,
+  autoplay = true,
 }: VideoBannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
