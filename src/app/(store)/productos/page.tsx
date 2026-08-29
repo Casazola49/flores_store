@@ -3,7 +3,7 @@ import ProductsClient from "./ProductsClient";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Colecciones | Flores Studio - Aria Liquidación",
+  title: "Colecciones | Flores",
   description: "Explora nuestra selección exclusiva de botas, zapatillas y tacos en liquidación. Calidad premium al mejor precio en Bolivia.",
   alternates: {
     canonical: "/productos",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     locale: "es_BO",
     type: "website",
     siteName: "Flores",
-    title: "Colecciones | Flores Studio - Aria Liquidación",
+    title: "Colecciones | Flores",
     description: "Explora nuestra selección exclusiva de botas, zapatillas y tacos en liquidación. Calidad premium al mejor precio en Bolivia.",
     url: "/productos",
   },
