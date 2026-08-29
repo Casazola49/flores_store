@@ -6,11 +6,6 @@ import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "@convex/_generated/api";
 
-// TODO(dev-fallback): fallback de mocks retirado — Convex es fuente de verdad.
-// Si Convex está vacío en desarrollo local, poblar via seed/dashboard en lugar de
-// reintroducir mocks en cliente. Para un fallback temporal solo-dev, definir
-// const FALLBACK_PRODUCTS: Product[] = [] y usarlo guardado tras process.env.NODE_ENV !== "production".
-
 export default function ProductsClient() {
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get("category");
@@ -32,7 +27,6 @@ export default function ProductsClient() {
   const rawProducts = productsResult?.data || [];
 
   // Fuente de verdad: Convex. Sin fallback activo — si la BD está vacía se muestra empty state.
-  // TODO(dev-fallback): solo para desarrollo local, poblar Convex con seed en lugar de mocks en cliente.
   const products = rawProducts as any[];
         
   const loading = productsResult === undefined || categoriesData === undefined;
