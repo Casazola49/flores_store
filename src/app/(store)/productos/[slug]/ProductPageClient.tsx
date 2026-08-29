@@ -129,7 +129,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
             <div className="space-y-12">
                 <div>
                     <div className="flex items-center gap-4 mb-6">
-                      <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[var(--color-accent)] block">In Stock — Aria Archive</span>
+                      <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[var(--color-accent)] block">In Stock — Flores Archive</span>
                       {product.is_new && <span className="text-[9px] bg-black text-white px-2 py-0.5 font-bold tracking-widest uppercase">New Arrival</span>}
                     </div>
                     <h1 className="text-6xl md:text-8xl font-serif font-black uppercase tracking-tighter leading-none mb-8">{product.name}</h1>
@@ -143,7 +143,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
 
                 <div className="border-y border-gray-100 py-12">
                     <p className="text-[11px] font-bold text-gray-500 leading-loose uppercase tracking-widest">
-                        {product.description || "Pieza de liquidación exclusiva Aria. Diseño estructural enfocado en la durabilidad y estética atemporal."}
+                        {product.description || "Pieza de liquidación exclusiva Flores. Diseño estructural enfocado en la durabilidad y estética atemporal."}
                     </p>
                 </div>
 
@@ -237,7 +237,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                                 <ShieldCheck size={16} />
                                 <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-black">Quality</span>
                             </div>
-                            <p className="text-[8px] text-gray-400 uppercase tracking-widest leading-relaxed">Garantía Aria Studio en cada costura y material.</p>
+                            <p className="text-[8px] text-gray-400 uppercase tracking-widest leading-relaxed">Garantía Flores Studio en cada costura y material.</p>
                         </div>
                     </div>
                 </div>
