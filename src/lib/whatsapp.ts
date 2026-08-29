@@ -1,5 +1,5 @@
 // Unified WhatsApp helper — single source of truth for number + message format
-// Covers TODO(#4): CartDrawer / carrito/page / WhatsAppButton must share fallback.
+// Covers #4: CartDrawer / carrito/page / WhatsAppButton must share fallback.
 import type { CartItem } from "@/types";
 
 const FALLBACK_NUMBER = "59170000000";

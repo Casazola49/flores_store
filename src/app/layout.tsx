@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
 import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -9,11 +10,6 @@ const dmSans = DM_Sans({
   display: "swap",
   variable: "--font-sans",
 });
-
-// TODO: Set NEXT_PUBLIC_SITE_URL to the production canonical domain. There is no
-// NEXT_PUBLIC_SITE_URL env var yet, so we default to the brand domain used across
-// the site (ventas@floresbolivia.com / footer "Flores Bolivia").
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://floresbolivia.com";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],

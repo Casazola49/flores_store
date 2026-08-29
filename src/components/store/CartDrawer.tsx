@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { buildOrderMessage, getWhatsAppNumber, openWhatsApp } from "@/lib/whatsapp";
 
-// Helpers moved to @/lib/whatsapp — single source of truth (TODO#4)
+// Helpers moved to @/lib/whatsapp — single source of truth (#4)
 
 // ── Stepper Config ────────────────────────────────────────────
 const STEPS = [
