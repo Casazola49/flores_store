@@ -3,6 +3,8 @@ import { api } from "@convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
 import { siteUrl } from "@/lib/site";
 
+export const revalidate = 3600; // ISR 1h — evita golpear Convex en cada request de sitemap, sigue fresco para SEO
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
