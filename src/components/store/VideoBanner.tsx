@@ -26,6 +26,12 @@ interface VideoBannerProps {
 const FALLBACK =
   "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1800";
 
+function optimizeCloudinaryVideo(url: string): string {
+  if (!url.includes("res.cloudinary.com") || !url.includes("/video/upload/")) return url;
+  if (url.includes("f_auto")) return url;
+  return url.replace("/video/upload/", "/video/upload/f_auto,q_auto/");
+}
+
 export default function VideoBanner({
   src,
   poster,
@@ -37,6 +43,8 @@ export default function VideoBanner({
   priority = false,
 }: VideoBannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const optimizedSrc = src ? optimizeCloudinaryVideo(src) : undefined;
+  const optimizedPoster = poster || undefined;
 
   // Cine Sutil rule: respect prefers-reduced-motion. Pause loops for users
   // who ask for less movement; resume only when a real source exists.
@@ -47,7 +55,7 @@ export default function VideoBanner({
       if (!v) return;
       if (mq.matches) {
         v.pause();
-      } else if (src) {
+      } else if (optimizedSrc) {
         // autoPlay may be suppressed by the browser; nudge it along.
         v.play().catch(() => {});
       }
@@ -55,10 +63,10 @@ export default function VideoBanner({
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
-  }, [src]);
+  }, [optimizedSrc]);
 
   // No source → image fallback (real poster when available, else Unsplash).
-  if (!src) {
+  if (!optimizedSrc) {
     return (
       <>
         <Image
@@ -85,12 +93,12 @@ export default function VideoBanner({
         muted
         playsInline
         preload="metadata"
-        poster={poster}
+        poster={optimizedPoster}
         aria-hidden="true"
         className={`absolute inset-0 w-full h-full object-cover ${className ?? ""}`}
         style={objectPosition ? { objectPosition } : undefined}
       >
-        <source src={src} type="video/mp4" />
+        <source src={optimizedSrc} type="video/mp4" />
         {/* If a clip ever carries spoken audio, add:
             <track kind="captions" src="/captions/hero.vtt" srcLang="es" label="Español" default /> */}
       </video>
