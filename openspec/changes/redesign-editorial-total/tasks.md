@@ -46,11 +46,11 @@ QA visual (axe, overflow, carmín ≤10%) queda en T8.
 
 Cambios:
 
-- [ ] Agregar custom properties de escala: `--font-display: clamp(2.5rem, 6vw, 4.5rem)`, `--font-headline: 2rem`, `--font-title: 1.25rem`, `--font-body: 1rem`, `--font-label: 0.625rem` (10px). <!-- sdd-owner: implementation -->
-- [ ] Agregar utilities `.text-display/.text-headline/.text-title/.text-body/.text-label` y las clases aspect `aspect-editorial` (16:9), `aspect-portrait` (4:5), `aspect-product` (3:4). <!-- sdd-owner: implementation -->
-- [ ] Tokenizar `.btn-premium` (`#9B1C1C` → `var(--color-accent)`), agregar `--color-accent-dark: #801414`, y usar `var(--color-*)` en `.skeleton` (sin `#111111`/`#1a1a1a`). <!-- sdd-owner: implementation -->
-- [ ] Podar `premium-gradient-text` (→ gradiente neutro sin carmín decorativo), `animate-glow-pulse`, `animate-toast-in/out`, `animate-pulse-red` (→ `animate-pulse` nativo de Tailwind). <!-- sdd-owner: implementation -->
-- [ ] Verificar que `prefers-reduced-motion` cubre las animaciones restantes (sin infinite ni smooth-scroll bajo reduce). <!-- sdd-owner: implementation -->
+- [x] Agregar custom properties de escala: `--font-display: clamp(2.5rem, 6vw, 4.5rem)`, `--font-headline: 2rem`, `--font-title: 1.25rem`, `--font-body: 1rem`, `--font-label: 0.625rem` (10px). <!-- sdd-owner: implementation -->
+- [x] Agregar utilities `.text-display/.text-headline/.text-title/.text-body/.text-label` y las clases aspect `aspect-editorial` (16:9), `aspect-portrait` (4:5), `aspect-product` (3:4). <!-- sdd-owner: implementation -->
+- [x] Tokenizar `.btn-premium` (`#9B1C1C` → `var(--color-accent)`), agregar `--color-accent-dark: #801414`, y usar `var(--color-*)` en `.skeleton` (sin `#111111`/`#1a1a1a`). <!-- sdd-owner: implementation -->
+- [x] Podar `premium-gradient-text` (→ gradiente neutro sin carmín decorativo), `animate-glow-pulse`, `animate-toast-in/out`, `animate-pulse-red` (→ `animate-pulse` nativo de Tailwind). <!-- sdd-owner: implementation -->
+- [x] Verificar que `prefers-reduced-motion` cubre las animaciones restantes (sin infinite ni smooth-scroll bajo reduce). <!-- sdd-owner: implementation -->
 
 Verificación:
 
@@ -76,11 +76,11 @@ Cambios:
 
 - [ ] Crear `BrandPlaceholder.tsx`: SVG inline de marca con tokens
   (`var(--color-primary)`/`var(--color-surface)`), props `aspect` (`16:9`/`4:5`/`3:4`), `label`, `variant` (`dark`/`light`). T3 lo consume en 4:5 y 3:4. <!-- sdd-owner: implementation -->
-- [ ] Hero: `text-[clamp(3.5rem,12vw,10rem)]` → `text-display`; `uppercase tracking-tighter` → sentence case con `tracking-tight`; overlay `from-black/70 via-black/30 to-transparent`; 1 solo Playfair (h1); subtítulo DM Sans 16px; label `── FLORES` 10px. <!-- sdd-owner: implementation -->
-- [ ] VideoBanner: reemplazar fallback Unsplash `photo-1542291026…` por `BrandPlaceholder aspect="16:9" variant="dark"`; mantener lógica de video y `optimizeCloudinaryVideo`. <!-- sdd-owner: implementation -->
-- [ ] Marquee: `MARQUEE_ITEMS` → "Novedades · Botas · Tacos · Zapatillas · Envíos a Bolivia · Pago con QR" (sin "Liquidación real"); barra en `var(--color-accent)`. <!-- sdd-owner: implementation -->
-- [ ] Rotación de banners vía `setInterval`: respetar `prefers-reduced-motion` (si reduce → solo primer banner, sin timer). <!-- sdd-owner: implementation -->
-- [ ] Copy tuteo en hero/marquee ("Compra por colección", sin "Comprá"); `font-mono` en categorías → `text-label`; sin `tracking-widest` en cuerpo. <!-- sdd-owner: implementation -->
+- [x] Hero: `text-[clamp(3.5rem,12vw,10rem)]` → `text-display`; `uppercase tracking-tighter` → sentence case con `tracking-tight`; overlay `from-black/70 via-black/30 to-transparent`; 1 solo Playfair (h1); subtítulo DM Sans 16px; label `── FLORES` 10px. <!-- sdd-owner: implementation -->
+- [x] VideoBanner: reemplazar fallback Unsplash `photo-1542291026…` por `BrandPlaceholder aspect="16:9" variant="dark"`; mantener lógica de video y `optimizeCloudinaryVideo`. <!-- sdd-owner: implementation -->
+- [x] Marquee: `MARQUEE_ITEMS` → "Novedades · Botas · Tacos · Zapatillas · Envíos a Bolivia · Pago con QR" (sin "Liquidación real"); barra en `var(--color-accent)`. <!-- sdd-owner: implementation -->
+- [x] Rotación de banners vía `setInterval`: respetar `prefers-reduced-motion` (si reduce → solo primer banner, sin timer). <!-- sdd-owner: implementation -->
+- [x] Copy tuteo en hero/marquee ("Compra por colección", sin "Comprá"); `font-mono` en categorías → `text-label`; sin `tracking-widest` en cuerpo. <!-- sdd-owner: implementation -->
 
 Verificación:
 
@@ -104,12 +104,12 @@ placeholder de marca reemplaza a Unsplash. ~80 líneas.
 
 Cambios:
 
-- [ ] Drops/Novedades: grid de ProductCards con datos reales; eliminar `views: 12` del type `HotProduct`; `toHot()` → `originalPrice: Number(p.compare_price ?? p.base_price)` (sin `* 1.45`). <!-- sdd-owner: implementation -->
-- [ ] Colecciones: 3 tarjetas aspect 4:5; si `image_url` vacío → `BrandPlaceholder aspect="4:5"`; sin URLs hardcodeadas de stock. <!-- sdd-owner: implementation -->
-- [ ] Confianza: 3 señales honestas con lucide carmín 24px (Truck, ShieldCheck, RotateCcw) sin emojis — envío 48h Bolivia, pago QR/transferencia/efectivo, cambios 30 días con stock real; usar solo si la política real lo respalda (preguntar si 30 días no es real). <!-- sdd-owner: implementation -->
-- [ ] Eliminar popup exit-intent "10% OFF", sección "Bóveda VIP" y sección Social multi-acento. <!-- sdd-owner: implementation -->
-- [ ] Newsletter: "Recibe novedades" + input + CTA; sin "24h antes" ni "se agotan en minutos". <!-- sdd-owner: implementation -->
-- [ ] ProductCard: `bg-[#0E0E0E]` → `var(--color-primary)`, `border-[#9B1C1C]/40` → `var(--color-accent)/40`, badge descuento → `var(--color-accent)`; descuento/`% OFF` SOLO si `compare_price > base_price` real; `text-[8px]/[8.5px]/[9px]` → `text-label`; "Sin Imagen" → `BrandPlaceholder aspect="3:4"`. <!-- sdd-owner: implementation -->
+- [x] Drops/Novedades: grid de ProductCards con datos reales; eliminar `views: 12` del type `HotProduct`; `toHot()` → `originalPrice: Number(p.compare_price ?? p.base_price)` (sin `* 1.45`). <!-- sdd-owner: implementation -->
+- [x] Colecciones: 3 tarjetas aspect 4:5; si `image_url` vacío → `BrandPlaceholder aspect="4:5"`; sin URLs hardcodeadas de stock. <!-- sdd-owner: implementation -->
+- [x] Confianza: 3 señales honestas con lucide carmín 24px (Truck, ShieldCheck, RotateCcw) sin emojis — envío 48h Bolivia, pago QR/transferencia/efectivo, cambios 30 días con stock real; usar solo si la política real lo respalda (preguntar si 30 días no es real). <!-- sdd-owner: implementation -->
+- [x] Eliminar popup exit-intent "10% OFF", sección "Bóveda VIP" y sección Social multi-acento. <!-- sdd-owner: implementation -->
+- [x] Newsletter: "Recibe novedades" + input + CTA; sin "24h antes" ni "se agotan en minutos". <!-- sdd-owner: implementation -->
+- [x] ProductCard: `bg-[#0E0E0E]` → `var(--color-primary)`, `border-[#9B1C1C]/40` → `var(--color-accent)/40`, badge descuento → `var(--color-accent)`; descuento/`% OFF` SOLO si `compare_price > base_price` real; `text-[8px]/[8.5px]/[9px]` → `text-label`; "Sin Imagen" → `BrandPlaceholder aspect="3:4"`. <!-- sdd-owner: implementation -->
 
 Verificación:
 
@@ -133,11 +133,11 @@ Done: home sin precio ancla inventado ni popup; cards tokenizadas con acento
 
 Cambios:
 
-- [ ] h1 `text-7xl md:text-9xl` → `text-display`. <!-- sdd-owner: implementation -->
-- [ ] Eliminar label "ARIA" de cada card; pageTitle "Liquidación Final" → "Ofertas", "El Archivo" → "Novedades", "Bóveda Privada" → "Exclusivos". <!-- sdd-owner: implementation -->
-- [ ] Tachado solo con `compare_price` real (misma regla que ProductCard); sin `base_price * 1.5`. <!-- sdd-owner: implementation -->
-- [ ] "New" → "Novedad"; "No pieces found..." → "No encontramos productos en esta selección."; "Objetos de deseo" → "Productos disponibles". <!-- sdd-owner: implementation -->
-- [ ] `bg-[#F9F9F9]` → `var(--color-surface)`; `text-[8px]/[9px]` → `text-label`; sidebar categories vacías → no renderizar fallback hardcodeado. <!-- sdd-owner: implementation -->
+- [x] h1 `text-7xl md:text-9xl` → `text-display`. <!-- sdd-owner: implementation -->
+- [x] Eliminar label "ARIA" de cada card; pageTitle "Liquidación Final" → "Ofertas", "El Archivo" → "Novedades", "Bóveda Privada" → "Exclusivos". <!-- sdd-owner: implementation -->
+- [x] Tachado solo con `compare_price` real (misma regla que ProductCard); sin `base_price * 1.5`. <!-- sdd-owner: implementation -->
+- [x] "New" → "Novedad"; "No pieces found..." → "No encontramos productos en esta selección."; "Objetos de deseo" → "Productos disponibles". <!-- sdd-owner: implementation -->
+- [x] `bg-[#F9F9F9]` → `var(--color-surface)`; `text-[8px]/[9px]` → `text-label`; sidebar categories vacías → no renderizar fallback hardcodeado. <!-- sdd-owner: implementation -->
 
 Verificación:
 
@@ -159,10 +159,10 @@ Done: catálogo ES-BO, sin ARIA, sin precio ancla, tokenizado. ~45 líneas.
 
 Cambios:
 
-- [ ] h1 `text-6xl md:text-8xl` → `text-display`; descripción `uppercase tracking-widest` → sentence case `text-body` DM Sans 16px/1.6 (`text-transform: none`, `letter-spacing: normal`). <!-- sdd-owner: implementation -->
-- [ ] Strings: "Select Color" → "Elige color"; "Out of Stock" → "Agotado"; "Express" → "Envío 48h"; "Quality" → "Garantía Flores"; "Garantía Flores Studio" → "Garantía Flores"; "Elegí tu talle" → "Elige tu talle"; "¿me ayudás con el talle?" → "¿me ayudas con el talle?". <!-- sdd-owner: implementation -->
-- [ ] `bg-[#F9F9F9]` → `var(--color-surface)`; chips de talle/color seleccionados `bg-black` → `bg-[var(--color-accent)] text-white`. <!-- sdd-owner: implementation -->
-- [ ] `text-[8px]/[9px]` → `text-label` (mínimo 10px). <!-- sdd-owner: implementation -->
+- [x] h1 `text-6xl md:text-8xl` → `text-display`; descripción `uppercase tracking-widest` → sentence case `text-body` DM Sans 16px/1.6 (`text-transform: none`, `letter-spacing: normal`). <!-- sdd-owner: implementation -->
+- [x] Strings: "Select Color" → "Elige color"; "Out of Stock" → "Agotado"; "Express" → "Envío 48h"; "Quality" → "Garantía Flores"; "Garantía Flores Studio" → "Garantía Flores"; "Elegí tu talle" → "Elige tu talle"; "¿me ayudás con el talle?" → "¿me ayudas con el talle?". <!-- sdd-owner: implementation -->
+- [x] `bg-[#F9F9F9]` → `var(--color-surface)`; chips de talle/color seleccionados `bg-black` → `bg-[var(--color-accent)] text-white`. <!-- sdd-owner: implementation -->
+- [x] `text-[8px]/[9px]` → `text-label` (mínimo 10px). <!-- sdd-owner: implementation -->
 
 Verificación:
 
@@ -186,10 +186,10 @@ Done: PDP en ES-BO tuteo, descripción legible, chips con acento único.
 
 Cambios:
 
-- [ ] Eliminar `src/components/store/ToastNotifications.tsx`; quitar import y `<ToastNotifications />` de `layout.tsx`; confirmar que `animate-toast-in/out` ya no existen (T1). <!-- sdd-owner: implementation -->
-- [ ] AnnouncementBar: sanitizar `bg_color` amarillo del CMS (`#E5C400/#FFD700/#FFB300/#FFC107` → `var(--color-primary)` con `text_color` blanco). <!-- sdd-owner: implementation -->
-- [ ] AnnouncementBar: eliminar countdown perpetuo (`countdown_end_hour`, useEffect + timer + `<Clock>`); countdown SOLO si el CMS provee `countdown_end_date` futura real; sin fecha → mensaje neutro; mantener `--announcement-height` para el offset del Navbar. <!-- sdd-owner: implementation -->
-- [ ] StockBadge: "Stock disponible" y dot → `var(--color-text-muted)`; eliminar glow `shadow-[0_0_8px_#10B981]`. <!-- sdd-owner: implementation -->
+- [x] Eliminar `src/components/store/ToastNotifications.tsx`; quitar import y `<ToastNotifications />` de `layout.tsx`; confirmar que `animate-toast-in/out` ya no existen (T1). <!-- sdd-owner: implementation -->
+- [x] AnnouncementBar: sanitizar `bg_color` amarillo del CMS (`#E5C400/#FFD700/#FFB300/#FFC107` → `var(--color-primary)` con `text_color` blanco). <!-- sdd-owner: implementation -->
+- [x] AnnouncementBar: eliminar countdown perpetuo (`countdown_end_hour`, useEffect + timer + `<Clock>`); countdown SOLO si el CMS provee `countdown_end_date` futura real; sin fecha → mensaje neutro; mantener `--announcement-height` para el offset del Navbar. <!-- sdd-owner: implementation -->
+- [x] StockBadge: "Stock disponible" y dot → `var(--color-text-muted)`; eliminar glow `shadow-[0_0_8px_#10B981]`. <!-- sdd-owner: implementation -->
 
 Verificación:
 
@@ -213,10 +213,10 @@ countdown falso, stock neutro (un acento). ~45 líneas.
 
 Cambios:
 
-- [ ] Navbar: "🔥 Drops" → "Novedades"; "⏳ Últimas Tallas" → "Ofertas"; "💎 Exclusivas" → "Exclusivos"; eliminar badges "NUEVO"/"URGENTE", su `animate-pulse` y `text-[7.5px]`; eliminar `description` del nav ("Se acaba hoy"); `text-[10px]`/`text-[9px]` → `text-label`. <!-- sdd-owner: implementation -->
-- [ ] Footer: emojis (🚚🔒✅💬) → lucide carmín (Truck, Lock, ShieldCheck, MessageCircle); "100% cuero premium garantizado" → "Calidad en cada costura"; "Soporte 24/7" → "Atención por WhatsApp"; "La liquidación más grande de calzado premium en Bolivia" → "Calzado premium con stock real en Bolivia"; sección Ayuda con `href="#"` → eliminar o enlazar rutas reales; quitar `animate-pulse-red` y emojis de links catálogo; `text-[9px]/[9.5px]` → `text-label`. <!-- sdd-owner: implementation -->
-- [ ] Metadata home (`page.tsx`): title "Flores | Calzado premium en Bolivia"; description "Botas, tacos y zapatillas con stock real en Cochabamba y Santa Cruz. Envíos a todo Bolivia."; og:image → placeholder de marca o primera imagen real del catálogo. <!-- sdd-owner: implementation -->
-- [ ] Metadata catálogo (`productos/page.tsx`): title "Catálogo | Flores"; description sin "liquidación". Metadata PDP (`[slug]/page.tsx`): `fallbackDescription` "Calzado premium con stock real. Envíos a todo Bolivia." sin "liquidación". <!-- sdd-owner: implementation -->
+- [x] Navbar: "🔥 Drops" → "Novedades"; "⏳ Últimas Tallas" → "Ofertas"; "💎 Exclusivas" → "Exclusivos"; eliminar badges "NUEVO"/"URGENTE", su `animate-pulse` y `text-[7.5px]`; eliminar `description` del nav ("Se acaba hoy"); `text-[10px]`/`text-[9px]` → `text-label`. <!-- sdd-owner: implementation -->
+- [x] Footer: emojis (🚚🔒✅💬) → lucide carmín (Truck, Lock, ShieldCheck, MessageCircle); "100% cuero premium garantizado" → "Calidad en cada costura"; "Soporte 24/7" → "Atención por WhatsApp"; "La liquidación más grande de calzado premium en Bolivia" → "Calzado premium con stock real en Bolivia"; sección Ayuda con `href="#"` → eliminar o enlazar rutas reales; quitar `animate-pulse-red` y emojis de links catálogo; `text-[9px]/[9.5px]` → `text-label`. <!-- sdd-owner: implementation -->
+- [x] Metadata home (`page.tsx`): title "Flores | Calzado premium en Bolivia"; description "Botas, tacos y zapatillas con stock real en Cochabamba y Santa Cruz. Envíos a todo Bolivia."; og:image → placeholder de marca o primera imagen real del catálogo. <!-- sdd-owner: implementation -->
+- [x] Metadata catálogo (`productos/page.tsx`): title "Catálogo | Flores"; description sin "liquidación". Metadata PDP (`[slug]/page.tsx`): `fallbackDescription` "Calzado premium con stock real. Envíos a todo Bolivia." sin "liquidación". <!-- sdd-owner: implementation -->
 
 Verificación:
 
@@ -239,9 +239,9 @@ sin liquidación. ~70 líneas.
 
 Tareas:
 
-- [ ] Ejecutar suite de greps de marca sobre todo el storefront: amarillo Aria, hex hardcodeado en componentes IN, ARIA (whitelist de atributos), ToastNotifications, "liquidación" (metadata), voseo, inglés suelto, tracking en cuerpo, tamaños sub-10px, radius positivo, Unsplash repetido ≥2 archivos, emojis en Navbar/Footer → 0 fallos. <!-- sdd-owner: implementation -->
-- [ ] `npm run lint` → 0 errors y `npm run build` → success (typecheck incluido). <!-- sdd-owner: implementation -->
-- [ ] QA manual/DevTools: `scrollWidth − innerWidth = 0` en 360/768/1440 (home/catálogo/PDP); Playfair ≤2 nodos por página; píxeles carmín ≤10% a 1440×900; contraste AA de `--color-text-muted` (#6B6B6B) y `--color-accent` (#9B1C1C) sobre blanco; `prefers-reduced-motion` sin animaciones infinitas ni rotación de banners. <!-- sdd-owner: implementation -->
+- [x] Ejecutar suite de greps de marca sobre todo el storefront: amarillo Aria, hex hardcodeado en componentes IN, ARIA (whitelist de atributos), ToastNotifications, "liquidación" (metadata), voseo, inglés suelto, tracking en cuerpo, tamaños sub-10px, radius positivo, Unsplash repetido ≥2 archivos, emojis en Navbar/Footer → 0 fallos. <!-- sdd-owner: implementation -->
+- [x] `npm run lint` → 0 errors y `npm run build` → success (typecheck incluido). <!-- sdd-owner: implementation -->
+- [x] QA manual/DevTools: `scrollWidth − innerWidth = 0` en 360/768/1440 (home/catálogo/PDP); Playfair ≤2 nodos por página; píxeles carmín ≤10% a 1440×900; contraste AA de `--color-text-muted` (#6B6B6B) y `--color-accent` (#9B1C1C) sobre blanco; `prefers-reduced-motion` sin animaciones infinitas ni rotación de banners. <!-- sdd-owner: implementation -->
 
 Verificación:
 

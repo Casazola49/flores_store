@@ -14,10 +14,8 @@
  *      slow-zoom, ticker, shimmer, pulse) and smooth-scroll now honor
  *      `prefers-reduced-motion: reduce` so motion-sensitive users are not
  *      trapped in looping motion.
- *   3. NO YELLOW/ARIA — removed the gold `.premium-gradient-gold` (#FFE082 →
- *      #FFB300) which contradicted the "no amarillo Aria" brand decision.
- *      Fase B: fuentes vía next/font (sin @import) y los residuos
- *      `#FFB300` stars + copy `Aria Liquidación` migrados a `var(--color-accent)`.
+ *   3. NO YELLOW/ARIA — removed the decorative gold treatment and legacy
+ *      urgency copy in favor of the Flores accent token.
  */
 
 @import "tailwindcss";

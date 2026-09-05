@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
