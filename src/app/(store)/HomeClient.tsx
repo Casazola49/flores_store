@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Flame, Clock, ArrowRight, Star, Diamond } from "lucide-react";
+import { Flame, ArrowRight, Star, Diamond } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Product, Category } from "@/types";
@@ -57,57 +57,6 @@ function toHot(p: any): HotProduct {
   };
 }
 
-function CountdownTimer({ endHour = 24 }: { endHour?: number }) {
-  const [mounted, setMounted] = useState(false);
-  const [time, setTime] = useState({ h: 0, m: 0, s: 0 });
-
-  useEffect(() => {
-    setMounted(true);
-    const calc = () => {
-      const now = new Date();
-      const end = new Date();
-      end.setHours(endHour, 0, 0, 0);
-      if (end <= now) end.setDate(end.getDate() + 1);
-      const diff = end.getTime() - now.getTime();
-      setTime({
-        h: Math.floor(diff / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    calc();
-    const id = setInterval(calc, 1000);
-    return () => clearInterval(id);
-  }, [endHour]);
-
-  if (!mounted) {
-    return (
-      <div className="flex items-center gap-2.5 font-mono">
-        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/60 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
-        <span className="text-white/60 font-black text-xl">:</span>
-        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/60 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
-        <span className="text-white/60 font-black text-xl">:</span>
-        <span className="bg-[var(--color-dark-surface)] border border-[var(--color-accent)]/10 text-white/60 text-xl md:text-2xl px-3 py-2 min-w-[3rem] text-center rounded-none shadow-md">--</span>
-      </div>
-    );
-  }
-
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return (
-    <div className="flex items-center gap-2.5 font-mono">
-      {[pad(time.h), pad(time.m), pad(time.s)].map((v, i) => (
-        <span key={i} className="flex items-center gap-2.5">
-          <span className="bg-black border border-[var(--color-accent)]/40 text-[var(--color-accent-bright)] text-xl md:text-2xl font-black px-3.5 py-2.5 min-w-[3.2rem] text-center rounded-none shadow-inner shadow-black/80 drop-shadow-[0_0_8px_rgba(155,28,28,0.35)]">
-            {v}
-          </span>
-          {i < 2 && <span className="text-[var(--color-accent)] font-black text-xl animate-pulse">:</span>}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-
 export default function HomeClient() {
   const [popupVisible, setPopupVisible] = useState(false);
   const [activeBannerIdx, setActiveBannerIdx] = useState(0);
@@ -127,13 +76,17 @@ export default function HomeClient() {
   useEffect(() => {
     fetchCMS();
 
-    // Email popup trigger
-    const timer = setTimeout(() => {
-      if (!localStorage.getItem("flores_popup_dismissed")) {
+    // Exit-intent: solo PC con hover, una vez por visitante. Nunca en móvil,
+    // nunca por temporizador — sin presión falsa.
+    if (!window.matchMedia("(hover: hover)").matches) return;
+    if (localStorage.getItem("flores_popup_dismissed")) return;
+    const onLeave = (e: MouseEvent) => {
+      if (e.clientY <= 0 && !localStorage.getItem("flores_popup_dismissed")) {
         setPopupVisible(true);
       }
-    }, 12000);
-    return () => clearTimeout(timer);
+    };
+    document.addEventListener("mouseout", onLeave);
+    return () => document.removeEventListener("mouseout", onLeave);
   }, [fetchCMS]);
 
   useEffect(() => {
@@ -288,19 +241,6 @@ export default function HomeClient() {
           </div>
         </div>
 
-        {/* Floating Stats - Desktop Only */}
-        <div className="absolute bottom-16 right-16 hidden xl:flex flex-col gap-6 text-right z-20">
-          <div className="glass-card px-10 py-7 border border-white/5 hover:border-white/10 transition-all duration-500 shadow-2xl backdrop-blur-2xl">
-            <span className="font-mono text-[8px] text-white/40 tracking-widest block uppercase">[Estilos de Temporada]</span>
-            <p className="text-white text-5xl font-black tracking-tight mt-1">+500</p>
-            <p className="text-white/40 text-[9px] uppercase tracking-[0.35em] font-black mt-2">Pares Únicos</p>
-          </div>
-          <div className="bg-gradient-to-br from-[var(--color-accent)] to-[#631010] px-10 py-7 transition-all duration-500 shadow-2xl shadow-[var(--color-accent)]/15 border border-[var(--color-accent)]/25">
-            <span className="font-mono text-[8px] text-white/70 tracking-widest block uppercase">[Liquidación Activa]</span>
-            <p className="text-white text-5xl font-black tracking-tight mt-1">70%</p>
-            <p className="text-white/80 text-[9px] uppercase tracking-[0.35em] font-black mt-2">Dcto Máximo</p>
-          </div>
-        </div>
       </section>
 
       {/* ── BRAND TICKER CON IMÁGENES (Mucho más ancho, logos con padding-x masivo, y mas grande) ── */}
@@ -326,7 +266,7 @@ export default function HomeClient() {
         </div>
       </div>
 
-      {/* ── SECCIÓN HOT DROPS — (Hot Drops subido levemente y botón explorar centrado) ──── */}
+      {/* ── SECCIÓN DROPS — (título y botón explorar centrado) ──── */}
       <section className="bg-transparent relative overflow-hidden border-b border-white/5 py-16 md:py-24">
         {/* Glow decorativo de fondo */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/5 blur-[140px] rounded-full pointer-events-none" />
@@ -343,31 +283,19 @@ export default function HomeClient() {
                 <span className="text-[10px] font-black tracking-[0.5em] uppercase text-[var(--color-accent)]">Inventario En Vivo — Cochabamba</span>
               </div>
               
-              {/* Spaced Hot Drops Title (Subido levemente: mt-2 mb-10) */}
+              {/* Título Drops (mt-2 mb-10) */}
               <h2 
                 className="text-5xl md:text-8xl font-serif font-black uppercase tracking-tighter leading-none text-white mt-2"
                 style={{ marginBottom: "2.5rem" }}
               >
-                Hot <span className="premium-gradient-text italic font-normal">Drops</span>
+                Drops <span className="premium-gradient-text italic font-normal">Calientes</span>
               </h2>
               
               <p className="text-white/40 text-sm md:text-base mt-8 font-medium max-w-sm leading-relaxed tracking-wider" style={{ marginBottom: "2rem" }}>
-                Nuestra selección más codiciada. Actualizada cada hora con el stock físico de nuestra tienda.
+                Nuestra selección más codiciada. Stock real de nuestra tienda en Cochabamba.
               </p>
             </div>
 
-            {/* Glowing countdown box using animate-glow-pulse */}
-            <div className="glass-card p-8 md:p-10 border border-[var(--color-accent)]/45 flex flex-col items-start gap-4 min-w-[310px] shadow-2xl backdrop-blur-xl animate-glow-pulse relative">
-              <div className="corner-decor corner-tl" />
-              <div className="corner-decor corner-tr" />
-              <div className="corner-decor corner-bl" />
-              <div className="corner-decor corner-br" />
-              
-              <p className="text-[9px] font-black tracking-[0.45em] uppercase text-[var(--color-accent-bright)] flex items-center gap-2">
-                <Clock size={12} className="text-[var(--color-accent)] animate-spin" /> Finaliza pronto
-              </p>
-              <CountdownTimer endHour={parseInt(sections.countdown_end_hour || "24", 10)} />
-            </div>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-6 md:gap-y-16">
@@ -450,12 +378,6 @@ export default function HomeClient() {
                 <div className="corner-decor corner-br" />
                 Acceder A La Bóveda
               </Link>
-              <div className="w-full sm:w-auto text-center sm:text-left">
-                <p className="text-[var(--color-accent)] text-[10px] font-black uppercase tracking-[0.2em] flex items-center justify-center sm:justify-start gap-2 animate-pulse">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)]" />
-                  12 Accesos disponibles hoy
-                </p>
-              </div>
             </div>
           </div>
         </div>
