@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import BrandPlaceholder from "./BrandPlaceholder";
 import { useEffect, useRef } from "react";
 
 interface VideoBannerProps {
@@ -23,8 +24,7 @@ interface VideoBannerProps {
 }
 
 // Neutral fallback so a missing source never collapses the hero / sections.
-const FALLBACK =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1800";
+
 
 function optimizeCloudinaryVideo(url: string): string {
   if (!url.includes("res.cloudinary.com") || !url.includes("/video/upload/")) return url;
@@ -65,23 +65,9 @@ export default function VideoBanner({
     return () => mq.removeEventListener("change", apply);
   }, [optimizedSrc]);
 
-  // No source → image fallback (real poster when available, else Unsplash).
+  // No source → real poster when available, otherwise an aspect-aware brand placeholder.
   if (!optimizedSrc) {
-    return (
-      <>
-        <Image
-          src={poster || FALLBACK}
-          alt={alt || ""}
-          fill
-          sizes="100vw"
-          priority={priority}
-              {...(priority ? { fetchPriority: "high" } : { loading: "lazy" })}
-          className={`object-cover ${className ?? ""}`}
-          style={objectPosition ? { objectPosition } : undefined}
-        />
-        {withOverlays && <Overlay />}
-      </>
-    );
+    return poster ? <><Image src={poster} alt={alt || ""} fill sizes="100vw" priority={priority} {...(priority ? { fetchPriority: "high" } : { loading: "lazy" })} className={`object-cover ${className ?? ""}`} style={objectPosition ? { objectPosition } : undefined} />{withOverlays && <Overlay />}</> : <BrandPlaceholder aspect="16:9" label={alt || "Flores"} variant="dark" />;
   }
 
   return (
