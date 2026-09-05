@@ -3,7 +3,6 @@ import Navbar from "@/components/store/Navbar";
 import Footer from "@/components/store/Footer";
 import CartDrawer from "@/components/store/CartDrawer";
 import WhatsAppButton from "@/components/store/WhatsAppButton";
-import ToastNotifications from "@/components/store/ToastNotifications";
 
 export default function StoreLayout({
   children,
@@ -29,8 +28,6 @@ export default function StoreLayout({
       <CartDrawer />
       <WhatsAppButton />
 
-      {/* Social proof toasts — bottom left */}
-      <ToastNotifications />
     </>
   );
 }
