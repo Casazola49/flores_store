@@ -53,7 +53,7 @@ export default function VideoBanner({
     const apply = () => {
       const v = videoRef.current;
       if (!v) return;
-      if (mq.matches) {
+      if (mq.matches || !autoplay) {
         v.pause();
       } else if (optimizedSrc) {
         // autoPlay may be suppressed by the browser; nudge it along.
@@ -63,7 +63,7 @@ export default function VideoBanner({
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
-  }, [optimizedSrc]);
+  }, [optimizedSrc, autoplay]);
 
   // No source → real poster when available, otherwise an aspect-aware brand placeholder.
   if (!optimizedSrc) {
@@ -74,11 +74,11 @@ export default function VideoBanner({
     <>
       <video
         ref={videoRef}
-        autoPlay
+        autoPlay={autoplay}
         loop
         muted
         playsInline
-        preload="metadata"
+        preload={autoplay ? "metadata" : "none"}
         poster={optimizedPoster}
         aria-hidden="true"
         className={`absolute inset-0 w-full h-full object-cover ${className ?? ""}`}
