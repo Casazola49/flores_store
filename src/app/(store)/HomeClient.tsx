@@ -29,16 +29,15 @@ const CAT_FALLBACK: Record<string, string> = {
   default: "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=600",
 };
 
-// Brand logos list
-const BRAND_LOGOS = [
-  { name: "Nike", src: "/homepage_carrusel/nike.png" },
-  { name: "Adidas", src: "/homepage_carrusel/adidas.png" },
-  { name: "Puma", src: "/homepage_carrusel/puma.png" },
-  { name: "New Balance", src: "/homepage_carrusel/new_balance.png" },
-  { name: "Vans", src: "/homepage_carrusel/vans.png" },
-  { name: "Converse", src: "/homepage_carrusel/converse.png" },
-  { name: "Reebok", src: "/homepage_carrusel/reebok.png" },
-  { name: "Skechers", src: "/homepage_carrusel/skechers.png" }
+// Marquee: categorías y datos reales (sin ofertas inventadas).
+const MARQUEE_ITEMS = [
+  "Mujer",
+  "Botas",
+  "Tacos",
+  "Zapatillas",
+  "Envíos 48h",
+  "Pagá con QR",
+  "Liquidación real",
 ];
 
 
@@ -118,7 +117,7 @@ export default function HomeClient() {
                       src={b.video_url}
                       poster={b.image_url}
                       alt={b.title || "Flores Banner"}
-                      className="opacity-50 scale-105"
+                      className="opacity-90 scale-105"
                       objectPosition="center 30%"
                     />
               </div>
@@ -130,16 +129,14 @@ export default function HomeClient() {
                       priority
                       src={sections.hero_video_url}
                       alt="Flores Premium"
-                      className="opacity-50 scale-105"
+                      className="opacity-90 scale-105"
                       objectPosition="center 30%"
                     />
               </div>
             )}
 
-            {/* Cinematic Overlays */}
+            {/* Legibility gradient — single overlay so the video runs full-bleed */}
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-text)] via-[var(--color-text)]/40 to-transparent z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-text)] via-[var(--color-text)]/60 to-transparent z-10" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,rgba(0,0,0,0.65))] z-10" />
 
         {/* Spaced Hero Container padding */}
         <div className="relative z-20 w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
@@ -154,16 +151,14 @@ export default function HomeClient() {
               <>
                 {/* Spaced title margin bottom */}
                 <h1 
-                  className="text-[clamp(2.5rem,6vw,4.5rem)] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow"
-                  style={{ marginBottom: "4rem" }}
+                  className="text-[clamp(3.5rem,12vw,10rem)] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow mb-10 md:mb-16"
                 >
                   {banners[activeBannerIdx].title ? renderTitle(banners[activeBannerIdx].title!) : "Cultura Exclusiva"}
                 </h1>
                 
                 {/* Spaced typography description text */}
                 <p 
-                  className="text-white/60 text-sm md:text-lg max-w-xl font-normal tracking-widest md:tracking-wide leading-loose animate-slide-up"
-                  style={{ marginBottom: "6rem" }}
+                  className="text-white/60 text-sm md:text-lg max-w-xl font-normal tracking-widest md:tracking-wide leading-loose animate-slide-up mb-10 md:mb-14"
                 >
                   {banners[activeBannerIdx].subtitle}
                 </p>
@@ -181,33 +176,20 @@ export default function HomeClient() {
                     <Flame size={16} className="mr-2 animate-pulse" /> 
                     {banners[activeBannerIdx].link_text || "Comprar Ahora"}
                   </Link>
-                  <Link
-                    href="/productos"
-                    className="btn-premium-outline group w-full sm:w-auto"
-                  >
-                    <div className="corner-decor corner-tl" />
-                    <div className="corner-decor corner-tr" />
-                    <div className="corner-decor corner-bl" />
-                    <div className="corner-decor corner-br" />
-                    Ver Catálogo
-                    <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-                  </Link>
                 </div>
               </>
             ) : (
               <>
                 {/* Spaced title margin bottom */}
                 <h1 
-                  className="text-[clamp(2.5rem,6vw,4.5rem)] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow"
-                  style={{ marginBottom: "4rem" }}
+                  className="text-[clamp(3.5rem,12vw,10rem)] font-serif font-black text-white leading-[0.9] uppercase tracking-tighter animate-slide-up luxury-text-shadow mb-10 md:mb-16"
                 >
                   {sections.hero_title ? renderTitle(sections.hero_title) : renderTitle("Últimas Tallas\nEn Liquidación")}
                 </h1>
                 
                 {/* Spaced typography description text */}
                 <p 
-                  className="text-white/60 text-sm md:text-lg max-w-xl font-normal tracking-widest md:tracking-wide leading-loose animate-slide-up"
-                  style={{ marginBottom: "6rem" }}
+                  className="text-white/60 text-sm md:text-lg max-w-xl font-normal tracking-widest md:tracking-wide leading-loose animate-slide-up mb-10 md:mb-14"
                 >
                   {sections.hero_subtitle || "Botas, tacos y zapatillas con stock real limitado. Precios de liquidación verificados, envíos 48h a todo Bolivia."}
                 </p>
@@ -224,17 +206,6 @@ export default function HomeClient() {
                     <div className="corner-decor corner-br" />
                     <Flame size={16} className="mr-2 animate-pulse" /> Reclamar Mi Par
                   </Link>
-                  <Link
-                    href="/productos"
-                    className="btn-premium-outline group w-full sm:w-auto"
-                  >
-                    <div className="corner-decor corner-tl" />
-                    <div className="corner-decor corner-tr" />
-                    <div className="corner-decor corner-bl" />
-                    <div className="corner-decor corner-br" />
-                    Catálogo Completo
-                    <ArrowRight size={16} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-                  </Link>
                 </div>
               </>
             )}
@@ -243,24 +214,20 @@ export default function HomeClient() {
 
       </section>
 
-      {/* ── BRAND TICKER CON IMÁGENES (Mucho más ancho, logos con padding-x masivo, y mas grande) ── */}
-      <div className="bg-black/95 overflow-hidden border-y border-white/5 relative z-10 py-12 md:py-16" >
-        <div className="absolute left-0 top-0 bottom-0 w-64 bg-gradient-to-r from-[var(--color-text)] to-transparent z-20 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-64 bg-gradient-to-l from-[var(--color-text)] to-transparent z-20 pointer-events-none" />
-        
-        <div className="flex animate-ticker whitespace-nowrap gap-0 items-center">
-          {[...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS].map((logo, i) => (
-            <div 
-              key={i} 
-              className="inline-flex items-center justify-center border-r border-white/5 h-16 shrink-0"
-              style={{ paddingLeft: "7rem", paddingRight: "7rem" }}
-            >
-              <img
-                src={logo.src}
-                alt={logo.name}
-                className="h-10 md:h-12 w-auto object-contain opacity-95"
-                style={{ filter: "brightness(0) invert(1) drop-shadow(0 0 12px rgba(255, 255, 255, 0.8))" }}
-              />
+      {/* ── MARQUEE CRIMSON — categorías y datos reales, sin ofertas inventadas ── */}
+      <div className="bg-[var(--color-accent)] overflow-hidden relative z-10 py-4 md:py-5 border-y border-black/20">
+        <div className="flex animate-ticker whitespace-nowrap items-center w-max">
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex items-center shrink-0" aria-hidden={dup === 1}>
+              {MARQUEE_ITEMS.map((item) => (
+                <span
+                  key={`${dup}-${item}`}
+                  className="flex items-center text-white text-xs md:text-sm font-black tracking-[0.35em] uppercase shrink-0"
+                >
+                  <span className="px-8 md:px-12">{item}</span>
+                  <span className="text-black/40">•</span>
+                </span>
+              ))}
             </div>
           ))}
         </div>
