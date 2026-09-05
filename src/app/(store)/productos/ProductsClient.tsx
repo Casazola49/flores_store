@@ -32,14 +32,14 @@ export default function ProductsClient() {
   const loading = productsResult === undefined || categoriesData === undefined;
 
   const pageTitle = isNew 
-    ? "The Archive" 
+    ? "El Archivo" 
     : isSale 
-      ? "Final Sale" 
+      ? "Liquidación Final" 
       : isExclusive 
         ? "Bóveda Privada" 
         : categorySlug 
           ? categorySlug 
-          : "Collection";
+          : "Colección";
 
   return (
     <div className="bg-white min-h-screen pb-40 pt-40">
@@ -70,28 +70,28 @@ export default function ProductsClient() {
           <aside className="w-full lg:w-48 flex-shrink-0">
             <div className="sticky top-40 space-y-20">
               <section>
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] mb-12 text-gray-300">Catalog</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] mb-12 text-gray-300">Catálogo</h3>
                 <ul className="space-y-6">
                     <li>
                     <Link href="/productos" className={`text-[10px] font-bold tracking-[0.3em] uppercase hover:text-black transition-colors ${!categorySlug && !isNew && !isSale ? 'text-black border-b border-black pb-1' : 'text-gray-400'}`}>
-                        All Pieces
+                        Todo
                     </Link>
                     </li>
                     <li>
                     <Link href="/productos?is_new=true" className={`text-[10px] font-bold tracking-[0.3em] uppercase hover:text-black transition-colors ${isNew ? 'text-black border-b border-black pb-1' : 'text-gray-400'}`}>
-                        New Arrivals
+                        Novedades
                     </Link>
                     </li>
                     <li>
                     <Link href="/productos?sale=true" className={`text-[10px] font-bold tracking-[0.3em] uppercase hover:text-[var(--color-accent)] transition-colors ${isSale ? 'text-[var(--color-accent)] border-b border-[var(--color-accent)] pb-1' : 'text-gray-400'}`}>
-                        Archive Sale
+                        Liquidación
                     </Link>
                     </li>
                 </ul>
               </section>
 
               <section>
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] mb-12 text-gray-300">Categories</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] mb-12 text-gray-300">Categorías</h3>
                 <ul className="space-y-6">
                     {categories.length > 0 ? (categories as any[]).map((cat: any) => (
                     <li key={cat.id}>

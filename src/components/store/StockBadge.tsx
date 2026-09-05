@@ -9,19 +9,19 @@ export function StockBadge({ stock }: { stock: number }) {
       </span>
     );
   }
-  if (stock <= 2) {
+  if (stock === 1) {
     return (
       <span className="flex items-center gap-2 text-[9px] font-black uppercase tracking-wider text-[var(--color-accent)] animate-pulse">
         <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] inline-block shadow-[0_0_10px_var(--color-accent)]" />
-        ¡Último par restante!
+        ¡Último par!
       </span>
     );
   }
-  if (stock <= 5) {
+  if (stock <= 3) {
     return (
       <span className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-wider text-[var(--color-accent)]">
         <span className="w-2 h-2 rounded-full bg-[var(--color-accent)] inline-block shadow-[0_0_8px_var(--color-accent)]" />
-        Pocas unidades
+        Últimas tallas
       </span>
     );
   }

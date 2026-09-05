@@ -354,17 +354,17 @@ export default function HomeClient() {
       <section className="bg-transparent border-b border-white/5 py-16 md:py-24">
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Spaced categories header mb-36 md:mb-52 */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6" style={{ marginBottom: "8rem" }}>
-            <h2 className="text-4xl md:text-6xl font-serif font-black uppercase tracking-tighter text-white">
-              Colección por <span className="text-white/60 italic font-normal">Categoría</span>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16 md:mb-24">
+            <h2 className="text-5xl md:text-8xl font-serif font-black uppercase tracking-tighter leading-none text-white">
+              Comprá por <span className="text-[var(--color-accent)] italic font-normal">colección</span>
             </h2>
             <Link href="/productos" className="text-[10px] font-black tracking-[0.4em] uppercase text-[var(--color-accent)] border-b border-[var(--color-accent)]/30 pb-2 hover:text-white hover:border-white transition-all duration-300 w-fit">
               Ver Todo
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
-            {(categories.length > 0 ? categories.slice(0, 5) : Array.from({ length: 5 })).map((cat, i) => {
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-6">
+            {(categories.length > 0 ? categories.slice(0, 3) : Array.from({ length: 3 })).map((cat, i) => {
               if (!cat) return <div key={i} className="aspect-[4/5] skeleton rounded-none" />;
               const c = cat as Category;
               const img = c.image_url || CAT_FALLBACK[c.slug] || CAT_FALLBACK.default;
@@ -384,7 +384,8 @@ export default function HomeClient() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10" />
                   
                   <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
-                    <span className="font-mono text-[8px] text-white/40 block tracking-widest mb-1">0{i+1} / COLLECTION</span>
+                    <span className="font-mono text-[8px] text-white/40 block tracking-widest mb-1">0{i+1} / COLECCIÓN</span>
+                    <span aria-hidden="true" className="absolute -top-8 right-2 text-[7rem] md:text-[9rem] font-black leading-none text-white/[0.07] select-none pointer-events-none">0{i+1}</span>
                     <h3 className="text-white font-serif font-black text-lg md:text-xl uppercase tracking-tighter group-hover:text-[var(--color-accent)] transition-colors">{c.name}</h3>
                   </div>
                   
@@ -398,73 +399,6 @@ export default function HomeClient() {
         </div>
       </section>
 
-      {/* ── TESTIMONIOS OSCUROS — (Surgido arriba, centrado y recuadros más grandes/espaciados) ──── */}
-      <section className="bg-transparent border-b border-white/5 relative overflow-hidden py-16 md:py-24">
-        {/* Muted background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--color-accent)]/5 blur-[150px] rounded-full pointer-events-none" />
-        
-        <div className="max-w-[1400px] mx-auto px-6 relative z-10">
-          {/* Centered header title with mb-36 md:mb-56 */}
-          <div className="text-center" style={{ marginBottom: "8rem" }}>
-            <span className="text-[var(--color-accent)] text-[10px] font-black tracking-[0.55em] uppercase mb-4 block animate-pulse">Garantía Flores</span>
-            <h2 className="text-4xl md:text-6xl font-serif font-black uppercase tracking-tighter text-white">Experiencia de Nuestros Compradores</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-14 lg:gap-16 max-w-6xl mx-auto justify-center">
-            {[
-              { name: "María V.", city: "Santa Cruz", text: "Increíble calidad y precio. Llegó en 2 días mediante flota. ¡Ya pedí mi segundo par para mi hermano!", rating: 5, model: "Bota Chelsea Noir", size: "38" },
-              { name: "Carlos M.", city: "Cochabamba", text: "Las botas de cuero son exactamente como en las fotos. La atención por WhatsApp fue súper rápida y me asesoraron con mi talla exacta.", rating: 5, model: "Deportivo Urban Red", size: "41" },
-              { name: "Ana P.", city: "La Paz", text: "Aproveché la liquidación y ahorré casi Bs. 200. Calidad de cuero excelente, totalmente garantizado.", rating: 5, model: "Tacón Stiletto Oro", size: "39" },
-            ].map((t, i) => (
-              <div 
-                key={i} 
-                className="relative bg-[var(--color-dark-surface)] border border-white/10 p-10 md:p-14 shadow-2xl flex flex-col justify-between rounded-none hover:border-[var(--color-accent)]/40 transition-all duration-500"
-                style={{ minHeight: "340px" }}
-              >
-                {/* Tech corner decorations for the cards */}
-                <div className="corner-decor corner-tl" />
-                <div className="corner-decor corner-tr" />
-                <div className="corner-decor corner-bl" />
-                <div className="corner-decor corner-br" />
-                
-                <div>
-                  {/* Verified Shoe Specs Header */}
-                  <div className="flex justify-between items-center border-b border-white/10 pb-4 mb-8 text-[9px] font-mono tracking-widest text-white/40 uppercase">
-                    <span>[ COMPRA VERIFICADA ]</span>
-                    <span className="bg-[var(--color-accent-light)] text-[var(--color-text)] px-2 py-0.5 border border-[var(--color-accent)]/40 font-bold">
-                      {t.model} / T: {t.size}
-                    </span>
-                  </div>
-                  
-                  <div className="flex gap-2 mb-8">
-                    {[...Array(t.rating)].map((_, j) => (
-                      <Star key={j} size={12} fill="var(--color-accent)" className="text-[var(--color-accent)]" />
-                    ))}
-                  </div>
-                  <p className="text-sm md:text-base text-white/80 leading-loose mb-10 font-medium italic tracking-wide">"{t.text}"</p>
-                </div>
-                
-                <div className="flex items-center justify-between border-t border-white/5 pt-6 mt-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-neutral-900 border border-white/10 flex items-center justify-center shrink-0">
-                      <span className="text-white font-black text-sm font-serif">{t.name[0]}</span>
-                    </div>
-                    <div>
-                      <p className="text-xs font-black uppercase tracking-wider text-white">{t.name}</p>
-                      <p className="text-[9.5px] text-white/40 uppercase tracking-widest mt-0.5">{t.city}</p>
-                    </div>
-                  </div>
-                  
-                  {/* Sneakerhead spec serial */}
-                  <span className="font-mono text-[7px] text-white/20 tracking-wider hidden sm:inline-block">
-                    FLS-DEV-{t.size}X
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── NEWSLETTER VIP — Spaced layout, design buttons (Espacio vertical masivo de 16rem) ── */}
       <section className="bg-[var(--color-dark-surface)] text-white border-b border-white/5 relative overflow-hidden py-16 md:py-24">

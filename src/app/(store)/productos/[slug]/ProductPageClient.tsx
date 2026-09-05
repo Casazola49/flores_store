@@ -8,6 +8,7 @@ import { api } from "@convex/_generated/api";
 import type { Product, ProductVariant } from "@/types";
 import { Truck, ShieldCheck, Minus, Plus, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import { getWhatsAppNumber } from "@/lib/whatsapp";
 
 export default function ProductPageClient({ slug }: { slug: string }) {
   const { addItem } = useCartStore();
@@ -44,7 +45,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
         <div className="w-16 h-1 w-32 bg-gray-100 relative overflow-hidden">
             <div className="absolute inset-0 bg-black animate-slide-infinite" />
         </div>
-        <p className="text-[10px] font-bold tracking-[0.5em] uppercase">Loading Archive</p>
+        <p className="text-[10px] font-bold tracking-[0.5em] uppercase">Cargando modelo</p>
       </div>
     );
   }
@@ -93,7 +94,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
         <div className="flex items-center gap-4 text-[9px] font-bold tracking-[0.4em] uppercase text-gray-400 mb-20">
             <Link href="/" className="hover:text-black transition-colors">Home</Link>
             <span className="w-4 h-[1px] bg-gray-200" />
-            <Link href="/productos" className="hover:text-black transition-colors">Archive</Link>
+            <Link href="/productos" className="hover:text-black transition-colors">Archivo</Link>
             <span className="w-4 h-[1px] bg-gray-200" />
             <span className="text-black">{product.name}</span>
         </div>
@@ -129,8 +130,8 @@ export default function ProductPageClient({ slug }: { slug: string }) {
             <div className="space-y-12">
                 <div>
                     <div className="flex items-center gap-4 mb-6">
-                      <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[var(--color-accent)] block">In Stock — Flores Archive</span>
-                      {product.is_new && <span className="text-[9px] bg-black text-white px-2 py-0.5 font-bold tracking-widest uppercase">New Arrival</span>}
+                      <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[var(--color-accent)] block">En stock</span>
+                      {product.is_new && <span className="text-[9px] bg-black text-white px-2 py-0.5 font-bold tracking-widest uppercase">Nuevo</span>}
                     </div>
                     <h1 className="text-6xl md:text-8xl font-serif font-black uppercase tracking-tighter leading-none mb-8">{product.name}</h1>
                     <div className="flex items-baseline gap-8">
@@ -152,8 +153,8 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                   {availableSizes.length > 0 && (
                     <div>
                       <div className="flex justify-between items-center mb-6">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Select Size</span>
-                        <Link href="/tallas" className="text-[9px] font-bold underline uppercase tracking-[0.3em] text-gray-300 hover:text-black transition-colors">Size Guide</Link>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Elegí tu talle</span>
+                        <a href={`https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(`Hola Flores, ¿me ayudás con el talle de ${product?.name ?? "este modelo"}?`)}`} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold underline uppercase tracking-[0.3em] text-gray-300 hover:text-black transition-colors">Guía de talles</a>
                       </div>
                       <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
                         {availableSizes.map(size => (
@@ -218,7 +219,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                               className="flex-1 bg-black text-white h-16 text-[10px] font-bold tracking-[0.4em] uppercase hover:bg-[var(--color-accent)] transition-all duration-500 flex items-center justify-center gap-4 group"
                           >
                               <ShoppingBag size={16} />
-                              Add to Archive
+                              Agregar al carrito
                               <span className="w-0 group-hover:w-8 h-[1px] bg-white transition-all" />
                           </button>
                       </div>
