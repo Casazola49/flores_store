@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function ProductosPageWrapper() {
   return (
     <Suspense fallback={<div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-      <div className="w-12 h-12 border-4 border-[var(--color-accent)] border-t-black animate-spin rounded-full" />
+      <div className="w-12 h-12 border-4 border-[var(--color-accent)] border-t-black animate-spin rounded-none" />
       <p className="text-[10px] font-black tracking-[0.4em] uppercase">Cargando Catálogo...</p>
     </div>}>
       <ProductsClient />
