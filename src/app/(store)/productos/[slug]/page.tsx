@@ -21,7 +21,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const fallbackTitle = `${slugToTitle(slug)} | Flores`;
-  const fallbackDescription = `Compra ${slugToTitle(slug)} en Flores. Calzado premium en liquidación con envíos a todo Bolivia.`;
+  const fallbackDescription = `Compra ${slugToTitle(slug)} en Flores. Calzado premium con stock real. Envíos a todo Bolivia.`;
 
   // Try to read the product from Convex (public query, no auth) for richer
   // metadata. If the deployment is unreachable at request time, fall back to a
@@ -52,7 +52,7 @@ export async function generateMetadata({
     const description =
       product.meta_desc ||
       product.description ||
-      `Compra ${product.name} en Flores. Calzado premium en liquidación con envíos a todo Bolivia.`;
+      `Compra ${product.name} en Flores. Calzado premium con stock real. Envíos a todo Bolivia.`;
     const primaryImage =
       product.images?.find((img) => img.is_primary)?.url ||
       product.images?.[0]?.url;

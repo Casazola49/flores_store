@@ -53,7 +53,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
   if (!product) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center gap-6 bg-white">
-        <p className="text-sm font-bold uppercase tracking-widest text-gray-400">Producto no encontrado</p>
+        <p className="text-sm font-bold  text-gray-400">Producto no encontrado</p>
         <Link href="/productos" className="text-[10px] font-black uppercase tracking-[0.3em] border-b border-black pb-2">Volver al catálogo</Link>
       </div>
     );
@@ -91,7 +91,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
     <div className="bg-white min-h-screen pt-40 pb-40">
       <div className="container mx-auto px-6">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-4 text-[9px] font-bold tracking-[0.4em] uppercase text-gray-400 mb-20">
+        <div className="flex items-center gap-4 text-label font-bold tracking-[0.4em] uppercase text-gray-400 mb-20">
             <Link href="/" className="hover:text-black transition-colors">Home</Link>
             <span className="w-4 h-[1px] bg-gray-200" />
             <Link href="/productos" className="hover:text-black transition-colors">Archivo</Link>
@@ -103,7 +103,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
 
           {/* Gallery */}
           <div className="w-full lg:w-3/5 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="md:col-span-2 relative aspect-[4/5] bg-[#F9F9F9] overflow-hidden border border-gray-100">
+            <div className="md:col-span-2 relative aspect-[4/5] bg-[var(--color-surface)] overflow-hidden border border-gray-100">
                 <Image
                     src={selectedImage}
                     alt={product.name}
@@ -117,7 +117,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
             {product.images?.map((img: any, idx: number) => (
                 <div
                   key={img.id}
-                  className={`relative aspect-[3/4] bg-[#F9F9F9] overflow-hidden border transition-all duration-300 group cursor-pointer ${selectedImage === img.url ? 'border-black' : 'border-gray-100'}`}
+                  className={`relative aspect-[3/4] bg-[var(--color-surface)] overflow-hidden border transition-all duration-300 group cursor-pointer ${selectedImage === img.url ? 'border-black' : 'border-gray-100'}`}
                   onClick={() => setSelectedImage(img.url)}
                 >
                     <Image src={img.url} alt={`${product.name} ${idx}`} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px" className="object-cover group-hover:scale-105 transition-transform duration-1000" />
@@ -131,9 +131,9 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                 <div>
                     <div className="flex items-center gap-4 mb-6">
                       <span className="text-[10px] font-bold tracking-[0.5em] uppercase text-[var(--color-accent)] block">En stock</span>
-                      {product.is_new && <span className="text-[9px] bg-black text-white px-2 py-0.5 font-bold tracking-widest uppercase">Nuevo</span>}
+                      {product.is_new && <span className="text-label bg-black text-white px-2 py-0.5 font-bold tracking-widest uppercase">Nuevo</span>}
                     </div>
-                    <h1 className="text-6xl md:text-8xl font-serif font-black uppercase tracking-tighter leading-none mb-8">{product.name}</h1>
+                    <h1 className="text-display font-serif font-black uppercase tracking-tighter leading-none mb-8">{product.name}</h1>
                     <div className="flex items-baseline gap-8">
                         <span className="text-4xl font-bold tracking-tighter">Bs. {Number(currentPrice).toFixed(0)}</span>
                         {product.compare_price && (
@@ -143,8 +143,8 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                 </div>
 
                 <div className="border-y border-gray-100 py-12">
-                    <p className="text-[11px] font-bold text-gray-500 leading-loose uppercase tracking-widest">
-                        {product.description || "Pieza de liquidación exclusiva Flores. Diseño estructural enfocado en la durabilidad y estética atemporal."}
+                    <p className="text-[11px] font-bold text-gray-500 leading-loose ">
+                        {product.description || "Calzado Flores con diseño atemporal y stock real."}
                     </p>
                 </div>
 
@@ -153,8 +153,8 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                   {availableSizes.length > 0 && (
                     <div>
                       <div className="flex justify-between items-center mb-6">
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Elegí tu talle</span>
-                        <a href={`https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(`Hola Flores, ¿me ayudás con el talle de ${product?.name ?? "este modelo"}?`)}`} target="_blank" rel="noopener noreferrer" className="text-[9px] font-bold underline uppercase tracking-[0.3em] text-gray-300 hover:text-black transition-colors">Guía de talles</a>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em]">Elige tu talle</span>
+                        <a href={`https://wa.me/${getWhatsAppNumber()}?text=${encodeURIComponent(`Hola Flores, ¿me ayudas con el talle de ${product?.name ?? "este modelo"}?`)}`} target="_blank" rel="noopener noreferrer" className="text-label font-bold underline uppercase tracking-[0.3em] text-gray-300 hover:text-black transition-colors">Guía de talles</a>
                       </div>
                       <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
                         {availableSizes.map(size => (
@@ -167,7 +167,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                               const color = variants.find((v: any) => v.size === size)?.color || "";
                               setSelectedColor(color);
                             }}
-                            className={`h-14 flex items-center justify-center text-[11px] font-bold transition-all duration-300 border ${selectedSize === size ? 'bg-black text-white border-black shadow-xl scale-105' : 'border-gray-100 text-gray-400 hover:border-gray-300 hover:text-black'}`}
+                            className={`h-14 flex items-center justify-center text-[11px] font-bold transition-all duration-300 border ${selectedSize === size ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)] shadow-xl scale-105' : 'border-gray-100 text-gray-400 hover:border-gray-300 hover:text-black'}`}
                           >
                             {size}
                           </button>
@@ -178,13 +178,13 @@ export default function ProductPageClient({ slug }: { slug: string }) {
 
                   {availableColorsForSize.length > 1 && (
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-[0.4em] mb-6 block">Select Color</span>
+                      <span className="text-[10px] font-bold uppercase tracking-[0.4em] mb-6 block">Elige color</span>
                       <div className="flex gap-4">
                         {availableColorsForSize.map(color => (
                           <button
                             key={color}
                             onClick={() => { setVariantError(""); setSelectedColor(color); }}
-                            className={`px-6 h-12 flex items-center justify-center text-[10px] font-bold tracking-widest uppercase transition-all duration-300 border ${selectedColor === color ? 'bg-black text-white border-black' : 'border-gray-100 text-gray-400 hover:border-gray-300'}`}
+                            className={`px-6 h-12 flex items-center justify-center text-[10px] font-bold tracking-widest uppercase transition-all duration-300 border ${selectedColor === color ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]' : 'border-gray-100 text-gray-400 hover:border-gray-300'}`}
                           >
                             {color}
                           </button>
@@ -195,7 +195,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                 </div>
 
                 {variantError && (
-                      <p role="alert" aria-live="assertive" className="text-xs font-bold uppercase tracking-widest text-red-500">
+                      <p role="alert" aria-live="assertive" className="text-xs font-bold  text-red-500">
                         {variantError}
                       </p>
                     )}
@@ -204,7 +204,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                 <div className="space-y-8 pt-8">
                     {isOutOfStock ? (
                       <div className="h-16 flex items-center justify-center bg-gray-100 text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">
-                        Out of Stock
+                        Agotado
                       </div>
                     ) : (
                       <div className="flex items-center gap-6">
@@ -229,16 +229,16 @@ export default function ProductPageClient({ slug }: { slug: string }) {
                         <div className="space-y-4">
                             <div className="flex items-center gap-4 text-[var(--color-accent)]">
                                 <Truck size={16} />
-                                <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-black">Express</span>
+                                <span className="text-label font-bold uppercase tracking-[0.3em] text-black">Envío 48h</span>
                             </div>
-                            <p className="text-[8px] text-gray-400 uppercase tracking-widest leading-relaxed">Envíos prioritarios a todo el país.</p>
+                            <p className="text-label text-gray-400  leading-relaxed">Envíos prioritarios a todo el país.</p>
                         </div>
                         <div className="space-y-4">
                             <div className="flex items-center gap-4 text-[var(--color-accent)]">
                                 <ShieldCheck size={16} />
-                                <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-black">Quality</span>
+                                <span className="text-label font-bold uppercase tracking-[0.3em] text-black">Garantía Flores</span>
                             </div>
-                            <p className="text-[8px] text-gray-400 uppercase tracking-widest leading-relaxed">Garantía Flores Studio en cada costura y material.</p>
+                            <p className="text-label text-gray-400  leading-relaxed">Calidad en cada costura.</p>
                         </div>
                     </div>
                 </div>
