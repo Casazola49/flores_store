@@ -74,7 +74,7 @@ toast/glow podadas; no quedan techo Display excedido ni infinite sin reduce.
 
 Cambios:
 
-- [ ] Crear `BrandPlaceholder.tsx`: SVG inline de marca con tokens
+- [x] Crear `BrandPlaceholder.tsx`: SVG inline de marca con tokens
   (`var(--color-primary)`/`var(--color-surface)`), props `aspect` (`16:9`/`4:5`/`3:4`), `label`, `variant` (`dark`/`light`). T3 lo consume en 4:5 y 3:4. <!-- sdd-owner: implementation -->
 - [x] Hero: `text-[clamp(3.5rem,12vw,10rem)]` → `text-display`; `uppercase tracking-tighter` → sentence case con `tracking-tight`; overlay `from-black/70 via-black/30 to-transparent`; 1 solo Playfair (h1); subtítulo DM Sans 16px; label `── FLORES` 10px. <!-- sdd-owner: implementation -->
 - [x] VideoBanner: reemplazar fallback Unsplash `photo-1542291026…` por `BrandPlaceholder aspect="16:9" variant="dark"`; mantener lógica de video y `optimizeCloudinaryVideo`. <!-- sdd-owner: implementation -->
@@ -261,3 +261,5 @@ T8.
 - [ ] Post-apply bounded review por PR (revisar por tarea si el diff del PR supera 400 líneas). <!-- sdd-owner: parent -->
 - [ ] Confirmar con el usuario la estrategia de cadena (config `chain_strategy: deferred` → `pending` hasta confirmación; opciones: size-exception revisando por tarea o feature-branch-chain PR1→PR2→PR3 hacia main) antes de aplicar el PR 1. <!-- sdd-owner: parent -->
 - [ ] Al cerrar los 3 PRs: pasar el gate verify (T8), syncear DESIGN.md/PRODUCT.md si lo implementado los supera y archivar `openspec/changes/redesign-editorial-total` → `openspec/archive/`. <!-- sdd-owner: parent -->
+## Decisión size:exception
+- El usuario aceptó explícitamente aplicar todo directo en la rama (sin PRs encadenados). delivery_strategy: exception-ok.

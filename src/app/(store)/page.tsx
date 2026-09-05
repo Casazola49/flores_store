@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Flores | Calzado premium en Bolivia",
     description:
       "Botas, tacos y zapatillas con stock real en Cochabamba y Santa Cruz. Envíos a todo Bolivia.",
-    images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800"],
+    images: ["https://res.cloudinary.com/dggj5tnke/image/upload/flores/placeholders/foto-pendiente.jpg"],
   },
 };
 
