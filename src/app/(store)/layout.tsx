@@ -3,7 +3,6 @@ import Navbar from "@/components/store/Navbar";
 import Footer from "@/components/store/Footer";
 import CartDrawer from "@/components/store/CartDrawer";
 import WhatsAppButton from "@/components/store/WhatsAppButton";
-import ToastNotifications from "@/components/store/ToastNotifications";
 
 export default function StoreLayout({
   children,
@@ -21,7 +20,7 @@ export default function StoreLayout({
       <Navbar />
 
       {/* Main content padded to clear fixed bars */}
-      <main className="min-h-screen bg-[var(--color-bg)]" style={{ paddingTop: 0 }}>
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-[var(--color-bg)]" style={{ paddingTop: 0 }}>
         {children}
       </main>
 
@@ -29,8 +28,6 @@ export default function StoreLayout({
       <CartDrawer />
       <WhatsAppButton />
 
-      {/* Social proof toasts — bottom left */}
-      <ToastNotifications />
     </>
   );
 }

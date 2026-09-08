@@ -14,10 +14,8 @@
  *      slow-zoom, ticker, shimmer, pulse) and smooth-scroll now honor
  *      `prefers-reduced-motion: reduce` so motion-sensitive users are not
  *      trapped in looping motion.
- *   3. NO YELLOW/ARIA — removed the gold `.premium-gradient-gold` (#FFE082 →
- *      #FFB300) which contradicted the "no amarillo Aria" brand decision.
- *      Fase B: fuentes vía next/font (sin @import) y los residuos
- *      `#FFB300` stars + copy `Aria Liquidación` migrados a `var(--color-accent)`.
+ *   3. NO YELLOW/ARIA — removed the decorative gold treatment and legacy
+ *      urgency copy in favor of the Flores accent token.
  */
 
 @import "tailwindcss";
@@ -35,6 +33,12 @@
   --color-accent: #9B1C1C;
   --color-accent-bright: #C1272D;
   --color-accent-light: #FEE2E2;
+  --color-accent-dark: #801414;
+  --font-display: clamp(2.5rem, 6vw, 4.5rem);
+  --font-headline: 2rem;
+  --font-title: 1.25rem;
+  --font-body: 1rem;
+  --font-label: 0.625rem;
 
   /* --font-serif / --font-sans now provided by next/font (see app/layout.tsx) */
 
@@ -50,9 +54,20 @@
   --transition: 0.45s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* ─── Reset ─── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ─── Reset ───
+ * Solo box-sizing aquí. El margin/padding 0 vive en el preflight de Tailwind
+ * (capa base, sobreescribible). Un reset universal sin capa mataría TODAS las
+ * utilidades de espaciado (m-*, p-*, mx-auto) por especificidad de cascada. */
+*, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; font-size: 16px; }
+.text-display { font-size: var(--font-display); }
+.text-headline { font-size: var(--font-headline); }
+.text-title { font-size: var(--font-title); }
+.text-body { font-size: var(--font-body); line-height: 1.6; }
+.text-label { font-size: var(--font-label); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.aspect-editorial { aspect-ratio: 16 / 9; }
+.aspect-portrait { aspect-ratio: 4 / 5; }
+.aspect-product { aspect-ratio: 3 / 4; }
 
 body {
   font-family: var(--font-sans);
@@ -82,6 +97,35 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; bac
   box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent);
 }
 
+/* ─── Skip link (WCAG 2.4.1 Bypass Blocks) ───
+   First focusable element of <body>. Off-screen until focus, then
+   slides into view at top-left. Ring mirrors :focus-visible. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  transform: translateY(-120%);
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: 0;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
 /* ─── Reduced motion (WCAG 2.2 — 2.3.3) ─── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -136,7 +180,7 @@ button { cursor: pointer; border: none; outline: none; font-family: inherit; bac
 
 /* ─── Skeleton ─── */
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-border) 50%, var(--color-surface) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
@@ -172,11 +216,6 @@ tr:last-child td { border-bottom: none; }
 tr:hover td { background: var(--color-surface); }
 
 /* ─── Urgency Animations ─── */
-@keyframes pulse-red {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-.animate-pulse-red { animation: pulse-red 1.5s ease-in-out infinite; }
 
 @keyframes ticker {
   0% { transform: translateX(0); }
@@ -184,18 +223,6 @@ tr:hover td { background: var(--color-surface); }
 }
 .animate-ticker { animation: ticker 20s linear infinite; }
 .animate-ticker:hover { animation-play-state: paused; }
-
-@keyframes toast-in {
-  0% { transform: translateY(100%); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.animate-toast-in { animation: toast-in 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-
-@keyframes toast-out {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(100%); opacity: 0; }
-}
-.animate-toast-out { animation: toast-out 0.4s ease-in forwards; }
 
 @keyframes slide-down {
   0% { transform: translateY(-100%); opacity: 0; }
@@ -249,14 +276,14 @@ tr:hover td { background: var(--color-surface); }
 }
 
 .premium-gradient-text {
-  background: linear-gradient(135deg, #ffffff 30%, #a3a3a3 70%, #9b1c1c 100%);
+  background: linear-gradient(135deg, #ffffff 30%, #a3a3a3 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 /* Overriding skeleton for dark theme */
 .skeleton {
-  background: linear-gradient(90deg, #111111 25%, #1a1a1a 50%, #111111 75%) !important;
+  background: linear-gradient(90deg, var(--color-dark-surface) 25%, var(--color-primary) 50%, var(--color-dark-surface) 75%) !important;
   background-size: 200% 100%;
 }
 
@@ -281,9 +308,9 @@ tr:hover td { background: var(--color-surface); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #9B1C1C;
+  background: var(--color-accent);
   color: #ffffff;
-  border: 1px solid #9B1C1C;
+  border: 1px solid var(--color-accent);
   font-family: var(--font-sans);
   font-weight: 900;
   text-transform: uppercase;
@@ -310,8 +337,8 @@ tr:hover td { background: var(--color-surface); }
 }
 
 .btn-premium:hover {
-  background: #801414;
-  border-color: #c92a2a;
+  background: var(--color-accent-dark);
+  border-color: var(--color-accent-bright);
   box-shadow: 0 0 35px rgba(155, 28, 28, 0.55);
   transform: translateY(-2px);
 }
@@ -370,10 +397,3 @@ tr:hover td { background: var(--color-surface); }
 .corner-bl { bottom: -1px; left: -1px; border-bottom: 1px solid; border-left: 1px solid; }
 .corner-br { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; }
 
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 15px rgba(155, 28, 28, 0.15); border-color: rgba(155, 28, 28, 0.25); }
-  50% { box-shadow: 0 0 35px rgba(155, 28, 28, 0.55); border-color: rgba(155, 28, 28, 0.7); }
-}
-.animate-glow-pulse {
-  animation: glow-pulse 2s infinite ease-in-out;
-}

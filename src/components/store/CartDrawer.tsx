@@ -1,49 +1,22 @@
 "use client";
 
-import { useCartStore } from "@/lib/store";
-import { X, Minus, Plus, ShoppingBag, ArrowRight, ArrowLeft, MessageCircle, CheckCircle } from "lucide-react";
+import { useCartStore, useCMSStore } from "@/lib/store";
+import { X, Minus, Plus, ShoppingBag, ArrowRight, ArrowLeft, MessageCircle, CheckCircle, Check } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { buildOrderMessage, getWhatsAppNumber, openWhatsApp } from "@/lib/whatsapp";
 
-// ── Helpers ───────────────────────────────────────────────────
-function buildWhatsAppMessage(
-  items: ReturnType<typeof useCartStore.getState>["items"],
-  subtotal: number,
-  customer: { name: string; phone: string; city: string; deliveryType: string; address: string }
-): string {
-  const productLines = items
-    .map(item => {
-      const variant = [item.size && `Talla ${item.size}`, item.color && item.color]
-        .filter(Boolean)
-        .join(" / ");
-      const lineTotal = (item.price * item.quantity).toFixed(0);
-      return `• ${item.product_name}${variant ? ` (${variant})` : ""} x${item.quantity} — Bs. ${lineTotal}`;
-    })
-    .join("\n");
+// Helpers moved to @/lib/whatsapp — single source of truth (#4)
 
-  const deliveryLine =
-    customer.deliveryType === "envio"
-      ? `🚚 *Envío a:* ${customer.address}, ${customer.city}`
-      : `🏬 *Retiro en tienda* — ${customer.city}`;
+// ── Stepper Config ────────────────────────────────────────────
+const STEPS = [
+  { key: "cart" as const, label: "Revisar", sub: "Carrito" },
+  { key: "checkout" as const, label: "Datos", sub: "Entrega" },
+  { key: "sent" as const, label: "WhatsApp", sub: "Enviar" },
+] as const;
 
-  const msg = [
-    `🛍️ *NUEVO PEDIDO — FLORES STORE*`,
-    ``,
-    `👤 *Cliente:* ${customer.name}`,
-    `📱 *Teléfono:* ${customer.phone}`,
-    deliveryLine,
-    ``,
-    `📦 *PRODUCTOS:*`,
-    productLines,
-    ``,
-    `━━━━━━━━━━━━━━━━━━`,
-    `💰 *TOTAL: Bs. ${subtotal.toFixed(0)}*`,
-    `━━━━━━━━━━━━━━━━━━`,
-    ``,
-    `¿Pueden confirmar disponibilidad y coordinar la entrega? 🙏`,
-  ].join("\n");
-
-  return encodeURIComponent(msg);
+function stepIndex(step: string) {
+  return STEPS.findIndex(s => s.key === step);
 }
 
 // ── Main Component ────────────────────────────────────────────
@@ -51,6 +24,7 @@ type Step = "cart" | "checkout" | "sent";
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, updateQuantity, removeItem, subtotal } = useCartStore();
+  const { sections } = useCMSStore();
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<Step>("cart");
   const [customer, setCustomer] = useState({
@@ -61,6 +35,7 @@ export default function CartDrawer() {
     address: "",
   });
   const [formError, setFormError] = useState("");
+  const formErrorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -76,23 +51,37 @@ export default function CartDrawer() {
     }
   }, [isOpen]);
 
+  // Move focus to the form error when it appears (accessibility)
+  useEffect(() => {
+    if (formError && formErrorRef.current) {
+      formErrorRef.current.focus();
+    }
+  }, [formError]);
+
   const handleCheckout = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
+
+    if (items.length === 0) return;
 
     if (!customer.name.trim()) return setFormError("Por favor ingresa tu nombre.");
     if (!customer.phone.trim() || customer.phone.trim().length < 7) return setFormError("Ingresa un número de teléfono válido.");
     if (!customer.city.trim()) return setFormError("Indica tu ciudad.");
     if (customer.deliveryType === "envio" && !customer.address.trim()) return setFormError("Ingresa tu dirección de entrega.");
 
-    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "59170000000";
-    const message = buildWhatsAppMessage(items, subtotal(), customer);
+    const phoneNumber = getWhatsAppNumber(sections.whatsapp_number);
+    const message = buildOrderMessage(items, subtotal(), customer);
 
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+    if (!openWhatsApp(phoneNumber, message)) {
+      setFormError("No pudimos abrir WhatsApp — permití pop-ups y reintentá.");
+      return;
+    }
     setStep("sent");
   };
 
   if (!mounted) return null;
+
+  const activeIdx = stepIndex(step);
 
   return (
     <>
@@ -107,6 +96,74 @@ export default function CartDrawer() {
           isOpen ? "translate-x-0" : "translate-x-full"
         } flex flex-col border-l border-neutral-200 shadow-2xl`}
       >
+        {/* ── Stepper: Review → Data → WhatsApp ───────────────── */}
+        <nav aria-label="Progreso del pedido" className="shrink-0 px-6 sm:px-8 py-5 border-b border-neutral-200 bg-white">
+          <ol className="flex items-start justify-between">
+            {STEPS.map((s, idx) => {
+              const state: "completed" | "active" | "pending" =
+                idx < activeIdx ? "completed" : idx === activeIdx ? "active" : "pending";
+              const isLast = idx === STEPS.length - 1;
+
+              return (
+                <li
+                  key={s.key}
+                  aria-current={state === "active" ? "step" : undefined}
+                  className="relative flex flex-1 flex-col items-center gap-2"
+                >
+                  {/* connector to next step — absolute track between centers */}
+                  {!isLast && (
+                    <span
+                      aria-hidden="true"
+                      className={[
+                        "absolute top-[18px] h-px transition-colors duration-300",
+                        "left-[calc(50%+20px)] right-[calc(-50%+20px)]",
+                        idx < activeIdx ? "bg-[var(--color-accent)]" : "bg-[var(--color-border)]",
+                      ].join(" ")}
+                    />
+                  )}
+
+                  {/* node — sharp (radius 0), crimson discipline */}
+                  <span
+                    className={[
+                      "relative z-[1] flex h-9 w-9 shrink-0 items-center justify-center rounded-none text-[11px] font-black tracking-wide transition-all duration-300",
+                      state === "completed"
+                        ? "bg-[var(--color-accent)] text-white border border-[var(--color-accent)] shadow-sm"
+                        : state === "active"
+                          ? "bg-white text-[var(--color-accent)] border-2 border-[var(--color-accent)] shadow-[0_0_0_4px_rgba(155,28,28,0.08)]"
+                          : "bg-white text-[var(--color-text-muted)] border border-[var(--color-border)]",
+                    ].join(" ")}
+                    aria-hidden="true"
+                  >
+                    {state === "completed" ? <Check size={16} strokeWidth={3} /> : idx + 1}
+                  </span>
+
+                  {/* labels */}
+                  <span
+                    className={[
+                      "text-center text-[10px] font-black uppercase tracking-[0.16em] leading-none",
+                      state === "active"
+                        ? "text-[var(--color-accent)]"
+                        : state === "completed"
+                          ? "text-[var(--color-text)]"
+                          : "text-[var(--color-text-muted)]",
+                    ].join(" ")}
+                  >
+                    {s.label}
+                  </span>
+                  <span
+                    className={[
+                      "-mt-0.5 text-center text-[10px] font-semibold leading-none",
+                      state === "active" ? "text-[var(--color-text)]" : "text-[var(--color-text-muted)]",
+                    ].join(" ")}
+                  >
+                    {s.sub}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
+
         {/* ── Step: CART ──────────────────────────────────── */}
         {step === "cart" && (
           <>
@@ -228,7 +285,7 @@ export default function CartDrawer() {
           <>
             {/* Header */}
             <div className="flex items-center gap-4 px-8 py-6 border-b border-neutral-100">
-              <button onClick={() => setStep("cart")} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+              <button onClick={() => setStep("cart")} className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors" aria-label="Volver al carrito">
                 <ArrowLeft size={18} />
               </button>
               <div>
@@ -267,6 +324,7 @@ export default function CartDrawer() {
                     type="text"
                     required
                     placeholder="Ej. María González"
+                    id="drawer-name"
                     value={customer.name}
                     onChange={e => setCustomer({ ...customer, name: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
@@ -279,6 +337,7 @@ export default function CartDrawer() {
                     type="tel"
                     required
                     placeholder="Ej. 70000000"
+                    id="drawer-phone"
                     value={customer.phone}
                     onChange={e => setCustomer({ ...customer, phone: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
@@ -291,7 +350,7 @@ export default function CartDrawer() {
                     type="text"
                     required
                     id="drawer-city"
-                        placeholder="Ej. La Paz, Cochabamba, Santa Cruz..."
+                    placeholder="Ej. La Paz, Cochabamba, Santa Cruz..."
                     value={customer.city}
                     onChange={e => setCustomer({ ...customer, city: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
@@ -332,7 +391,7 @@ export default function CartDrawer() {
                     <input
                       type="text"
                       id="drawer-address"
-                          placeholder="Ej. Av. Arce 1234, Zona Central"
+                      placeholder="Ej. Av. Arce 1234, Zona Central"
                       value={customer.address}
                       onChange={e => setCustomer({ ...customer, address: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-200 rounded-none text-sm focus:outline-none focus:border-[var(--color-accent)] transition-colors font-semibold"
@@ -341,7 +400,11 @@ export default function CartDrawer() {
                 )}
 
                 {formError && (
-                  <div className="bg-red-50 border border-red-200 rounded-none px-4 py-3 text-xs text-red-700 font-semibold">
+                  <div ref={formErrorRef}
+                    role="alert"
+                    aria-live="assertive"
+                    tabIndex={-1}
+                    className="bg-red-50 border border-red-200 rounded-none px-4 py-3 text-xs text-red-700 font-semibold">
                     ⚠️ {formError}
                   </div>
                 )}

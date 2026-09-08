@@ -3,14 +3,25 @@ import ProductsClient from "./ProductsClient";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "Colecciones | Flores Studio - Aria Liquidación",
-  description: "Explora nuestra selección exclusiva de botas, zapatillas y tacos en liquidación. Calidad premium al mejor precio en Bolivia.",
+  title: "Catálogo | Flores",
+  description: "Explora botas, zapatillas y tacos con stock real. Envíos a todo Bolivia.",
+  alternates: {
+    canonical: "/productos",
+  },
+  openGraph: {
+    locale: "es_BO",
+    type: "website",
+    siteName: "Flores",
+    title: "Catálogo | Flores",
+    description: "Explora botas, zapatillas y tacos con stock real. Envíos a todo Bolivia.",
+    url: "/productos",
+  },
 };
 
 export default function ProductosPageWrapper() {
   return (
     <Suspense fallback={<div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-      <div className="w-12 h-12 border-4 border-[var(--color-accent)] border-t-black animate-spin rounded-full" />
+      <div className="w-12 h-12 border-4 border-[var(--color-accent)] border-t-black animate-spin rounded-none" />
       <p className="text-[10px] font-black tracking-[0.4em] uppercase">Cargando Catálogo...</p>
     </div>}>
       <ProductsClient />

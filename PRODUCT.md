@@ -27,7 +27,7 @@ Marca propia **Flores** (crimson, mujer-first) frente a la competencia de liquid
 - Sedes: Santa Cruz y Cochabamba, Bolivia.
 - Pagos: QR, Transferencia, Efectivo, Tigo Money.
 - Envíos: ~48h a todo el país.
-- Catálogo servido desde Convex; fallback a `MOCK_PRODUCTS` cuando la API está vacía/falla (ver `src/app/(store)/productos/ProductsClient.tsx`).
+- Catálogo servido desde Convex (fuente única de verdad, sin mocks en cliente). Si la BD está vacía se muestra empty state; poblar vía `seed:run`.
 - Modo de superficie storefront: **Persuade**.
 
 ## Capabilities and Constraints
@@ -35,8 +35,8 @@ Marca propia **Flores** (crimson, mujer-first) frente a la competencia de liquid
 - Catálogo completo de calzado por género (mujer / varón / niños) y por colección (drops, últimas tallas, exclusivas).
 - Carrito funcional (Zustand): añadir, sumar, restar, eliminar, subtotal.
 - Checkout por WhatsApp: el `CartDrawer` genera el mensaje del pedido.
-- Hero en video + hover-video en cards (Opción A "Cine Sutil") — pendiente de implementar en Fase B; sin parallax pesado.
-- `MOCK_PRODUCTS` es placeholder de MVP, no fuente de verdad (Fase B → CMS).
+- Hero en video + hover-video en cards (Opción A "Cine Sutil") implementado vía `VideoBanner`/`ProductCard` con `prefers-reduced-motion`; sin parallax pesado.
+- Home rediseñado Editorial Brutalista: hero full-bleed + marquee crimson + colecciones 01/02/03 + drops con stock real (sin countdown/stats inventados, copy ES-BO).
 
 ## Brand Commitments
 
@@ -51,8 +51,8 @@ Marca propia **Flores** (crimson, mujer-first) frente a la competencia de liquid
 ## Evidence on Hand
 
 - Tokens unificados en `src/app/globals.css` (Fase A).
-- `MOCK_PRODUCTS` en `src/app/(store)/productos/ProductsClient.tsx` (placeholders Unsplash, Fase B → CMS).
-- `PROJECT_CONTEXT.md` es **legacy y contradictorio** (aún cita amarillo Aria, Montserrat y radius 20px). No es fuente de verdad; ver `DESIGN.md` / `PRODUCT.md`.
+- Videos reales en Cloudinary + Convex (`hero_video_url`, `vip_vault_video_url`, categorías y productos con `video_url`).
+- `PROJECT_CONTEXT.md` archivado en `docs/legacy/` (legacy contradictorio). Fuente de verdad: `DESIGN.md` / `PRODUCT.md`.
 
 ## Product Principles
 

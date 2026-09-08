@@ -1,0 +1,98 @@
+# OpenSpec SDD configuration — Flores Store
+# Generado por gentle-ai (sdd-init). La fuente de verdad del producto es
+# DESIGN.md + PRODUCT.md; este archivo solo orquesta el ciclo SDD del
+# storefront visual (ver `project.scope`).
+
+project:
+  name: flores-store
+  change: redesign-editorial-total
+  branch: redesign/editorial-total
+  execution: auto            # el usuario opera con "dale"; sin pausas salvo fallo de gate
+  delivery_strategy: ask-on-risk
+  review_budget_lines: 400
+  chain_strategy: deferred
+  stack:
+    framework: Next.js 16 (App Router, Server Components)
+    react: 19.2.4
+    styling: Tailwind CSS 4 (CSS-first, plugin @tailwindcss/postcss, sin tailwind.config)
+    fonts: next/font (DM Sans + Playfair Display, display swap; sin @import de Google Fonts)
+    backend: Convex (convex/_generated; seed:run puebla el catálogo)
+    cart: Zustand (src/lib/store.ts, CartDrawer para checkout WhatsApp)
+    media: Cloudinary (next-cloudinary; hero_video_url, video_url por producto)
+    motion: framer-motion
+    remote-state: "@tanstack/react-query + axios"
+  sources_of_truth:
+    - DESIGN.md    # sistema de diseño: tokens, paleta, tipografía, do's/don'ts
+    - PRODUCT.md   # posicionamiento, principios, capacidades, accesibilidad
+  scope:
+    in: |
+      Storefront visual únicamente: home (src/app/(store)/page.tsx +
+      HomeClient.tsx), PDP (productos/[slug]/ + ProductPageClient.tsx),
+      catálogo (productos/ + ProductsClient.tsx), layout store, componentes
+      src/components/store/* y tokens CSS en src/app/globals.css.
+    out: |
+      Backend Convex (convex/), admin (src/app/admin/*), carrito/checkout
+      (Zustand src/lib/store.ts, CartDrawer, WhatsAppButton), CMS, API routes
+      (src/app/api/*), next.config.ts, autenticación, database/.
+
+sdd:
+  enabled: true
+  strict_tdd: true
+  lifecycle:
+    - explore    # solo lectura: inspeccionar storefront, tokens, fuentes de verdad
+    - proposal   # propuesta de rediseño editorial total (sin implementar)
+    - spec       # requisitos verificables / criterios de aceptación
+    - design     # diseño técnico por archivos y tokens
+    - tasks      # descomposición en tareas con criterio de done
+    - apply      # implementación por tareas
+    - verify     # lint + build + reglas de marca y accesibilidad
+    - sync       # DESIGN.md / PRODUCT.md al día con lo implementado
+    - archive    # mover change a openspec/archive/
+  gates:
+    review_budget_lines: 400
+    ask_on_risk: true        # preguntar al usuario solo ante riesgo material
+    pause_on_failed_gate: true
+
+phase_rules:
+  explore:
+    - "Solo lectura: inspeccionar storefront, tokens y fuentes de verdad (DESIGN.md, PRODUCT.md)."
+    - "Dado que execution=auto, exploración rápida sin pausas; riesgos → ask-on-risk."
+  proposal:
+    - "Redactar la propuesta de rediseño editorial en proposal.md; NO implementar."
+    - "Cada decisión cita su origen en DESIGN.md/PRODUCT.md (Named Rules)."
+  spec:
+    - "Requisitos verificables con criterios de aceptación; alcance solo storefront visual."
+    - "Prohibido mover nada del alcance out (backend/carrito/CMS/admin)."
+  design:
+    - "Diseño técnico por archivo: componentes store y tokens en globals.css."
+    - "Cada diff planeado debe cumplir las Named Rules de DESIGN.md (sharp, un acento, sin amarillo)."
+  tasks:
+    - "Tareas atómicas con criterio de done y verificación asociada."
+    - "Presupuesto combinado de review: 400 líneas por change."
+  apply:
+    - "Implementar una tarea a la vez (chain diferida); sin commits a medias."
+    - "Prohibido: amarillo Aria (#FFD700/#FFB300/#FFC107), radius != 0, hex hardcodeado en componentes, dark patterns, urgencia/escasez inventada."
+    - "Prohibido tocar: convex/, admin, carrito/checkout, API routes, next.config.ts."
+  verify:
+    - "Runner disponible: npm run lint (eslint) y npm run build (next build + typecheck)."
+    - "Sin runner de tests unitarios configurado: verificación visual/manual + greps de marca."
+  sync:
+    - "Actualizar DESIGN.md/PRODUCT.md solo si lo implementado los supera o contradice."
+  archive:
+    - "Mover openspec/changes/redesign-editorial-total a openspec/archive/ al cerrar el change."
+
+testing:
+  runner: none                # package.json no define scripts de test
+  verify_commands:
+    - name: lint
+      cmd: npm run lint
+    - name: build
+      cmd: npm run build
+  manual_checks:
+    - "grep: sin #FFD700 / #FFB300 / #FFC107 (amarillo Aria prohibido)."
+    - "Tokens: sin hex hardcodeado en componentes (usar var(--color-*))."
+    - "Contraste AA: text-muted #6B6B6B ≈ 5.6:1 y accent #9B1C1C ≈ 12.4:1 sobre blanco."
+    - "prefers-reduced-motion: animaciones infinitas y smooth-scroll desactivadas bajo la preferencia."
+    - "Radius 0 en todo componente (excepción documentada: badge contador del carrito)."
+    - "Playfair Display solo en 1-2 headlines premium por página; body siempre DM Sans."
+    - "Acento carmín <= 10% de pantalla (One-Voice Rule)."

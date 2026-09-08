@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Minus, Plus, X, ArrowLeft, Send } from "lucide-react";
+import { buildOrderMessage, getWhatsAppNumber, openWhatsApp } from "@/lib/whatsapp";
 
 export default function CartPage() {
   const { items, updateQuantity, removeItem, subtotal, clearCart } = useCartStore();
@@ -21,32 +22,9 @@ export default function CartPage() {
   if (!mounted) return null;
 
   const handleWhatsAppCheckout = () => {
-    const phoneNumber = sections.whatsapp_number || "59170000000";
-    
-    let message = `¡Hola! Me gustaría realizar el siguiente pedido en Flores:\n\n`;
-    
-    items.forEach((item, index) => {
-      message += `${index + 1}. *${item.product_name}*\n`;
-      if (item.size) message += `   - Talla: ${item.size}\n`;
-      if (item.color) message += `   - Color: ${item.color}\n`;
-      message += `   - Cantidad: ${item.quantity}\n`;
-      message += `   - Precio Unitario: Bs. ${item.price.toFixed(2)}\n`;
-      message += `   - Subtotal: Bs. ${(item.price * item.quantity).toFixed(2)}\n\n`;
-    });
-
-    message += `*Total a pagar: Bs. ${subtotal().toFixed(2)}*\n\n`;
-    
-    if (notes) {
-      message += `*Notas adicionales:*\n${notes}\n\n`;
-    }
-
-    message += `Por favor, confírmenme la disponibilidad y los datos para el pago/envío. ¡Gracias!`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    
-    // Abrir WhatsApp en nueva pestaña
-    window.open(whatsappUrl, '_blank');
+    const phoneNumber = getWhatsAppNumber(sections.whatsapp_number);
+    const encodedMessage = buildOrderMessage(items, subtotal(), null, notes);
+    openWhatsApp(phoneNumber, encodedMessage);
     
     // Opcional: limpiar carrito después de unos segundos asumiendo que compró
     // setTimeout(() => clearCart(), 5000);
@@ -94,7 +72,7 @@ export default function CartPage() {
                   <div className="col-span-6 flex items-center gap-4 w-full">
                     <div className="relative w-24 h-32 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-100">
                       {item.product_image ? (
-                        <Image src={item.product_image} alt={item.product_name} fill className="object-cover" />
+                        <Image src={item.product_image} alt={item.product_name} fill sizes="80px" className="object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-300">Img</div>
                       )}

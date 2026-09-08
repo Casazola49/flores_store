@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { StockBadge } from "./StockBadge";
+import BrandPlaceholder from "./BrandPlaceholder";
 
 // Shared shape for hot-product cards (mujer-first catalog highlight).
 export type HotProduct = {
@@ -12,7 +13,6 @@ export type HotProduct = {
   price: number;
   originalPrice: number;
   stock: number;
-  views: number;
   img: string;
   slug: string;
   isNew: boolean;
@@ -63,7 +63,7 @@ export default function ProductCard({ product }: { product: HotProduct }) {
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
     >
-      <div className="relative aspect-[3/4] bg-[#0E0E0E] overflow-hidden mb-5 border border-white/5 group-hover:border-[#9B1C1C]/40 transition-all duration-500 rounded-none shadow-lg">
+      <div className="relative aspect-[3/4] bg-[var(--color-primary)] overflow-hidden mb-5 border border-white/5 group-hover:border-[var(--color-accent)]/40 transition-all duration-500 rounded-none shadow-lg">
         {product.img ? (
           <Image
             src={product.img}
@@ -73,9 +73,7 @@ export default function ProductCard({ product }: { product: HotProduct }) {
             className="object-cover group-hover:scale-[1.03] transition-transform duration-700 opacity-70 group-hover:opacity-100 filter brightness-[0.92] group-hover:brightness-100"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/5 text-[9px] font-black uppercase tracking-widest">
-            Sin Imagen
-          </div>
+          <BrandPlaceholder aspect="3:4" label="Flores" variant="dark" />
         )}
 
         {/* Hover-video preview: fades in over the image, never autoplays in grid. */}
@@ -95,12 +93,12 @@ export default function ProductCard({ product }: { product: HotProduct }) {
         {/* Tags — crimson for discount, sharp (radius 0), no yellow. */}
         <div className="absolute top-4 left-4 flex flex-col gap-1.5 z-20">
           {disc > 0 && (
-            <span className="bg-[#9B1C1C] text-white text-[8px] font-black px-2.5 py-1.5 uppercase tracking-widest rounded-none shadow-md">
+            <span className="bg-[var(--color-accent)] text-white text-label font-black px-2.5 py-1.5 uppercase tracking-widest rounded-none shadow-md">
               -{disc}% OFF
             </span>
           )}
           {product.isNew && (
-            <span className="bg-white text-black text-[8px] font-black px-2.5 py-1.5 uppercase tracking-widest rounded-none shadow-md">
+            <span className="bg-white text-black text-label font-black px-2.5 py-1.5 uppercase tracking-widest rounded-none shadow-md">
               NUEVO
             </span>
           )}
@@ -111,7 +109,7 @@ export default function ProductCard({ product }: { product: HotProduct }) {
 
         {/* Hover Overlay bottom sliding */}
         <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black via-black/80 to-transparent z-20 flex justify-center">
-          <span className="border border-white/20 text-white text-[8.5px] font-black uppercase tracking-[0.3em] px-4 py-2 bg-black/60 backdrop-blur-md rounded-none">
+          <span className="border border-white/20 text-white text-label font-black uppercase tracking-[0.3em] px-4 py-2 bg-black/60 backdrop-blur-md rounded-none">
             Ver Detalles
           </span>
         </div>

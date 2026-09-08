@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import BrandPlaceholder from "./BrandPlaceholder";
 import { useEffect, useRef } from "react";
 
 interface VideoBannerProps {
@@ -18,11 +19,18 @@ interface VideoBannerProps {
   withOverlays?: boolean;
   /** Whether to autoplay. Categories should be false to avoid mass autoplay. */
   autoplay?: boolean;
+  /** When true, marks the poster image as priority (eager + fetchPriority high) for LCP; below-fold usages should omit it and stay lazy. */
+  priority?: boolean;
 }
 
 // Neutral fallback so a missing source never collapses the hero / sections.
-const FALLBACK =
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1800";
+
+
+function optimizeCloudinaryVideo(url: string): string {
+  if (!url.includes("res.cloudinary.com") || !url.includes("/video/upload/")) return url;
+  if (url.includes("f_auto")) return url;
+  return url.replace("/video/upload/", "/video/upload/f_auto,q_auto/");
+}
 
 export default function VideoBanner({
   src,
@@ -32,8 +40,11 @@ export default function VideoBanner({
   objectPosition,
   withOverlays = false,
   autoplay = true,
+  priority = false,
 }: VideoBannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const optimizedSrc = src ? optimizeCloudinaryVideo(src) : undefined;
+  const optimizedPoster = poster || undefined;
 
   // Cine Sutil rule: respect prefers-reduced-motion. Pause loops for users
   // who ask for less movement; resume only when a real source exists.
@@ -42,9 +53,9 @@ export default function VideoBanner({
     const apply = () => {
       const v = videoRef.current;
       if (!v) return;
-      if (mq.matches) {
+      if (mq.matches || !autoplay) {
         v.pause();
-      } else if (src) {
+      } else if (optimizedSrc) {
         // autoPlay may be suppressed by the browser; nudge it along.
         v.play().catch(() => {});
       }
@@ -52,40 +63,28 @@ export default function VideoBanner({
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
-  }, [src]);
+  }, [optimizedSrc, autoplay]);
 
-  // No source → image fallback (real poster when available, else Unsplash).
-  if (!src) {
-    return (
-      <>
-        <Image
-          src={poster || FALLBACK}
-          alt={alt || ""}
-          fill
-          priority
-          className={`object-cover ${className ?? ""}`}
-          style={objectPosition ? { objectPosition } : undefined}
-        />
-        {withOverlays && <Overlay />}
-      </>
-    );
+  // No source → real poster when available, otherwise an aspect-aware brand placeholder.
+  if (!optimizedSrc) {
+    return poster ? <><Image src={poster} alt={alt || ""} fill sizes="100vw" priority={priority} {...(priority ? { fetchPriority: "high" } : { loading: "lazy" })} className={`object-cover ${className ?? ""}`} style={objectPosition ? { objectPosition } : undefined} />{withOverlays && <Overlay />}</> : <BrandPlaceholder aspect="16:9" label={alt || "Flores"} variant="dark" />;
   }
 
   return (
     <>
       <video
         ref={videoRef}
-        autoPlay
+        autoPlay={autoplay}
         loop
         muted
         playsInline
-        preload="metadata"
-        poster={poster}
+        preload={autoplay ? "metadata" : "none"}
+        poster={optimizedPoster}
         aria-hidden="true"
         className={`absolute inset-0 w-full h-full object-cover ${className ?? ""}`}
         style={objectPosition ? { objectPosition } : undefined}
       >
-        <source src={src} type="video/mp4" />
+        <source src={optimizedSrc} type="video/mp4" />
         {/* If a clip ever carries spoken audio, add:
             <track kind="captions" src="/captions/hero.vtt" srcLang="es" label="Español" default /> */}
       </video>
