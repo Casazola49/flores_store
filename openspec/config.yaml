@@ -5,8 +5,8 @@
 
 project:
   name: flores-store
-  change: catalogo-n8n-discord
-  branch: sdd/catalogo-n8n-discord
+  change: null               # último archivado: 2026-09-08-catalogo-n8n-discord
+  branch: main
   execution: auto            # el usuario opera con "dale"; sin pausas salvo fallo de gate
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
@@ -79,7 +79,7 @@ phase_rules:
   sync:
     - "Actualizar DESIGN.md/PRODUCT.md solo si lo implementado los supera o contradice."
   archive:
-    - "Mover openspec/changes/catalogo-n8n-discord a openspec/archive/ al cerrar el change."
+    - "Mover openspec/changes/<change> a openspec/changes/archive/ al cerrar el change."
 
 testing:
   runner: none                # package.json no define scripts de test
