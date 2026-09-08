@@ -1,0 +1,69 @@
+{
+  "name": "Flores · B · Posters → descripciones → Discord",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-b1",
+      "name": "Ejecutar manualmente",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ejecutá el workflow y subí el poster como parámetro 'data' (binario) de esta ejecución manual.\nconst item = $input.first();\nconst b64 = item.binary && item.binary.data ? item.binary.data : '';\nif (!b64) throw new Error('Adjuntá el poster generado como binario antes de ejecutar.');\nreturn { b64 };"
+      },
+      "id": "code-binary",
+      "name": "Tomar poster",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ parts: [\n  { text: 'Sos el community manager de FLORES, e-commerce de calzado premium boliviano (estética editorial carmín, sin amarillo, mujer-first). Mirá el poster y escribí EXACTAMENTE 4 descripciones breves y listas para publicar, en español de Bolivia, separadas con el encabezado de cada red: TIKTOK: / FACEBOOK: / INSTAGRAM: / WHATSAPP: (para WhatsApp incluir precio y cómo pedir). Sin voseo, sin hashtags inventados, sin urgencia falsa.' },\n  { inlineData: { mimeType: 'image/png', data: $json.b64 } }\n] }] }) }}"
+      },
+      "id": "http-gemini",
+      "name": "Gemini · descripciones",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst text = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) ? data.candidates[0].content.parts.map(x => x.text || '').join('\\n') : JSON.stringify(data);\nreturn { descs: text };"
+      },
+      "id": "code-extract",
+      "name": "Extraer descripciones",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ embeds: [{ title: 'Descriptions listas (TikTok / Facebook / Instagram / WhatsApp)', description: $json.descs ? $json.descs.slice(0, 4000) : 'Sin texto (revisar Gemini)', color: 10166572 }] }) }}"
+      },
+      "id": "discord-send",
+      "name": "Discord · descripciones",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [800, 0]
+    }
+  ],
+  "connections": {
+    "Ejecutar manualmente": { "main": [[{ "node": "Tomar poster", "type": "main", "index": 0 }]] },
+    "Tomar poster": { "main": [[{ "node": "Gemini · descripciones", "type": "main", "index": 0 }]] },
+    "Gemini · descripciones": { "main": [[{ "node": "Extraer descripciones", "type": "main", "index": 0 }]] },
+    "Extraer descripciones": { "main": [[{ "node": "Discord · descripciones", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}
