@@ -5,8 +5,8 @@
 
 project:
   name: flores-store
-  change: null               # último archivado: 2026-09-08-catalogo-n8n-discord
-  branch: main
+  change: ficha-producto-vendedora
+  branch: sdd/ficha-producto-vendedora
   execution: auto            # el usuario opera con "dale"; sin pausas salvo fallo de gate
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
