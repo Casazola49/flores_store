@@ -26,14 +26,13 @@ project:
     - PRODUCT.md   # posicionamiento, principios, capacidades, accesibilidad
   scope:
     in: |
-      Seed masivo de catálogo (convex/seed*.ts, datos vía dashboard), fix menor
-      CMS admin (rehidratar sesión en src/lib/store.ts + layout, link
-      /admin/configuracion en Sidebar) y automatización n8n local con Discord
-      (n8n/flows/*.json, n8n/docker-compose.yml, n8n/.env.example, n8n/README.md).
+      Vendedora PDP upgrade, truthful sales signals (stock, is_new, liquidation
+      end date), favorites, Convex-driven category mega-menu, and the +10
+      idempotent seed batch; supporting Convex/CMS settings, admin configuration,
+      shared WhatsApp helpers, and the canonical product-card implementation.
     out: |
-      Storefront visual (ya cerrado en redesign-editorial-total), VPS/producción,
-      API routes, next.config.ts, ejecución real de flujos n8n, credenciales
-      reales (GEMINI_API_KEY y DISCORD_WEBHOOK_URL solo vía env, jamás en repo).
+      Payment gateway, authentication, reviews system, shipping calculation,
+      and unrelated VPS/production or credential work.
 
 sdd:
   enabled: true
