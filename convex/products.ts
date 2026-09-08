@@ -481,3 +481,30 @@ export const adjustStock = mutation({
   },
 });
 
+
+// PRODUCTOS RECIENTES (Público — para n8n). Ordena por _creationTime desc.
+export const getRecentProducts = query({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = Math.min(Math.max(args.limit ?? 50, 1), 100);
+    const list = await ctx.db
+      .query("products")
+      .filter((q) => q.eq(q.field("is_active"), true))
+      .order("desc")
+      .take(limit);
+    return list.map((p) => ({
+      id: p._id,
+      name: p.name,
+      slug: p.slug,
+      gender: p.gender,
+      base_price: p.base_price,
+      is_new: p.is_new,
+      category_slug: p.category_slug,
+      images: (p.images || []).filter((i) => i.is_primary || i).slice(0, 3).map((i) => i.url),
+      variants: (p.variants || []).map((v) => ({
+        size: v.size, color: v.color, stock: v.stock,
+      })),
+      createdAt: p._creationTime,
+    }));
+  },
+});
