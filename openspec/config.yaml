@@ -10,7 +10,7 @@ project:
   execution: auto            # el usuario opera con "dale"; sin pausas salvo fallo de gate
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
-  chain_strategy: deferred
+  chain_strategy: auto-chain
   stack:
     framework: Next.js 16 (App Router, Server Components)
     react: 19.2.4
