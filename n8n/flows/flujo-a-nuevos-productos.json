@@ -1,0 +1,123 @@
+{
+  "name": "Flores · A · Nuevos productos → Gemini → Discord",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [{ "field": "cronExpression", "expression": "0 */10 * * * * *" }] },
+        "activateOnStartup": true
+      },
+      "id": "sched-a1",
+      "name": "Cada 10 min + al iniciar",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.CONVEX_SITE_URL }}/products/latest?limit=50",
+        "options": { "timeout": 30000 }
+      },
+      "id": "http-convex",
+      "name": "Convex · recientes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [200, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const wfData = $getWorkflowStaticData('global');\nconst last = wfData.lastCreated || 0;\nconst body = $input.first().json;\nconst fresh = (body.products || [])\n  .filter(p => (p.createdAt || 0) > last)\n  .sort((a, b) => a.createdAt - b.createdAt);\nif (fresh.length === 0) return { done: true, processed: 0 };\nconst product = fresh[0];\nreturn {\n  done: false,\n  product,\n  imageUrl: (product.images && product.images[0]) ? product.images[0] : '',\n  nextLast: product.createdAt,\n  pending: fresh.length\n};"
+      },
+      "id": "code-filter",
+      "name": "Filtrar nuevo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [400, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.imageUrl }}",
+        "options": {
+          "timeout": 30000,
+          "response": { "response": { "responseFormat": "file", "outputPropertyName": "data" } }
+        }
+      },
+      "id": "http-download",
+      "name": "Descargar foto",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst b64 = item.binary && item.binary.data ? item.binary.data : '';\nreturn {\n  product: $node['Filtrar nuevo'].json.product,\n  body: {\n    contents: [{\n      parts: [\n        { text: 'Sos director de arte senior de FLORES, e-commerce de calzado premium boliviano (estética editorial, carmín #9B1C1C, sharp, sin amarillo, mujer-first). Mirá la foto del producto y escribí EXACTAMENTE 3 prompts de poster promocional en español de Bolivia, listos para pegar en una IA generadora de imágenes. Formato: PROMPT 1 / PROMPT 2 / PROMPT 3. Cada prompt: tema editorial, pose/encuadre, fondo, luz, estilo. No inventes descuentos ni urgencia.' },\n        { inlineData: { mimeType: 'image/jpeg', data: b64 } }\n      ]\n    }]\n  }\n};"
+      },
+      "id": "code-body",
+      "name": "Armar body Gemini",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}"
+      },
+      "id": "http-gemini",
+      "name": "Gemini · prompts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1000, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst text = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) ? data.candidates[0].content.parts.map(x => x.text || '').join('\\n') : JSON.stringify(data);\nreturn { prompts: text };"
+      },
+      "id": "code-extract",
+      "name": "Extraer prompts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ embeds: [{ title: 'Nuevo producto: ' + ($node['Armar body Gemini'].json.product.name || ''), description: $json.prompts ? $json.prompts.slice(0, 4000) : 'Sin prompts (revisar Gemini)', color: 10166572 }] }) }}"
+      },
+      "id": "discord-send",
+      "name": "Discord · aviso",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1400, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const wfData = $getWorkflowStaticData('global');\nconst filter = $node['Filtrar nuevo'].json;\nif (filter && !filter.done && filter.nextLast) {\n  wfData.lastCreated = Math.max(wfData.lastCreated || 0, filter.nextLast);\n}\nreturn { watermark: wfData.lastCreated };"
+      },
+      "id": "code-watermark",
+      "name": "Avanzar marca de agua",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1600, 0]
+    }
+  ],
+  "connections": {
+    "Cada 10 min + al iniciar": { "main": [[{ "node": "Convex · recientes", "type": "main", "index": 0 }]] },
+    "Convex · recientes": { "main": [[{ "node": "Filtrar nuevo", "type": "main", "index": 0 }]] },
+    "Filtrar nuevo": { "main": [[{ "node": "Descargar foto", "type": "main", "index": 0 }]] },
+    "Descargar foto": { "main": [[{ "node": "Armar body Gemini", "type": "main", "index": 0 }]] },
+    "Armar body Gemini": { "main": [[{ "node": "Gemini · prompts", "type": "main", "index": 0 }]] },
+    "Gemini · prompts": { "main": [[{ "node": "Extraer prompts", "type": "main", "index": 0 }]] },
+    "Extraer prompts": { "main": [[{ "node": "Discord · aviso", "type": "main", "index": 0 }]] },
+    "Discord · aviso": { "main": [[{ "node": "Avanzar marca de agua", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}

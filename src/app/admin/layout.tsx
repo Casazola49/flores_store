@@ -12,20 +12,25 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated } = useAdminAuth();
+  const { isAuthenticated, isHydrating, rehydrate } = useAdminAuth();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    
-    // Proteger rutas admin (excepto login)
-    if (!isAuthenticated && pathname !== "/admin/login") {
+    // Rehidratar sesión desde el token persistido (sobrevive refresh / deep-link)
+    void rehydrate();
+  }, [rehydrate]);
+
+  useEffect(() => {
+    // Proteger rutas admin (excepto login). Espera hidratación para no
+    // redirigir a login durante el refresh con token válido.
+    if (!isHydrating && !isAuthenticated && pathname !== "/admin/login") {
       router.push("/admin/login");
     }
-  }, [isAuthenticated, pathname, router]);
+  }, [isAuthenticated, isHydrating, pathname, router]);
 
-  if (!mounted) return null; // Prevenir hidratación mismatch
+  if (!mounted || isHydrating) return null; // Prevenir hidratación mismatch / falso login
 
   // Si es login, no mostrar sidebar
   if (pathname === "/admin/login") {

@@ -5,8 +5,8 @@
 
 project:
   name: flores-store
-  change: redesign-editorial-total
-  branch: redesign/editorial-total
+  change: catalogo-n8n-discord
+  branch: sdd/catalogo-n8n-discord
   execution: auto            # el usuario opera con "dale"; sin pausas salvo fallo de gate
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
@@ -26,14 +26,14 @@ project:
     - PRODUCT.md   # posicionamiento, principios, capacidades, accesibilidad
   scope:
     in: |
-      Storefront visual únicamente: home (src/app/(store)/page.tsx +
-      HomeClient.tsx), PDP (productos/[slug]/ + ProductPageClient.tsx),
-      catálogo (productos/ + ProductsClient.tsx), layout store, componentes
-      src/components/store/* y tokens CSS en src/app/globals.css.
+      Seed masivo de catálogo (convex/seed*.ts, datos vía dashboard), fix menor
+      CMS admin (rehidratar sesión en src/lib/store.ts + layout, link
+      /admin/configuracion en Sidebar) y automatización n8n local con Discord
+      (n8n/flows/*.json, n8n/docker-compose.yml, n8n/.env.example, n8n/README.md).
     out: |
-      Backend Convex (convex/), admin (src/app/admin/*), carrito/checkout
-      (Zustand src/lib/store.ts, CartDrawer, WhatsAppButton), CMS, API routes
-      (src/app/api/*), next.config.ts, autenticación, database/.
+      Storefront visual (ya cerrado en redesign-editorial-total), VPS/producción,
+      API routes, next.config.ts, ejecución real de flujos n8n, credenciales
+      reales (GEMINI_API_KEY y DISCORD_WEBHOOK_URL solo vía env, jamás en repo).
 
 sdd:
   enabled: true
@@ -62,7 +62,7 @@ phase_rules:
     - "Cada decisión cita su origen en DESIGN.md/PRODUCT.md (Named Rules)."
   spec:
     - "Requisitos verificables con criterios de aceptación; alcance solo storefront visual."
-    - "Prohibido mover nada del alcance out (backend/carrito/CMS/admin)."
+    - "Prohibido mover nada del alcance out (storefront, VPS, API routes, credenciales)."
   design:
     - "Diseño técnico por archivo: componentes store y tokens en globals.css."
     - "Cada diff planeado debe cumplir las Named Rules de DESIGN.md (sharp, un acento, sin amarillo)."
@@ -72,14 +72,14 @@ phase_rules:
   apply:
     - "Implementar una tarea a la vez (chain diferida); sin commits a medias."
     - "Prohibido: amarillo Aria (#FFD700/#FFB300/#FFC107), radius != 0, hex hardcodeado en componentes, dark patterns, urgencia/escasez inventada."
-    - "Prohibido tocar: convex/, admin, carrito/checkout, API routes, next.config.ts."
+    - "Prohibido tocar: storefront visual, API routes, next.config.ts. Prohibido commitear secretos."
   verify:
     - "Runner disponible: npm run lint (eslint) y npm run build (next build + typecheck)."
     - "Sin runner de tests unitarios configurado: verificación visual/manual + greps de marca."
   sync:
     - "Actualizar DESIGN.md/PRODUCT.md solo si lo implementado los supera o contradice."
   archive:
-    - "Mover openspec/changes/redesign-editorial-total a openspec/archive/ al cerrar el change."
+    - "Mover openspec/changes/catalogo-n8n-discord a openspec/archive/ al cerrar el change."
 
 testing:
   runner: none                # package.json no define scripts de test
