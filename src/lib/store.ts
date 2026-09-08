@@ -5,7 +5,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CartItem, CmsAnnouncement, CmsSection } from "@/types";
-import { publicApi } from "./api";
+import { publicApi, adminApi } from "./api";
 
 interface CartStore {
   items: CartItem[];
@@ -89,14 +89,18 @@ interface AdminAuthStore {
   token: string | null;
   user: { username: string; role: string } | null;
   isAuthenticated: boolean;
+  isHydrating: boolean;
   setAuth: (token: string, user: { username: string; role: string }) => void;
   logout: () => void;
+  /** Rehidrata la sesión desde el token persistido (adminApi.me). Llamar en AdminLayout. */
+  rehydrate: () => Promise<void>;
 }
 
 export const useAdminAuth = create<AdminAuthStore>()((set) => ({
   token: typeof window !== "undefined" ? localStorage.getItem("flores_admin_token") : null,
   user: null,
   isAuthenticated: false,
+  isHydrating: false,
 
   setAuth: (token, user) => {
     if (typeof window !== "undefined") {
@@ -109,7 +113,28 @@ export const useAdminAuth = create<AdminAuthStore>()((set) => ({
     if (typeof window !== "undefined") {
       localStorage.removeItem("flores_admin_token");
     }
-    set({ token: null, user: null, isAuthenticated: false });
+    set({ token: null, user: null, isAuthenticated: false, isHydrating: false });
+  },
+
+  rehydrate: async () => {
+    const token = localStorage.getItem("flores_admin_token");
+    if (!token) {
+      set({ token: null, user: null, isAuthenticated: false, isHydrating: false });
+      return;
+    }
+    set({ isHydrating: true });
+    try {
+      const { data } = await adminApi.me();
+      if (data?.success && data.user) {
+        set({ token, user: data.user, isAuthenticated: true, isHydrating: false });
+      } else {
+        localStorage.removeItem("flores_admin_token");
+        set({ token: null, user: null, isAuthenticated: false, isHydrating: false });
+      }
+    } catch {
+      localStorage.removeItem("flores_admin_token");
+      set({ token: null, user: null, isAuthenticated: false, isHydrating: false });
+    }
   },
 }));
 

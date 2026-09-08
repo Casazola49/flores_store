@@ -36,6 +36,7 @@ export default function Sidebar() {
     { name: "Productos", href: "/admin/productos", icon: Package },
     { name: "Pedidos", href: "/admin/pedidos", icon: ShoppingCart },
     { name: "CMS Tienda", href: "/admin/banners", icon: ImageIcon },
+    { name: "Configuración", href: "/admin/configuracion", icon: Settings },
   ];
 
 
