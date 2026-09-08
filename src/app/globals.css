@@ -54,8 +54,11 @@
   --transition: 0.45s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* ─── Reset ─── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ─── Reset ───
+ * Solo box-sizing aquí. El margin/padding 0 vive en el preflight de Tailwind
+ * (capa base, sobreescribible). Un reset universal sin capa mataría TODAS las
+ * utilidades de espaciado (m-*, p-*, mx-auto) por especificidad de cascada. */
+*, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; font-size: 16px; }
 .text-display { font-size: var(--font-display); }
 .text-headline { font-size: var(--font-headline); }
