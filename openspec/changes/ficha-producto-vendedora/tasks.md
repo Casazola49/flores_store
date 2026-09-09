@@ -17,16 +17,16 @@ English decomposition of `design.md` §9 into reviewable, dependency-ordered tas
 | Chained PRs recommended | Yes |
 | Suggested split | PR1 Convex queries + seed (+10 & `sale_ends_at`) ≈ 330 → PR2 lib stores/helpers + badge components ≈ 320 → PR3 Navbar/MegaMenu rename ≈ 250 → PR4 canonical ProductCard convergence ≈ 250 → PR5 PDP + global size-guide trigger ≈ 330 → PR6 "/favoritos" + admin ≈ 250 |
 | Delivery strategy | ask-on-risk |
-| Chain strategy | pending |
+| Chain strategy | auto-chain |
 
 ```text
-Decision needed before apply: Yes
+Decision needed before apply: No (approved by maintainer: chained PRs via auto-chain)
 Chained PRs recommended: Yes
-Chain strategy: pending
-400-line budget risk: High
+Chain strategy: auto-chain
+400-line budget risk: High (mitigated by auto-chain PR boundaries)
 ```
 
-All three design slices individually exceed the 400-line review budget (Slice 1 the most, driven by the +10 seed block and the static `sizeGuide.ts` map; Slice 3 second, driven by the PDP rewrite and `SizeGuideModal`). Each slice MUST be delivered as chained PRs using the suggested split above (each chunk ≤ 400 changed lines). Chain strategy is unresolved (`deferred` in config) → **decision required before apply**; do not invent a chain strategy or a size exception.
+All three design slices individually exceed the 400-line review budget (Slice 1 the most, driven by the +10 seed block and the static `sizeGuide.ts` map; Slice 3 second, driven by the PDP rewrite and `SizeGuideModal`). Each slice MUST be delivered as chained PRs using the suggested split above (each chunk ≤ 400 changed lines). Maintainer approved `auto-chain` delivery strategy.
 
 ---
 
