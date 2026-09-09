@@ -1,3 +1,19 @@
+```yaml
+schema: gentle-ai.verify-result/v1
+evidence_revision: sha256:4ea1cfea8c61831ebe1af9af22767cd83f3c2cded8b3db423fcb1b1b9f867d7b
+verdict: pass
+blockers: 0
+critical_findings: 0
+requirements: 31/31
+scenarios: 38/38
+test_command: npm run build
+test_exit_code: 0
+test_output_hash: sha256:11061d4d1b04307799df82039af9d5030240357902ac2f3839f19c2142087e95
+build_command: npx tsc --noEmit
+build_exit_code: 0
+build_output_hash: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+```
+
 # SDD Verification Report — Ficha de Producto Vendedora (`ficha-producto-vendedora`)
 
 - **Change:** `ficha-producto-vendedora`
