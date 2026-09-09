@@ -15,7 +15,7 @@ English decomposition of `design.md` §9 into reviewable, dependency-ordered tas
 | Estimated changed lines | ~1,700 total: Slice 1 ≈ 650–750 · Slice 2 ≈ 450–550 · Slice 3 ≈ 550–650 |
 | 400-line budget risk | High |
 | Chained PRs recommended | Yes |
-| Suggested split | PR1 Convex queries + seed (+10 & `sale_ends_at`) ≈ 330 → PR2 lib stores/helpers + badge components ≈ 320 → PR3 Navbar/MegaMenu rename ≈ 250 → PR4 canonical ProductCard convergence ≈ 250 → PR5 PDP + global size-guide trigger ≈ 330 → PR6 `/favoritos` + admin ≈ 250 |
+| Suggested split | PR1 Convex queries + seed (+10 & `sale_ends_at`) ≈ 330 → PR2 lib stores/helpers + badge components ≈ 320 → PR3 Navbar/MegaMenu rename ≈ 250 → PR4 canonical ProductCard convergence ≈ 250 → PR5 PDP + global size-guide trigger ≈ 330 → PR6 "/favoritos" + admin ≈ 250 |
 | Delivery strategy | ask-on-risk |
 | Chain strategy | pending |
 
@@ -92,24 +92,24 @@ All three design slices individually exceed the 400-line review budget (Slice 1 
 ## Slice 2 — Navigation (MegaMenu/Navbar rename) + Canonical ProductCard
 
 ### S2.1 Create desktop `MegaMenu` — `src/components/store/MegaMenu.tsx` (NEW)
-- [ ] Add a hover/focus-triggered mega-menu panel (≥ `md` only) listing every Convex category passed via prop (links `/productos?category={slug}`) plus quick links (`Novedades` → `/productos?is_new=true`, `Liquidación` → `/productos?sale=true`, `Exclusivos`), with `aria-expanded`/`aria-haspopup="menu"` on the trigger, `role="menu"` panel semantics, Escape-to-close with focus restore to the trigger, and a ~200ms mouse-leave close delay. No yellow; `rounded-none`; colors via `var(--color-*)`. <!-- sdd-owner: implementation -->
+- [ ] Add a hover/focus-triggered mega-menu panel (≥ `md` only) listing every Convex category passed via prop (links "/productos?category={slug}") plus quick links (`Novedades` → "/productos?is_new=true", `Liquidación` → "/productos?sale=true", `Exclusivos`), with `aria-expanded`/`aria-haspopup="menu"` on the trigger, `role="menu"` panel semantics, Escape-to-close with focus restore to the trigger, and a ~200ms mouse-leave close delay. No yellow; `rounded-none`; colors via `var(--color-*)`. <!-- sdd-owner: implementation -->
   - Acceptance: Spec G.2 (desktop hover scenario: opens on hover/focus, lists every category + quick links, Escape closes and restores focus) and Spec G.3 (label is `Liquidación`, never `Ofertas`).
   - Verify: `npm run build`; Playwright at 1440px: hover opens, Escape closes + focus on trigger; keyboard Tab/Enter/Escape; grep panel for `Ofertas` → 0.
 
 ### S2.2 Refactor `Navbar` to Convex categories + mobile accordion + rename — `src/components/store/Navbar.tsx`
-- [ ] Rewrite `Navbar`: build the desktop nav and mobile menu from `useQuery(api.categories.getCategories)` (live list) + quick links (`Novedades`, `Liquidación`, `Exclusivos`, and a `Favoritos` → `/favoritos` entry); on mobile (< `md`) a categories disclosure accordion with `aria-expanded` listing the same content; replace every `Ofertas` occurrence (labels and any derived aria/alt) with `Liquidación` while keeping the `/productos?sale=true` destination. Preserve logo, cart button, and mobile-menu toggle behavior. <!-- sdd-owner: implementation -->
+- [ ] Rewrite `Navbar`: build the desktop nav and mobile menu from `useQuery(api.categories.getCategories)` (live list) + quick links (`Novedades`, `Liquidación`, `Exclusivos`, and a `Favoritos` → "/favoritos" entry); on mobile (< `md`) a categories disclosure accordion with `aria-expanded` listing the same content; replace every `Ofertas` occurrence (labels and any derived aria/alt) with `Liquidación` while keeping the "/productos?sale=true" destination. Preserve logo, cart button, and mobile-menu toggle behavior. <!-- sdd-owner: implementation -->
   - Acceptance: Spec G.1 (exactly the live Convex category count renders alongside the quick links; add/remove a category in Convex reflects on next render), Spec G.2 (mobile accordion scenario with `aria-expanded`), Spec G.3 (no `Ofertas` string in any nav surface).
   - Verify: `npm run build`; Playwright at 390px (accordion expands to all categories + quick links) and 1440px (categories from Convex + quick links); `grep -rn "Ofertas" src/components/store/Navbar.tsx src/components/store/MegaMenu.tsx` → 0 matches.
 
 ### S2.3 Converge cards on one canonical `ProductCard` — `src/components/store/ProductCard.tsx`
-- [ ] Extend the existing dark `ProductCard` into the single canonical component: add `variant: "dark" | "light"` presentation chrome and an expanded `ProductCardData` shape (slug, total/low stock band info, `isNew`, liquidation eligibility, gender/category passthrough, video URL) so home, catalog, and later `/favoritos` all import this one path. Wire in `StockBadge` (low-stock), the `NUEVO` badge (from `is_new` only), `LiquidationBadge` (future-date gated), and `FavoritesButton` mounted as a sibling of the product `<Link>` (not inside it). No second inline card may carry its own badge/favorite logic. <!-- sdd-owner: implementation -->
+- [ ] Extend the existing dark `ProductCard` into the single canonical component: add `variant: "dark" | "light"` presentation chrome and an expanded `ProductCardData` shape (slug, total/low stock band info, `isNew`, liquidation eligibility, gender/category passthrough, video URL) so home, catalog, and later "/favoritos" all import this one path. Wire in `StockBadge` (low-stock), the `NUEVO` badge (from `is_new` only), `LiquidationBadge` (future-date gated), and `FavoritesButton` mounted as a sibling of the product `<Link>` (not inside it). No second inline card may carry its own badge/favorite logic. <!-- sdd-owner: implementation -->
   - Acceptance: Spec H.1/H.2 (both surfaces share one component; badge/favorites logic single-sourced, no drift) plus Spec E.1 (badge mirrors the ≤3 band) and Spec F.5 (heart on cards).
   - Verify: `npx tsc --noEmit`; `npm run build`; Playwright home (dark) + catalog (light) grids at 390px/1440px: same badges/heart behavior; grep that home and catalog import the same `@/components/store/ProductCard` path.
 
 ### S2.4 Migrate catalog to canonical card + title rename — `src/app/(store)/productos/ProductsClient.tsx`
 - [ ] Replace the inline light card JSX with `<ProductCard product={mappedData} variant="light" />` (mapping the live Convex product incl. variants aggregate for low-stock, tags/compare for liquidation, `is_new`) and rename the sale title `Ofertas` → `Liquidación` (query param handling unchanged). <!-- sdd-owner: implementation -->
   - Acceptance: Spec H.1 (catalog grid renders through the same `ProductCard` path) and Spec G.3 (no `Ofertas` text in the page header).
-  - Verify: `npm run build`; Playwright `/productos?sale=true` at 390px/1440px shows `Liquidación` title and card badges/heart; `grep -rn "Ofertas" src/app/(store)/productos/` → 0.
+  - Verify: `npm run build`; Playwright "/productos?sale=true" at 390px/1440px shows `Liquidación` title and card badges/heart; `grep -rn "Ofertas" src/app/(store)/productos/` → 0.
 
 ### S2.5 Align home feed mapping with the canonical card — `src/app/(store)/HomeClient.tsx`
 - [ ] Update the home `toHot` mapping (and any callers) to feed the full canonical `ProductCardData` (slug, per-variant low-stock band, liquidation eligibility from `tags`/`compare_price`, `is_new`, gender/category) while rendering `variant="dark"` by default. No new inline card here. <!-- sdd-owner: implementation -->
@@ -145,10 +145,10 @@ All three design slices individually exceed the 400-line review budget (Slice 1 
   - Acceptance: Spec A.1/A.2 (multi-image gallery behavior + accessible, keyboard thumbnails), Spec B.2 (PDP trigger opens the modal), Spec E.1 (variant low-stock copy and unselectable zero-stock), Spec F.3 (heart keyboard toggle), Spec C (related section), Spec D.1/D.2 (CTA correctness).
   - Verify: `npx tsc --noEmit`; `npm run build`; Playwright at 390px and 1440px: thumbnail Tab+Enter swaps the primary image and announces the slot name; low-stock size shows `Quedan N en talle X` and zero-stock sizes are disabled; heart persists across reload; CTA href matches the exact spec message.
 
-### S3.5 Create `/favoritos` page + live client — `src/app/(store)/favoritos/page.tsx` + `FavoritesClient.tsx` (NEW)
-- [ ] Add a server `page.tsx` with `metadata.title = "Mis favoritos | Flores"` and `robots: { index: false, follow: false }` (no canonical to another route) rendering a client `FavoritesClient` that reads `useFavoritesStore().slugs`, hydrates live products via `getProductsBySlugs`, renders the canonical `ProductCard variant="light"` grid (2 cols mobile / 4 cols desktop), omits unresolved/inactive slugs, and shows an ES-BO empty state linking to `/productos` when there are no persisted or no resolvable favorites. <!-- sdd-owner: implementation -->
-  - Acceptance: Spec F.1 (deleted product omitted — live query skips unresolved slugs; robots `noindex, nofollow` with no stray canonical), Spec F.2/K.2 (shows current `base_price`/stock/signals from Convex, never stale values), Spec F.4 (empty state links to `/productos`).
-  - Verify: `npm run build`; Playwright: empty state link visible and pointing to `/productos` at 390px/1440px; response `meta[name="robots"]` = `noindex, nofollow`; seed 2 favorites incl. one bogus slug → only the live one renders.
+### S3.5 Create "/favoritos" page + live client — `src/app/(store)/favoritos/page.tsx` + `FavoritesClient.tsx` (NEW)
+- [ ] Add a server `page.tsx` with `metadata.title = "Mis favoritos | Flores"` and `robots: { index: false, follow: false }` (no canonical to another route) rendering a client `FavoritesClient` that reads `useFavoritesStore().slugs`, hydrates live products via `getProductsBySlugs`, renders the canonical `ProductCard variant="light"` grid (2 cols mobile / 4 cols desktop), omits unresolved/inactive slugs, and shows an ES-BO empty state linking to "/productos" when there are no persisted or no resolvable favorites. <!-- sdd-owner: implementation -->
+  - Acceptance: Spec F.1 (deleted product omitted — live query skips unresolved slugs; robots `noindex, nofollow` with no stray canonical), Spec F.2/K.2 (shows current `base_price`/stock/signals from Convex, never stale values), Spec F.4 (empty state links to "/productos").
+  - Verify: `npm run build`; Playwright: empty state link visible and pointing to "/productos" at 390px/1440px; response `meta[name="robots"]` = `noindex, nofollow`; seed 2 favorites incl. one bogus slug → only the live one renders.
 
 ### S3.6 Admin: `sale_ends_at` editor — `src/app/admin/configuracion/page.tsx`
 - [ ] Replace the "en construcción" placeholder with a minimal form: read the current `sale_ends_at` (via `adminApi.getSections`), a labeled date input bound to the value, `Guardar` calling `adminApi.updateSection("sale_ends_at", { title: "Fecha fin liquidación", content: <ISO value> })`, a `Limpiar fecha` action storing `""`, and display of the current value (ES-BO formatted) or `Sin fecha configurada`. Auth is already enforced by `AdminLayout`; no new auth code. ISO-validate before saving; clear input MUST disable liquidation everywhere on next storefront render. <!-- sdd-owner: implementation -->
@@ -157,8 +157,8 @@ All three design slices individually exceed the 400-line review budget (Slice 1 
 
 ### S3.7 Global "Guía de talles" trigger opens the shared modal — `src/components/store/Navbar.tsx` (apply after S2.2 merges)
 - [ ] Add a `Guía de talles` trigger reachable from the storefront chrome (Navbar quick area, per Spec B the navbar OR footer may host it; Navbar chosen so the mobile menu and desktop bar both reach it) that opens the shared `SizeGuideModal` with the default women family (`categorySlug="botas"` or the resolver fallback). The trigger MUST NOT open WhatsApp and MUST NOT reference a hardcoded number. <!-- sdd-owner: implementation -->
-  - Acceptance: Spec B.3 (from `/` or `/productos` the trigger opens the modal with the women family; WhatsApp channel not invoked; no hardcoded phone).
-  - Verify: `npm run build`; Playwright at 390px and 1440px from `/`: trigger opens the modal (default family rows), Escape closes; no `wa.me` navigation fires.
+  - Acceptance: Spec B.3 (from "/" or "/productos" the trigger opens the modal with the women family; WhatsApp channel not invoked; no hardcoded phone).
+  - Verify: `npm run build`; Playwright at 390px and 1440px from "/": trigger opens the modal (default family rows), Escape closes; no `wa.me` navigation fires.
 
 ---
 
@@ -175,7 +175,7 @@ All three design slices individually exceed the 400-line review budget (Slice 1 
   - Verify: curl loop output shows only `200`; `grep -o "photo-[0-9a-z-]*"` on the new block shows unique values.
 
 ### F.3 Favorites persistence + live-price check
-- [ ] Playwright (or manual browser) check: favorite a product from a card → reload → heart stays active and `localStorage["flores-favorites"]` holds only slugs; lower that product's `base_price` in Convex → reload `/favoritos` → the card shows the NEW price (no stale snapshot); remove the slug from storage → empty state appears with the `/productos` link. <!-- sdd-owner: implementation -->
+- [ ] Playwright (or manual browser) check: favorite a product from a card → reload → heart stays active and `localStorage["flores-favorites"]` holds only slugs; lower that product's `base_price` in Convex → reload "/favoritos" → the card shows the NEW price (no stale snapshot); remove the slug from storage → empty state appears with the "/productos" link. <!-- sdd-owner: implementation -->
   - Acceptance: Spec F.2/K.2 (reload preserves slugs; prices refresh live from Convex) and Spec F.4 (empty state).
   - Verify: see scenario steps at 390px and 1440px.
 
@@ -195,7 +195,7 @@ All three design slices individually exceed the 400-line review budget (Slice 1 
 
 - [ ] Bounded review of Slice 1 PRs (S1.1–S1.11): cross-check Convex queries, favorites store, signal components, and the +10 seed against Spec B.1/C.1–C.2/E/F.1–F.3/I.1–I.4/K acceptance criteria before merging onward. <!-- sdd-owner: parent -->
 - [ ] Bounded review of Slice 2 PRs (S2.1–S2.6): verify single-canonical-card convergence (no second inline card remains), no `Ofertas` on any nav surface, and both mega-menu and accordion keyboard behavior against Spec G.1–G.3/H.1–H.2. <!-- sdd-owner: parent -->
-- [ ] Bounded review of Slice 3 PRs (S3.1–S3.7): verify PDP interactions, `/favoritos` metadata + live hydration, admin `sale_ends_at` flow, and the global size-guide trigger against Spec A.1–A.2/B.2–B.3/C/D/E.3/F.4/J. <!-- sdd-owner: parent -->
+- [ ] Bounded review of Slice 3 PRs (S3.1–S3.7): verify PDP interactions, "/favoritos" metadata + live hydration, admin `sale_ends_at` flow, and the global size-guide trigger against Spec A.1–A.2/B.2–B.3/C/D/E.3/F.4/J. <!-- sdd-owner: parent -->
 - [ ] Ask-on-risk decision gate (before further apply): (1) approve the chain strategy + PR split now that Slice sizes exceed 400 changed lines each; (2) confirm the inferred capability areas (Spec R2) and legacy-copy scope boundary (Spec R5, pre-existing `hero_subtitle`/banner scarcity copy and the inert `AnnouncementBar`/`countdown_end_hour` remain out of scope or become a follow-up); (3) confirm the Seed image HTTP-200 record (Spec R4) as point-in-time. <!-- sdd-owner: parent -->
 - [ ] Lifecycle gate: after the above reviews pass, hand off to the verify phase (lint/build/marca greps + manual Playwright checklist in `design.md` §10) and then sync/archive this change. <!-- sdd-owner: parent -->
 
