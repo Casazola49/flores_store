@@ -5,8 +5,8 @@
 
 project:
   name: flores-store
-  change: ficha-producto-vendedora
-  branch: sdd/ficha-producto-vendedora
+  change: null
+  branch: main
   execution: auto            # el usuario opera con "dale"; sin pausas salvo fallo de gate
   delivery_strategy: ask-on-risk
   review_budget_lines: 400
