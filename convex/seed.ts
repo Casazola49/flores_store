@@ -49,7 +49,7 @@ export const run = mutation({
         { key: "announcement_text_color", title: "Color de Texto Anuncio", content: "#000000" },
         { key: "announcement_active", title: "Barra Activa", content: "true" },
         { key: "hero_title", title: "Título Hero", content: "Cultura\nExclusiva\nEn Cada Paso" },
-        { key: "hero_subtitle", title: "Subtítulo Hero", content: "Curaduría de marcas globales a precios de liquidación. Stock limitado — Los mejores modelos se agotan en minutos." },
+        { key: "hero_subtitle", title: "Subtítulo Hero", content: "Curaduría de marcas globales a precios de liquidación. Calzado seleccionado con atención al detalle." },
         { key: "hero_video_url", title: "Video de Fondo Hero", content: "" },
         { key: "countdown_end_hour", title: "Hora Fin Oferta (0-23)", content: "24" },
         { key: "vip_vault_title", title: "Título de la Bóveda VIP", content: "Bóveda\nPrivada" },
@@ -81,10 +81,10 @@ export const run = mutation({
       console.log("Seeding banners...");
       await ctx.db.insert("cms_banners", {
         title: "Cultura\nExclusiva\nEn Cada Paso",
-        subtitle: "Curaduría de marcas globales a precios de liquidación. Stock limitado — Los mejores modelos se agotan en minutos.",
+        subtitle: "Curaduría de marcas globales a precios de liquidación. Calzado seleccionado con atención al detalle.",
         image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1800",
         link_url: "/productos?is_new=true",
-        link_text: "Reclamar Mi Par",
+        link_text: "Ver Colección",
         position: 0,
         is_active: true,
       });
