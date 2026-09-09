@@ -165,6 +165,21 @@ export const publicApi = {
     return { data: mapProduct(result) };
   },
 
+  getRelatedProducts: async (params: {
+    categorySlug: string;
+    gender?: string;
+    excludeSlug: string;
+    limit?: number;
+  }) => {
+    const result = await convexClient.query(convexApi.products.getRelatedProducts, params);
+    return { data: (result || []).map(mapProduct) };
+  },
+
+  getProductsBySlugs: async (slugs: string[]) => {
+    const result = await convexClient.query(convexApi.products.getProductsBySlugs, { slugs });
+    return { data: (result || []).map(mapProduct) };
+  },
+
   getCategories: async () => {
     const result = await convexClient.query(convexApi.categories.getCategories);
     return { data: result.map(mapCategory) };

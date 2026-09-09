@@ -89,6 +89,18 @@ export function buildGenericInquiryMessage(): string {
   return encodeURIComponent("¡Hola! Estoy interesado en los productos de Flores. ¿Me pueden ayudar?");
 }
 
+export function buildSingleProductMessage(params: {
+  name: string;
+  size: string;
+  color?: string;
+  price: number;
+}): string {
+  const { name, size, color, price } = params;
+  const colorPart = color?.trim() ? `, color ${color.trim()}` : "";
+  const text = `Hola FLORES 💕 Quiero el modelo *${name}* — talle ${size}${colorPart}. Precio: Bs ${price}. ¿Tienen stock?`;
+  return encodeURIComponent(text);
+}
+
 export function openWhatsApp(phoneNumber: string, encodedMessage: string): boolean {
   const url = encodedMessage ? `https://wa.me/${phoneNumber}?text=${encodedMessage}` : `https://wa.me/${phoneNumber}`;
   const win = window.open(url, "_blank");

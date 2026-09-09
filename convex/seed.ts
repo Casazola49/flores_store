@@ -54,10 +54,24 @@ export const run = mutation({
         { key: "countdown_end_hour", title: "Hora Fin Oferta (0-23)", content: "24" },
         { key: "vip_vault_title", title: "Título de la Bóveda VIP", content: "Bóveda\nPrivada" },
         { key: "vip_vault_subtitle", title: "Subtítulo de la Bóveda VIP", content: "Piezas seleccionadas que no están disponibles en el catálogo público. Solo para coleccionistas." },
-        { key: "vip_vault_video_url", title: "Video de Fondo Bóveda VIP", content: "" }
+        { key: "vip_vault_video_url", title: "Video de Fondo Bóveda VIP", content: "" },
+        { key: "sale_ends_at", title: "Fecha fin liquidación", content: "" }
       ];
       for (const set of settings) {
         await ctx.db.insert("cms_sections", set);
+      }
+    } else {
+      // Si cms_sections ya fue sembrado, asegurar que sale_ends_at exista de forma idempotente
+      const saleEndsAtSection = await ctx.db
+        .query("cms_sections")
+        .withIndex("by_key", (q) => q.eq("key", "sale_ends_at"))
+        .unique();
+      if (!saleEndsAtSection) {
+        await ctx.db.insert("cms_sections", {
+          key: "sale_ends_at",
+          title: "Fecha fin liquidación",
+          content: "",
+        });
       }
     }
 
@@ -246,7 +260,7 @@ export const run = mutation({
       }
     }
 
-    // 5b. Catálogo extendido — idempotente por slug (13 productos, variantes v26+).
+    // 5b. Catálogo extendido — idempotente por slug (23 productos, variantes v26-v98).
     // Re-ejecutar seed:run agrega los que falten sin duplicar.
     const existingSlugs = new Set((await ctx.db.query("products").collect()).map((p) => p.slug));
     const extendedCatalog = [
@@ -528,8 +542,237 @@ export const run = mutation({
       },
     ];
 
+    // 5c. Catálogo extendido 2 — Diez productos adicionales (sort_order 21–30, variantes v59–v98)
+    const extendedCatalog2 = [
+      {
+        name: "Bota Alta Cognac",
+        slug: "bota-alta-cognac",
+        description: "Bota alta en cuero vacuno color cognac. Caña estructurada y taco medio para máxima elegancia.",
+        short_desc: "Cuero vacuno, caña alta",
+        category_slug: "botas",
+        gender: "mujer",
+        brand: "Flores",
+        base_price: 480,
+        compare_price: 650,
+        is_featured: true,
+        is_new: true,
+        is_active: true,
+        tags: ["cuero", "tendencia"],
+        sort_order: 21,
+        images: [{ url: "https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v59", size: "35", color: "Cognac", sku: "bota-alta-cognac-35", stock: 2, is_active: true },
+          { id: "v60", size: "36", color: "Cognac", sku: "bota-alta-cognac-36", stock: 3, is_active: true },
+          { id: "v61", size: "37", color: "Cognac", sku: "bota-alta-cognac-37", stock: 5, is_active: true },
+          { id: "v62", size: "38", color: "Cognac", sku: "bota-alta-cognac-38", stock: 4, is_active: true },
+        ],
+      },
+      {
+        name: "Zapato Oxford Negro",
+        slug: "zapato-oxford-negro",
+        description: "Zapato oxford formal con costuras reforzadas y acabado satinado para eventos y oficina.",
+        short_desc: "Cuero negro, formal",
+        category_slug: "zapatos",
+        gender: "hombre",
+        brand: "Flores",
+        base_price: 420,
+        is_featured: false,
+        is_new: true,
+        is_active: true,
+        tags: ["clasico", "formal"],
+        sort_order: 22,
+        images: [{ url: "https://images.unsplash.com/photo-1582588678413-dbf45f4823e9?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v63", size: "40", color: "Negro", sku: "oxford-negro-40", stock: 3, is_active: true },
+          { id: "v64", size: "41", color: "Negro", sku: "oxford-negro-41", stock: 6, is_active: true },
+          { id: "v65", size: "42", color: "Negro", sku: "oxford-negro-42", stock: 4, is_active: true },
+          { id: "v66", size: "43", color: "Negro", sku: "oxford-negro-43", stock: 5, is_active: true },
+        ],
+      },
+      {
+        name: "Sneaker Urbano Blanco",
+        slug: "sneaker-urbano-blanco",
+        description: "Zapatilla urbana minimalista blanca con plantilla ergonómica y suela vulcanizada.",
+        short_desc: "Urbano minimalista, suela vulcanizada",
+        category_slug: "zapatillas",
+        gender: "unisex",
+        brand: "Flores",
+        base_price: 310,
+        compare_price: 420,
+        is_featured: true,
+        is_new: true,
+        is_active: true,
+        tags: ["urbano", "blanco"],
+        sort_order: 23,
+        images: [{ url: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v67", size: "36", color: "Blanco", sku: "sneaker-blanco-36", stock: 1, is_active: true },
+          { id: "v68", size: "37", color: "Blanco", sku: "sneaker-blanco-37", stock: 4, is_active: true },
+          { id: "v69", size: "38", color: "Blanco", sku: "sneaker-blanco-38", stock: 3, is_active: true },
+          { id: "v70", size: "39", color: "Blanco", sku: "sneaker-blanco-39", stock: 2, is_active: true },
+        ],
+      },
+      {
+        name: "Runner Pro Azul",
+        slug: "runner-pro-azul",
+        description: "Zapatilla de running ligero con amortiguación reactiva y tejido transpirable.",
+        short_desc: "Running ligero, amortiguación reactiva",
+        category_slug: "zapatillas-deportivas",
+        gender: "hombre",
+        brand: "Flores",
+        base_price: 390,
+        is_featured: false,
+        is_new: true,
+        is_active: true,
+        tags: ["running", "azul"],
+        sort_order: 24,
+        images: [{ url: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v71", size: "40", color: "Azul", sku: "runner-azul-40", stock: 4, is_active: true },
+          { id: "v72", size: "41", color: "Azul", sku: "runner-azul-41", stock: 8, is_active: true },
+          { id: "v73", size: "42", color: "Azul", sku: "runner-azul-42", stock: 5, is_active: true },
+          { id: "v74", size: "43", color: "Azul", sku: "runner-azul-43", stock: 6, is_active: true },
+        ],
+      },
+      {
+        name: "Taco Fiesta Rojo",
+        slug: "taco-fiesta-rojo",
+        description: "Taco fino en terciopelo rojo intenso. El punto de atención ideal para eventos y celebraciones.",
+        short_desc: "Taco fiesta, terciopelo rojo",
+        category_slug: "tacos",
+        gender: "mujer",
+        brand: "Flores",
+        base_price: 360,
+        compare_price: 520,
+        is_featured: true,
+        is_new: true,
+        is_active: true,
+        tags: ["fiesta", "rojo"],
+        sort_order: 25,
+        images: [{ url: "https://images.unsplash.com/photo-1597045566677-8cf032ed6634?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v75", size: "35", color: "Rojo", sku: "taco-fiesta-35", stock: 2, is_active: true },
+          { id: "v76", size: "36", color: "Rojo", sku: "taco-fiesta-36", stock: 3, is_active: true },
+          { id: "v77", size: "37", color: "Rojo", sku: "taco-fiesta-37", stock: 2, is_active: true },
+          { id: "v78", size: "38", color: "Rojo", sku: "taco-fiesta-38", stock: 3, is_active: true },
+        ],
+      },
+      {
+        name: "Botín Vaquero Marrón",
+        slug: "botin-vaquero-marron",
+        description: "Botín estilo texano con bordados artesanales y taco cubano en cuero marrón envejecido.",
+        short_desc: "Estilo texano, cuero envejecido",
+        category_slug: "botas",
+        gender: "mujer",
+        brand: "Flores",
+        base_price: 520,
+        is_featured: false,
+        is_new: true,
+        is_active: true,
+        tags: ["vaquero", "marron"],
+        sort_order: 26,
+        images: [{ url: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v79", size: "36", color: "Marrón", sku: "botin-vaquero-36", stock: 3, is_active: true },
+          { id: "v80", size: "37", color: "Marrón", sku: "botin-vaquero-37", stock: 5, is_active: true },
+          { id: "v81", size: "38", color: "Marrón", sku: "botin-vaquero-38", stock: 4, is_active: true },
+          { id: "v82", size: "39", color: "Marrón", sku: "botin-vaquero-39", stock: 3, is_active: true },
+        ],
+      },
+      {
+        name: "Mocasín Beige",
+        slug: "mocsin-beige",
+        description: "Mocasín de gamuza beige con antifaz y suela flexible. Sofisticación casual de primera.",
+        short_desc: "Gamuza beige, antifaz clásico",
+        category_slug: "zapatos",
+        gender: "hombre",
+        brand: "Flores",
+        base_price: 290,
+        compare_price: 380,
+        is_featured: false,
+        is_new: true,
+        is_active: true,
+        tags: ["casual", "beige"],
+        sort_order: 27,
+        images: [{ url: "https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v83", size: "40", color: "Beige", sku: "mocasor-beige-40", stock: 5, is_active: true },
+          { id: "v84", size: "41", color: "Beige", sku: "mocasor-beige-41", stock: 7, is_active: true },
+          { id: "v85", size: "42", color: "Beige", sku: "mocasor-beige-42", stock: 6, is_active: true },
+          { id: "v86", size: "43", color: "Beige", sku: "mocasor-beige-43", stock: 5, is_active: true },
+        ],
+      },
+      {
+        name: "Zapatilla Canvas Rosa",
+        slug: "zapatilla-canvas-rosa",
+        description: "Zapatilla de lona rosa suave con puntera de goma blanca. Frescura y ligereza para todos los días.",
+        short_desc: "Lona transpirable, puntera goma",
+        category_slug: "zapatillas",
+        gender: "mujer",
+        brand: "Flores",
+        base_price: 180,
+        is_featured: false,
+        is_new: true,
+        is_active: true,
+        tags: ["canvas", "rosa"],
+        sort_order: 28,
+        images: [{ url: "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v87", size: "34", color: "Rosa", sku: "canvas-rosa-34", stock: 6, is_active: true },
+          { id: "v88", size: "35", color: "Rosa", sku: "canvas-rosa-35", stock: 8, is_active: true },
+          { id: "v89", size: "36", color: "Rosa", sku: "canvas-rosa-36", stock: 10, is_active: true },
+          { id: "v90", size: "37", color: "Rosa", sku: "canvas-rosa-37", stock: 7, is_active: true },
+        ],
+      },
+      {
+        name: "Trail Runner Verde",
+        slug: "trail-runner-verde",
+        description: "Calzado todo terreno para senderos con tacos multidireccionales y capellada antidesgarro.",
+        short_desc: "Todo terreno, suela tracción",
+        category_slug: "zapatillas-deportivas",
+        gender: "hombre",
+        brand: "Flores",
+        base_price: 450,
+        compare_price: 580,
+        is_featured: false,
+        is_new: true,
+        is_active: true,
+        tags: ["trail", "verde"],
+        sort_order: 29,
+        images: [{ url: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v91", size: "40", color: "Verde Olivo", sku: "trail-verde-40", stock: 2, is_active: true },
+          { id: "v92", size: "41", color: "Verde Olivo", sku: "trail-verde-41", stock: 4, is_active: true },
+          { id: "v93", size: "42", color: "Verde Olivo", sku: "trail-verde-42", stock: 3, is_active: true },
+          { id: "v94", size: "43", color: "Verde Olivo", sku: "trail-verde-43", stock: 2, is_active: true },
+        ],
+      },
+      {
+        name: "Sandalia Plataforma",
+        slug: "sandalia-plataforma",
+        description: "Sandalia con plataforma forrada en yute y tiras cruzadas ajustables. Estilo veraniego chic.",
+        short_desc: "Plataforma yute, tiras ajustables",
+        category_slug: "tacos",
+        gender: "mujer",
+        brand: "Flores",
+        base_price: 320,
+        is_featured: false,
+        is_new: true,
+        is_active: true,
+        tags: ["verano", "plataforma"],
+        sort_order: 30,
+        images: [{ url: "https://images.unsplash.com/photo-1562273138-f46be4ebdf33?q=80&w=800", is_primary: true }],
+        variants: [
+          { id: "v95", size: "35", color: "Nude", sku: "plataforma-nude-35", stock: 4, is_active: true },
+          { id: "v96", size: "36", color: "Nude", sku: "plataforma-nude-36", stock: 6, is_active: true },
+          { id: "v97", size: "37", color: "Nude", sku: "plataforma-nude-37", stock: 5, is_active: true },
+          { id: "v98", size: "38", color: "Nude", sku: "plataforma-nude-38", stock: 4, is_active: true },
+        ],
+      },
+    ];
+
     let added = 0;
-    for (const prod of extendedCatalog) {
+    for (const prod of [...extendedCatalog, ...extendedCatalog2]) {
       if (existingSlugs.has(prod.slug)) continue;
       await ctx.db.insert("products", prod);
       existingSlugs.add(prod.slug);
