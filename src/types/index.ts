@@ -42,6 +42,7 @@ export interface Product {
   description?: string;
   short_desc?: string;
   category_id?: number;
+  category_slug?: string;
   category?: Category;
   gender?: string;
   brand: string;

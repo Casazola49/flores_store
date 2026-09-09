@@ -87,6 +87,75 @@ export const getProduct = query({
   },
 });
 
+// PRODUCTOS RELACIONADOS (Público - Ficha de producto)
+export const getRelatedProducts = query({
+  args: {
+    categorySlug: v.string(),
+    gender: v.optional(v.string()),
+    excludeSlug: v.string(),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = Math.min(args.limit ?? 4, 8);
+
+    // Búsqueda primaria: misma categoría excluyendo el producto actual
+    const results = await ctx.db
+      .query("products")
+      .withIndex("by_category", (q) => q.eq("category_slug", args.categorySlug))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("is_active"), true),
+          q.neq(q.field("slug"), args.excludeSlug)
+        )
+      )
+      .take(limit);
+
+    // Respaldo: si hay menos de 2 resultados y se especificó género,
+    // suplementar con productos activos del mismo género de otras categorías
+    if (results.length < 2 && args.gender) {
+      const allByGender = await ctx.db
+        .query("products")
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("is_active"), true),
+            q.eq(q.field("gender"), args.gender),
+            q.neq(q.field("slug"), args.excludeSlug)
+          )
+        )
+        .take(limit);
+
+      const existingSlugs = new Set(results.map((r) => r.slug));
+      for (const p of allByGender) {
+        if (!existingSlugs.has(p.slug)) {
+          results.push(p);
+          if (results.length >= limit) break;
+        }
+      }
+    }
+
+    return results.map((p) => ({ ...p, id: p._id }));
+  },
+});
+
+// OBTENER PRODUCTOS POR SLUGS (Público - Hidratación en vivo de Favoritos)
+export const getProductsBySlugs = query({
+  args: { slugs: v.array(v.string()) },
+  handler: async (ctx, args) => {
+    if (args.slugs.length === 0) return [];
+    const results = [];
+    for (const slug of args.slugs) {
+      const product = await ctx.db
+        .query("products")
+        .withIndex("by_slug", (q) => q.eq("slug", slug))
+        .unique();
+      if (product && product.is_active) {
+        results.push({ ...product, id: product._id });
+      }
+    }
+    return results;
+  },
+});
+
 // LISTAR PRODUCTOS PARA EL PANEL (Admin)
 export const getProductsAdmin = query({
   args: {
