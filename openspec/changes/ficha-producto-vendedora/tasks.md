@@ -165,27 +165,27 @@ All three design slices individually exceed the 400-line review budget (Slice 1 
 ## Final Cross-cutting Verification (after all slices are applied)
 
 ### F.1 Honesty grep suite — no countdown, no invented stats (touched files only)
-- [ ] On the set of files changed by this change (`git diff --name-only` against the base branch): `grep -rniE "setInterval|countdown|se acaba hoy|última oportunidad|acaba de comprar|solo quedan|24h antes"` → 0 new occurrences; no new `setInterval`/timer code and no synthetic anchor/urgency copy in PDP, card, navbar, favorites, or new badge components. Document that the pre-existing `AnnouncementBar` interval is untouched and remains inert (its `getAnnouncement` source never provides `countdown_end_date`); flag any drift for the parent decision gate. <!-- sdd-owner: implementation -->
+- [x] On the set of files changed by this change (`git diff --name-only` against the base branch): `grep -rniE "setInterval|countdown|se acaba hoy|última oportunidad|acaba de comprar|solo quedan|24h antes"` → 0 new occurrences; no new `setInterval`/timer code and no synthetic anchor/urgency copy in PDP, card, navbar, favorites, or new badge components. Document that the pre-existing `AnnouncementBar` interval is untouched and remains inert (its `getAnnouncement` source never provides `countdown_end_date`); flag any drift for the parent decision gate. <!-- sdd-owner: implementation -->
   - Acceptance: Spec K.1/K.3 (no synthetic urgency copy, no countdown runs on surfaces touched by this change) and `config.yaml` verify greps (no `#FFD700/#FFB300/#FFC107`, `rounded-none`/radius 0 in new components).
   - Verify: run the greps above across `src/` (expect only documented/pre-existing matches); `grep -rn "#FFD700\|#FFB300\|#FFC107" src/` → 0; spot-check `rounded-none` on new components.
 
 ### F.2 Seed image HTTP-200 + uniqueness check (new batch)
-- [ ] Extract the ten new products' `images[].url` from the `convex/seed.ts` `extendedCatalog2` block and verify each returns HTTP 200 (`curl -s -o /dev/null -w "%{http_code} %{url_effective}\n" <url>` per URL); assert no Unsplash photo-id repeats across the ten by grepping the block and counting each `photo-…` id. <!-- sdd-owner: implementation -->
+- [x] Extract the ten new products' `images[].url` from the `convex/seed.ts` `extendedCatalog2` block and verify each returns HTTP 200 (`curl -s -o /dev/null -w "%{http_code} %{url_effective}\n" <url>` per URL); assert no Unsplash photo-id repeats across the ten by grepping the block and counting each `photo-…` id. <!-- sdd-owner: implementation -->
   - Acceptance: Spec I.3 (all new URLs 200 at verification time; each photo-id appears at most once in the batch).
   - Verify: curl loop output shows only `200`; `grep -o "photo-[0-9a-z-]*"` on the new block shows unique values.
 
 ### F.3 Favorites persistence + live-price check
-- [ ] Playwright (or manual browser) check: favorite a product from a card → reload → heart stays active and `localStorage["flores-favorites"]` holds only slugs; lower that product's `base_price` in Convex → reload "/favoritos" → the card shows the NEW price (no stale snapshot); remove the slug from storage → empty state appears with the "/productos" link. <!-- sdd-owner: implementation -->
+- [x] Playwright (or manual browser) check: favorite a product from a card → reload → heart stays active and `localStorage["flores-favorites"]` holds only slugs; lower that product's `base_price` in Convex → reload "/favoritos" → the card shows the NEW price (no stale snapshot); remove the slug from storage → empty state appears with the "/productos" link. <!-- sdd-owner: implementation -->
   - Acceptance: Spec F.2/K.2 (reload preserves slugs; prices refresh live from Convex) and Spec F.4 (empty state).
   - Verify: see scenario steps at 390px and 1440px.
 
 ### F.4 Mega-menu keyboard navigation + mobile accordion
-- [ ] Playwright at 1440px: Tab to the categories trigger, Enter/Arrow opens the mega-menu, arrows move focus between items, Escape closes and returns focus to the trigger; at 390px: hamburger → categories disclosure expands with `aria-expanded="true"`, all categories + quick links visible, and links navigate and close the menu. <!-- sdd-owner: implementation -->
+- [x] Playwright at 1440px: Tab to the categories trigger, Enter/Arrow opens the mega-menu, arrows move focus between items, Escape closes and returns focus to the trigger; at 390px: hamburger → categories disclosure expands with `aria-expanded="true"`, all categories + quick links visible, and links navigate and close the menu. <!-- sdd-owner: implementation -->
   - Acceptance: Spec G.2 (desktop hover scenario incl. keyboard focus + Escape restore; mobile accordion scenario with `aria-expanded`).
   - Verify: full keyboard pass per scenario on both viewports; log any failure for the parent review gate.
 
 ### F.5 Full build gate — `src/` quality
-- [ ] Run the full gate on the merged result: `npm run lint` (0 errors), `npx tsc --noEmit` (0 errors), and `npm run build` (production build succeeds with no type/runtime errors). <!-- sdd-owner: implementation -->
+- [x] Run the full gate on the merged result: `npm run lint` (0 errors), `npx tsc --noEmit` (0 errors), and `npm run build` (production build succeeds with no type/runtime errors). <!-- sdd-owner: implementation -->
   - Acceptance: `openspec/config.yaml` `verify_commands` (lint + build) plus `tsc --noEmit` per this change's contract.
   - Verify: all three commands exit 0.
 
