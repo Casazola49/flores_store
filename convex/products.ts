@@ -99,7 +99,7 @@ export const getRelatedProducts = query({
     const limit = Math.min(args.limit ?? 4, 8);
 
     // Búsqueda primaria: misma categoría excluyendo el producto actual
-    let results = await ctx.db
+    const results = await ctx.db
       .query("products")
       .withIndex("by_category", (q) => q.eq("category_slug", args.categorySlug))
       .filter((q) =>

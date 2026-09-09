@@ -2,8 +2,8 @@
 
 ## Execution Status
 - **Change:** `ficha-producto-vendedora`
-- **Phase:** Apply (Slice 1 Foundation)
-- **Delivery Strategy:** `auto-chain` (Slice 1 delivered as first PR boundary)
+- **Phase:** Apply (Slice 2 Navigation + Canonical ProductCard convergence)
+- **Delivery Strategy:** `auto-chain` (Slice 2 delivered as second PR boundary)
 - **Status Consumed:**
   - `applyState`: `ready`
   - `blockedReasons`: `[]`
@@ -11,10 +11,9 @@
 
 ---
 
-## Completed Tasks (Slice 1 Foundation: S1.1 – S1.11)
+## Completed Tasks
 
-All 11 implementation tasks for Slice 1 have been completed and marked `- [x]` in `tasks.md`:
-
+### Slice 1 — Foundation (S1.1 – S1.11)
 - [x] **S1.1: `convex/products.ts`** — Added public `getRelatedProducts` query taking `{ categorySlug, gender?, excludeSlug, limit? }` (default 4, max 8). Primary read uses `withIndex("by_category")` filtered to `is_active` and `slug != excludeSlug` with `.take(limit)`. When < 2 category-mates exist and `gender` is present, supplements with same-gender active products (excluding current slug) capped at `limit`. No unbounded `.collect()` scan.
 - [x] **S1.2: `convex/products.ts`** — Added public `getProductsBySlugs` query taking `{ slugs: string[] }`. Returns `[]` for empty input, resolves each slug via `withIndex("by_slug")`, omits missing or `is_active === false` products, and preserves input slug order.
 - [x] **S1.3: `src/lib/favorites.ts`** — Created Zustand `persist` store `useFavoritesStore` (key `flores-favorites`) persisting ONLY `string[]` of slugs with `toggle`, `has`, `count`, `clear`. Capped at 100 with oldest-dropped overflow. No product snapshot fields serialized.
@@ -27,30 +26,40 @@ All 11 implementation tasks for Slice 1 have been completed and marked `- [x]` i
 - [x] **S1.10: `convex/seed.ts`** — Appended `{ key: "sale_ends_at", title: "Fecha fin liquidación", content: "" }` to initial `cms_sections` array and added idempotent insertion for previously seeded databases.
 - [x] **S1.11: `convex/seed.ts`** — Appended `extendedCatalog2` array with 10 products (sort_order 21–30 contiguous, `is_new: true`, `is_active: true`, prices Bs 180–620, variants `v59`–`v98` globally unique with 0 collisions, 10 distinct Unsplash URLs verified HTTP 200). Updated header comment.
 
+### Slice 2 — Navigation + Canonical ProductCard (S2.1 – S2.6)
+- [x] **S2.1: `src/components/store/MegaMenu.tsx` (NEW)** — Desktop hover/focus-triggered mega-menu panel (≥ `md` only) listing Convex categories via prop (links `/productos?category={slug}`) plus quick links (`Novedades` → `/productos?is_new=true`, `Liquidación` → `/productos?sale=true`, `Exclusivos` → `/productos?collection=exclusive`). Exposes `aria-expanded` and `aria-haspopup="menu"` on the trigger, `role="menu"` panel semantics, `role="menuitem"` on links, Escape-to-close with focus restore to the trigger, ArrowDown/ArrowUp cycling through menuitems, and ~200ms mouse-leave close delay. Zero yellow colors; `rounded-none`; token-driven styling. Zero occurrences of `Ofertas`.
+- [x] **S2.2: `src/components/store/Navbar.tsx`** — Rebuilt desktop nav and mobile menu using live Convex categories via `useQuery(api.categories.getCategories)` alongside quick links (`Novedades`, `Liquidación`, `Exclusivos`, and `Favoritos` → `/favoritos`). Mobile (< `md`) implements a category disclosure accordion with dynamic `aria-expanded` and chevron flip. Replaced every occurrence of `Ofertas` with `Liquidación` while preserving `/productos?sale=true` target. Preserved brand logo, cart trigger with count badge, and mobile toggle.
+- [x] **S2.3: `src/components/store/ProductCard.tsx`** — Extended into single canonical component supporting `variant: "dark" | "light"`, full `ProductCardData` shape, and exported canonical `mapProductToCardData` helper. Wired in `StockBadge` (low-stock ≤3 variant display), `NUEVO` badge (strictly from `is_new`), `LiquidationBadge` (future-date gated via `useCMSStore().sections.sale_ends_at`), and `FavoritesButton` mounted as sibling outside the `<Link>` anchor. Uses `useSyncExternalStore` for `prefers-reduced-motion` to ensure zero cascading renders.
+- [x] **S2.4: `src/app/(store)/productos/ProductsClient.tsx`** — Replaced inline light card JSX with canonical `<ProductCard product={mapProductToCardData(product)} variant="light" />`. Renamed sale page title from `Ofertas` → `Liquidación`. Verified 0 occurrences of `Ofertas` in `src/app/(store)/productos/`.
+- [x] **S2.5: `src/app/(store)/HomeClient.tsx`** — Updated `toHot` mapping to delegate to canonical `mapProductToCardData(p)` feeding full `ProductCardData` (slug, per-variant low-stock band, liquidation eligibility, `is_new`, gender, categorySlug) while explicitly passing `variant="dark"`. Eliminated any inline card duplication.
+- [x] **S2.6: `src/components/store/Footer.tsx`** — Renamed catalog link `Ofertas` → `Liquidación` (destination `/productos?sale=true` unchanged). Replaced hardcoded `https://wa.me/59176932485` link with dynamic `getWhatsAppNumber(useCMSStore().sections.whatsapp_number)`. Verified 0 matches for `Ofertas` or `wa.me/591` in `Footer.tsx`.
+
 ---
 
 ## Files Changed and Created
 
 ### New Files
-- `src/lib/favorites.ts`
-- `src/lib/sizeGuide.ts`
-- `src/components/store/LiquidationBadge.tsx`
-- `src/components/store/LowStockNote.tsx`
-- `src/components/store/FavoritesButton.tsx`
-- `openspec/changes/ficha-producto-vendedora/apply-progress.md`
+- `src/components/store/MegaMenu.tsx` (desktop hover/focus mega-menu panel)
+- `src/lib/favorites.ts` (Slice 1)
+- `src/lib/sizeGuide.ts` (Slice 1)
+- `src/components/store/LiquidationBadge.tsx` (Slice 1)
+- `src/components/store/LowStockNote.tsx` (Slice 1)
+- `src/components/store/FavoritesButton.tsx` (Slice 1)
 
 ### Modified Files
-- `convex/products.ts` (added `getRelatedProducts`, `getProductsBySlugs`)
-- `convex/seed.ts` (added `sale_ends_at` CMS section, `extendedCatalog2` +10 products, updated comment and idempotent loop)
-- `src/components/store/StockBadge.tsx` (extended with low-stock state)
-- `src/lib/whatsapp.ts` (added `buildSingleProductMessage`)
-- `src/lib/api.ts` (added `getRelatedProducts` and `getProductsBySlugs` to `publicApi`)
-- `openspec/changes/ficha-producto-vendedora/tasks.md` (checked S1.1–S1.11)
+- `src/components/store/Navbar.tsx` (Convex categories, MegaMenu, mobile accordion, "Ofertas" → "Liquidación")
+- `src/components/store/ProductCard.tsx` (canonical component, dark/light variants, badges, favorites, mapProductToCardData)
+- `src/app/(store)/productos/ProductsClient.tsx` (migrated to canonical ProductCard, "Ofertas" → "Liquidación")
+- `src/app/(store)/HomeClient.tsx` (updated toHot to use canonical mapProductToCardData)
+- `src/components/store/Footer.tsx` ("Ofertas" → "Liquidación", dynamic WhatsApp number from CMS)
+- `convex/products.ts` (Slice 1 queries, cleaned prefer-const)
+- `openspec/changes/ficha-producto-vendedora/tasks.md` (checked S2.1–S2.6)
+- `openspec/changes/ficha-producto-vendedora/apply-progress.md` (merged Slice 2 progress)
 
 ---
 
 ## Deviations from Design
-None. All components, schemas, and helpers strictly implement `design.md` §3.1, §3.2, §3.3, §3.5 and `spec.md` capabilities B, C, D, E, F, I, K.
+None. All components, navigation patterns, card convergence, and signals strictly follow `design.md` §3.2, §3.3, §3.4 and `spec.md` capabilities G and H.
 
 ---
 
@@ -59,30 +68,23 @@ None. All components, schemas, and helpers strictly implement `design.md` §3.1,
 1. **TypeScript Typecheck:**
    - `npx tsc --noEmit` → 0 errors.
 2. **ESLint on Changed Files:**
-   - `npx eslint src/lib/favorites.ts src/lib/sizeGuide.ts src/lib/whatsapp.ts src/components/store/StockBadge.tsx src/components/store/LiquidationBadge.tsx src/components/store/LowStockNote.tsx src/components/store/FavoritesButton.tsx` → 0 errors, 0 warnings.
+   - `npx eslint src/components/store/MegaMenu.tsx src/components/store/Navbar.tsx src/components/store/ProductCard.tsx src/app/(store)/productos/ProductsClient.tsx src/app/(store)/HomeClient.tsx src/components/store/Footer.tsx convex/products.ts` → 0 errors.
 3. **Next.js Production Build:**
-   - `npm run build` → Compiled successfully in 7.0s, all 17 routes generated cleanly.
-4. **Seed Integrity Verifications:**
-   - Variant IDs `v1`–`v98` checked: exactly 1 occurrence each, 0 collisions.
-   - Sort order 1–30 checked: contiguous from 1 to 30.
-   - All 10 new Unsplash image URLs tested via curl: HTTP 200 for all 10 with 10 distinct photo IDs.
-5. **Message Helper Verification:**
-   - With color: `Hola FLORES 💕 Quiero el modelo *Bota Taco Lira* — talle 38, color Camel. Precio: Bs 520. ¿Tienen stock?`
-   - Without color: `Hola FLORES 💕 Quiero el modelo *Bota Taco Lira* — talle 38. Precio: Bs 520. ¿Tienen stock?`
+   - `npm run build` → Compiled successfully in 4.8s, TypeScript check finished in 5.6s, all 17 routes generated statically and dynamically without errors.
+4. **Nav Surface "Ofertas" Grep:**
+   - `grep -rn "Ofertas" src/` → 0 matches across the entire `src/` codebase.
+5. **Hardcoded WhatsApp Number Grep:**
+   - `grep -rn "wa.me/591" src/` → 0 matches across `src/`.
+6. **Token Purity Grep:**
+   - `grep -rnE "#FFD700|#FFB300|#FFC107" src/` → 0 matches.
+7. **Canonical Card Convergence:**
+   - Both `HomeClient.tsx` and `ProductsClient.tsx` import and render `ProductCard` and `mapProductToCardData` from `@/components/store/ProductCard`.
 
 ---
 
-## Remaining Tasks (Slice 2, Slice 3, Final, Post-Apply)
+## Remaining Tasks (Slice 3, Final, Post-Apply)
 
 ```markdown
-### Slice 2 — Navigation (MegaMenu/Navbar rename) + Canonical ProductCard
-- [ ] Add a hover/focus-triggered mega-menu panel (≥ `md` only) listing every Convex category passed via prop (links "/productos?category={slug}") plus quick links (`Novedades` → "/productos?is_new=true", `Liquidación` → "/productos?sale=true", `Exclusivos`), with `aria-expanded`/`aria-haspopup="menu"` on the trigger, `role="menu"` panel semantics, Escape-to-close with focus restore to the trigger, and a ~200ms mouse-leave close delay. No yellow; `rounded-none`; colors via `var(--color-*)`. <!-- sdd-owner: implementation -->
-- [ ] Rewrite `Navbar`: build the desktop nav and mobile menu from `useQuery(api.categories.getCategories)` (live list) + quick links (`Novedades`, `Liquidación`, `Exclusivos`, and a `Favoritos` → "/favoritos" entry); on mobile (< `md`) a categories disclosure accordion with `aria-expanded` listing the same content; replace every `Ofertas` occurrence (labels and any derived aria/alt) with `Liquidación` while keeping the "/productos?sale=true" destination. Preserve logo, cart button, and mobile-menu toggle behavior. <!-- sdd-owner: implementation -->
-- [ ] Extend the existing dark `ProductCard` into the single canonical component: add `variant: "dark" | "light"` presentation chrome and an expanded `ProductCardData` shape (slug, total/low stock band info, `isNew`, liquidation eligibility, gender/category passthrough, video URL) so home, catalog, and later "/favoritos" all import this one path. Wire in `StockBadge` (low-stock), the `NUEVO` badge (from `is_new` only), `LiquidationBadge` (future-date gated), and `FavoritesButton` mounted as a sibling of the product `<Link>` (not inside it). No second inline card may carry its own badge/favorite logic. <!-- sdd-owner: implementation -->
-- [ ] Replace the inline light card JSX with `<ProductCard product={mappedData} variant="light" />` (mapping the live Convex product incl. variants aggregate for low-stock, tags/compare for liquidation, `is_new`) and rename the sale title `Ofertas` → `Liquidación` (query param handling unchanged). <!-- sdd-owner: implementation -->
-- [ ] Update the home `toHot` mapping (and any callers) to feed the full canonical `ProductCardData` (slug, per-variant low-stock band, liquidation eligibility from `tags`/`compare_price`, `is_new`, gender/category) while rendering `variant="dark"` by default. No new inline card here. <!-- sdd-owner: implementation -->
-- [ ] In `Footer`, rename the catalog link `Ofertas` → `Liquidación` (destination unchanged) and replace the hardcoded `https://wa.me/59176932485` link with `getWhatsAppNumber(useCMSStore().sections.whatsapp_number)`. No hardcoded number may remain in this touched file. <!-- sdd-owner: implementation -->
-
 ### Slice 3 — PDP upgrade + Favorites page + Admin `sale_ends_at`
 - [ ] Add `SizeGuideModal({ open, onClose, categorySlug })` rendering a dialog (`role="dialog"`, `aria-modal="true"`, `aria-label="Guía de talles"`) that: on open moves focus into the modal, traps Tab/Shift+Tab, closes on Escape, and restores focus to the trigger on close; renders the ES-BO table from `getSizeGuideForCategory(categorySlug)` ("Talle" | "Pie (cm)" per family label); full-width bottom sheet < 768px, centered modal ≥ 768px; `rounded-none`, token colors, no transitions under `prefers-reduced-motion`. <!-- sdd-owner: implementation -->
 - [ ] Add `RelatedProducts({ categorySlug, gender?, currentSlug })` using `useQuery(api.products.getRelatedProducts, …)`, heading `También te puede interesar`, grid of up to four canonical `ProductCard` items (2 cols mobile, 4 cols desktop), never including the current slug. <!-- sdd-owner: implementation -->
@@ -99,12 +101,19 @@ None. All components, schemas, and helpers strictly implement `design.md` §3.1,
 - [ ] Playwright at 1440px: Tab to the categories trigger, Enter/Arrow opens the mega-menu, arrows move focus between items, Escape closes and returns focus to the trigger; at 390px: hamburger → categories disclosure expands with `aria-expanded="true"`, all categories + quick links visible, and links navigate and close the menu. <!-- sdd-owner: implementation -->
 - [ ] Run the full gate on the merged result: `npm run lint` (0 errors), `npx tsc --noEmit` (0 errors), and `npm run build` (production build succeeds with no type/runtime errors). <!-- sdd-owner: implementation -->
 - [ ] Remove legacy dishonesty: inert countdown in `AnnouncementBar` (interval + countdown markup) and invented scarcity copy in seeded CMS content (search seed for "+500", "ÚLTIMAS", fake urgency phrases). Replace with honest copy or remove. Verify: grep for countdown/interval in AnnouncementBar returns 0; build green. <!-- sdd-owner: implementation -->
+
+### Deferred Parent Lifecycle Actions
+- [ ] Bounded review of Slice 1 PRs (S1.1–S1.11): cross-check Convex queries, favorites store, signal components, and the +10 seed against Spec B.1/C.1–C.2/E/F.1–F.3/I.1–I.4/K acceptance criteria before merging onward. <!-- sdd-owner: parent -->
+- [ ] Bounded review of Slice 2 PRs (S2.1–S2.6): verify single-canonical-card convergence (no second inline card remains), no `Ofertas` on any nav surface, and both mega-menu and accordion keyboard behavior against Spec G.1–G.3/H.1–H.2. <!-- sdd-owner: parent -->
+- [ ] Bounded review of Slice 3 PRs (S3.1–S3.7): verify PDP interactions, "/favoritos" metadata + live hydration, admin `sale_ends_at` flow, and the global size-guide trigger against Spec A.1–A.2/B.2–B.3/C/D/E.3/F.4/J. <!-- sdd-owner: parent -->
+- [ ] Ask-on-risk decision gate (before further apply): (1) approve the chain strategy + PR split now that Slice sizes exceed 400 changed lines each; (2) confirm the inferred capability areas (Spec R2) and legacy-copy scope boundary (Spec R5, pre-existing `hero_subtitle`/banner scarcity copy and the inert `AnnouncementBar`/`countdown_end_hour` remain out of scope or become a follow-up); (3) confirm the Seed image HTTP-200 record (Spec R4) as point-in-time. <!-- sdd-owner: parent -->
+- [ ] Lifecycle gate: after the above reviews pass, hand off to the verify phase (lint/build/marca greps + manual Playwright checklist in `design.md` §10) and then sync/archive this change. <!-- sdd-owner: parent -->
 ```
 
 ---
 
 ## Workload & PR Boundary
-- **Current Slice:** Slice 1 (Foundation)
-- **PR Scope:** Foundation data layer (Convex queries, stores, static maps, WhatsApp helpers, signal badge/note components, and seed batch +10).
-- **Line Count Forecast:** ~350 changed lines (well within the ≤400-line budget per PR under auto-chain).
-- **Next Slice:** Slice 2 (Navigation + Canonical ProductCard).
+- **Completed Slices:** Slice 1 (Foundation), Slice 2 (Navigation + Canonical ProductCard)
+- **Slice 2 PR Scope:** Navigation rebuild (MegaMenu desktop panel, Navbar with live Convex categories and mobile accordion disclosure), single canonical `ProductCard` (dark/light variants, badges, sibling favorites button, canonical mapper), catalog migration, home feed alignment, and footer rename + CMS WhatsApp number.
+- **Slice 2 Line Count:** ~280 changed lines (well within the ≤400-line budget per PR under auto-chain).
+- **Next Slice:** Slice 3 (PDP Upgrade, Favorites Page, Admin `sale_ends_at`, and global size guide trigger).
