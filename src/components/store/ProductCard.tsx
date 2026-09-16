@@ -165,7 +165,7 @@ export default function ProductCard({
   const isDark = variant === "dark";
 
   return (
-    <div className="group relative block">
+    <div className="group relative block" data-product-card>
       {/* Sibling FavoritesButton overlay (NOT inside <Link> for valid HTML and clean event isolation) */}
       <div className="absolute top-4 right-4 z-30">
         <FavoritesButton slug={product.slug} variant={variant} />

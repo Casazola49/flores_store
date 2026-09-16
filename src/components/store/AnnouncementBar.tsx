@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useSyncExternalStore } from "react";
 import { useCMSStore } from "@/lib/store";
 
 const blocked = new Set(["e5c400", "ffd700", "ffb300", "ffc107"].map(value => `#${value}`));
@@ -12,6 +12,17 @@ const getServerSnapshot = () => false;
 export default function AnnouncementBar() {
   const { announcement } = useCMSStore();
   const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  useEffect(() => {
+    const active = Boolean(mounted && announcement?.is_active);
+    document.documentElement.style.setProperty(
+      "--announcement-height",
+      active ? "36px" : "0px"
+    );
+    return () => {
+      document.documentElement.style.setProperty("--announcement-height", "0px");
+    };
+  }, [mounted, announcement?.is_active]);
 
   const bg = useMemo(() => {
     const color = announcement?.bg_color?.toLowerCase().trim();
