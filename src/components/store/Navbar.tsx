@@ -32,66 +32,84 @@ export default function Navbar() {
         style={{ top: "var(--announcement-height, 0px)" }}
       >
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6">
-          {/* Mobile menu button */}
-          <button
-            className="md:hidden p-1 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] cursor-pointer"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Menú"
-            aria-expanded={mobileMenuOpen}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Left: Mobile button + Desktop Left Nav */}
+          <div className="flex items-center gap-6">
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden p-1 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] cursor-pointer"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Menú"
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-6 md:flex">
-            <MegaMenu categories={categories} />
-            {QUICK_LINKS.map((link) => (
+            {/* Desktop Left Navigation */}
+            <nav className="hidden items-center gap-6 md:flex" aria-label="Navegación izquierda">
+              <MegaMenu categories={categories} />
               <Link
-                key={link.name}
-                href={link.href}
+                href="/productos?is_new=true"
                 className="text-label hover:text-[var(--color-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] py-2"
               >
-                {link.name}
+                Novedades
               </Link>
-            ))}
-            <Link
-              href="/favoritos"
-              className="text-label hover:text-[var(--color-accent)] transition-colors flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] py-2"
-              aria-label="Mis favoritos"
-            >
-              <Heart size={14} aria-hidden="true" />
-              <span>Favoritos</span>
-            </Link>
-            <button
-              type="button"
-              onClick={() => setSizeGuideOpen(true)}
-              className="text-label text-white/80 hover:text-[var(--color-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] py-2 cursor-pointer"
-            >
-              Guía de talles
-            </button>
-          </nav>
+              <Link
+                href="/productos?sale=true"
+                className="text-label hover:text-[var(--color-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] py-2"
+              >
+                Liquidación
+              </Link>
+            </nav>
+          </div>
 
-          {/* Brand Logo */}
+          {/* Brand Logo - centered */}
           <Link
             href="/"
-            className="absolute left-1/2 -translate-x-1/2 font-serif text-3xl font-black tracking-tight"
+            className="absolute left-1/2 -translate-x-1/2 font-serif text-3xl font-black tracking-tight text-white hover:opacity-95 transition-opacity"
           >
             Flores<span className="text-[var(--color-accent)]">.</span>
           </Link>
 
-          {/* Cart trigger button */}
-          <button
-            onClick={openCart}
-            aria-label="Carrito"
-            className="relative p-2 text-white hover:text-[var(--color-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] cursor-pointer"
-          >
-            <ShoppingBag size={20} />
-            {totalItems() > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-accent)] text-label font-bold text-white text-[10px]">
-                {totalItems()}
-              </span>
-            )}
-          </button>
+          {/* Right: Desktop Right Nav + Cart button */}
+          <div className="flex items-center gap-6">
+            <nav className="hidden items-center gap-6 md:flex" aria-label="Navegación derecha">
+              <Link
+                href="/productos?collection=exclusive"
+                className="text-label hover:text-[var(--color-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] py-2"
+              >
+                Exclusivos
+              </Link>
+              <Link
+                href="/favoritos"
+                className="text-label hover:text-[var(--color-accent)] transition-colors flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] py-2"
+                aria-label="Mis favoritos"
+              >
+                <Heart size={14} aria-hidden="true" />
+                <span>Favoritos</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setSizeGuideOpen(true)}
+                className="text-label text-white/80 hover:text-[var(--color-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] py-2 cursor-pointer"
+              >
+                Guía de talles
+              </button>
+            </nav>
+
+            {/* Cart trigger button */}
+            <button
+              onClick={openCart}
+              aria-label="Carrito"
+              className="relative p-2 text-white hover:text-[var(--color-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] cursor-pointer"
+            >
+              <ShoppingBag size={20} />
+              {totalItems() > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-accent)] text-label font-bold text-white text-[10px]">
+                  {totalItems()}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Accordion Menu */}
