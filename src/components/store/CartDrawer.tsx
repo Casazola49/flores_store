@@ -445,8 +445,8 @@ export default function CartDrawer() {
             <div className="flex flex-col gap-3 w-full">
               <button
                 onClick={() => {
-                  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "59170000000";
-                  window.open(`https://wa.me/${phoneNumber}`, "_blank");
+                  const phoneNumber = getWhatsAppNumber(sections.whatsapp_number);
+                  window.open(`https://wa.me/${phoneNumber}`, "_blank", "noopener,noreferrer");
                 }}
                 className="w-full bg-[#25D366] text-white py-3.5 rounded-none font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:bg-[#1eb558] transition-colors"
               >
