@@ -98,6 +98,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
     setVariantError("");
     addItem({
       product_id: product.id,
+      slug: product.slug,
       variant_id: currentVariant.id,
       product_name: product.name,
       product_image: selectedImage,

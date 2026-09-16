@@ -64,6 +64,7 @@ export interface Product {
 
 export interface CartItem {
   product_id: number | string;
+  slug?: string;
   variant_id: number | string;
   product_name: string;
   product_image?: string;
