@@ -3,26 +3,41 @@
   "nodes": [
     {
       "parameters": {
-        "rule": { "interval": [{ "field": "cronExpression", "expression": "0 */10 * * * * *" }] },
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        },
         "activateOnStartup": true
       },
       "id": "sched-a1",
       "name": "Cada 10 min + al iniciar",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [0, 0]
+      "position": [
+        0,
+        0
+      ]
     },
     {
       "parameters": {
         "method": "GET",
         "url": "={{ $env.CONVEX_SITE_URL }}/products/latest?limit=50",
-        "options": { "timeout": 30000 }
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "http-convex",
       "name": "Convex · recientes",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [200, 0]
+      "position": [
+        200,
+        0
+      ]
     },
     {
       "parameters": {
@@ -32,7 +47,10 @@
       "name": "Filtrar nuevo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [400, 0]
+      "position": [
+        400,
+        0
+      ]
     },
     {
       "parameters": {
@@ -40,14 +58,22 @@
         "url": "={{ $json.imageUrl }}",
         "options": {
           "timeout": 30000,
-          "response": { "response": { "responseFormat": "file", "outputPropertyName": "data" } }
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
         }
       },
       "id": "http-download",
       "name": "Descargar foto",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [600, 0]
+      "position": [
+        600,
+        0
+      ]
     },
     {
       "parameters": {
@@ -57,7 +83,10 @@
       "name": "Armar body Gemini",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [800, 0]
+      "position": [
+        800,
+        0
+      ]
     },
     {
       "parameters": {
@@ -71,7 +100,10 @@
       "name": "Gemini · prompts",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1000, 0]
+      "position": [
+        1000,
+        0
+      ]
     },
     {
       "parameters": {
@@ -81,7 +113,10 @@
       "name": "Extraer prompts",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1200, 0]
+      "position": [
+        1200,
+        0
+      ]
     },
     {
       "parameters": {
@@ -95,7 +130,10 @@
       "name": "Discord · aviso",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1400, 0]
+      "position": [
+        1400,
+        0
+      ]
     },
     {
       "parameters": {
@@ -105,19 +143,105 @@
       "name": "Avanzar marca de agua",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1600, 0]
+      "position": [
+        1600,
+        0
+      ]
     }
   ],
   "connections": {
-    "Cada 10 min + al iniciar": { "main": [[{ "node": "Convex · recientes", "type": "main", "index": 0 }]] },
-    "Convex · recientes": { "main": [[{ "node": "Filtrar nuevo", "type": "main", "index": 0 }]] },
-    "Filtrar nuevo": { "main": [[{ "node": "Descargar foto", "type": "main", "index": 0 }]] },
-    "Descargar foto": { "main": [[{ "node": "Armar body Gemini", "type": "main", "index": 0 }]] },
-    "Armar body Gemini": { "main": [[{ "node": "Gemini · prompts", "type": "main", "index": 0 }]] },
-    "Gemini · prompts": { "main": [[{ "node": "Extraer prompts", "type": "main", "index": 0 }]] },
-    "Extraer prompts": { "main": [[{ "node": "Discord · aviso", "type": "main", "index": 0 }]] },
-    "Discord · aviso": { "main": [[{ "node": "Avanzar marca de agua", "type": "main", "index": 0 }]] }
+    "Cada 10 min + al iniciar": {
+      "main": [
+        [
+          {
+            "node": "Convex · recientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convex · recientes": {
+      "main": [
+        [
+          {
+            "node": "Filtrar nuevo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar nuevo": {
+      "main": [
+        [
+          {
+            "node": "Descargar foto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar foto": {
+      "main": [
+        [
+          {
+            "node": "Armar body Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar body Gemini": {
+      "main": [
+        [
+          {
+            "node": "Gemini · prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini · prompts": {
+      "main": [
+        [
+          {
+            "node": "Extraer prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer prompts": {
+      "main": [
+        [
+          {
+            "node": "Discord · aviso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord · aviso": {
+      "main": [
+        [
+          {
+            "node": "Avanzar marca de agua",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
-  "settings": { "executionOrder": "v1" },
-  "pinData": {}
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "id": "flores-flow-a"
 }
