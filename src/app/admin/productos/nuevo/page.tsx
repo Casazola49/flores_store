@@ -86,16 +86,44 @@ const handleSubmit = async (e: React.FormEvent) => {
       });
 
       // 3. Subir Imágenes a Cloudinary
+      const uploadedUrls: string[] = [];
       for (const file of images) {
-        await adminApi.uploadProductImage(productId, file);
+        const upRes = await adminApi.uploadProductImage(productId, file);
+        if (upRes?.url) {
+          uploadedUrls.push(upRes.url);
+        }
       }
 
       // 4. Subir video opcional del producto (Cloudinary, resourceType video)
-if (videoFile) {
-  await adminApi.setProductVideo(productId, videoFile);
-}
+      if (videoFile) {
+        await adminApi.setProductVideo(productId, videoFile);
+      }
 
-alert("¡Producto creado con éxito!");
+      // 5. Disparar Webhook a n8n (asíncrono, para póster IA y copys en Discord)
+      const CATEGORY_SLUG_MAP: Record<number, string> = {
+        1: "botas",
+        2: "zapatos",
+        3: "zapatillas",
+        4: "zapatillas-deportivas",
+        5: "tacos",
+      };
+      try {
+        fetch("http://localhost:5678/webhook/nuevo-producto", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: productId,
+            name: formData.name,
+            category: CATEGORY_SLUG_MAP[formData.category_id] || "calzado",
+            price: parseFloat(formData.base_price),
+            imageUrl: uploadedUrls[0] || "",
+          }),
+        }).catch((e) => console.log("n8n local no disponible:", e));
+      } catch (e) {
+        console.log("n8n trigger skipped:", e);
+      }
+
+      alert("¡Producto creado con éxito!");
       router.push("/admin/inventario");
       
     } catch (err) {

@@ -1,0 +1,132 @@
+{
+  "id": "flores-webhook-cms",
+  "name": "Flores · Webhook CMS → Gemini Prompt & Póster → Discord",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nuevo-producto",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "wh-trigger",
+      "name": "Webhook CMS",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "nuevo-producto-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst name = body.name || \"Calzado Flores\";\nconst category = body.category || \"calzado\";\nconst price = body.price ? `Bs. ${body.price}` : \"Precio a consultar\";\nconst imageUrl = body.imageUrl || \"\";\n\nconst promptText = `Sos el director de arte y redactor publicitario senior de FLORES (marca boliviana de calzado femenino de lujo, estética brutalista editorial, acento carmín #9B1C1C, sin amarillo, sobrio, elegante y transparente).\n\nProducto: \"${name}\"\nCategoría: \"${category}\"\nPrecio: ${price}\nFoto de referencia: ${imageUrl}\n\nDevuelve ÚNICAMENTE un objeto JSON válido (sin texto antes ni después) con esta estructura exacta:\n{\n  \"flux_prompt\": \"Ultra-detailed high-end commercial footwear photography prompt in English for Flux-realism model. Describe the footwear with tactile texture, studio lighting with subtle crimson rim light, placed on dark minimalist brutalist pedestal, shot on 85mm f/1.4 lens, Vogue magazine cover quality, photorealistic 8k, sharp focus.\",\n  \"nano_banana_prompt\": \"Detailed prompt in English specifically tailored for Google Nano Banana / Gemini 2.5 Flash Image. Instruct the model to place the exact footwear from the reference photo onto an elegant female model in a high-fashion editorial pose, wearing minimalist monochromatic attire, architectural lighting, sharp focus, 8k.\",\n  \"tiktok\": \"Texto magnético y directo para TikTok sin urgencia falsa.\",\n  \"instagram\": \"Caption editorial para Instagram con detalles del modelo y cómo pedir.\",\n  \"whatsapp\": \"Mensaje de difusión para WhatsApp con precio ${price} y enlace a la tienda.\"\n}`;\n\nreturn {\n  name,\n  category,\n  price,\n  imageUrl,\n  geminiPayload: {\n    contents: [\n      {\n        parts: [\n          { text: promptText }\n        ]\n      }\n    ]\n  }\n};"
+      },
+      "id": "code-prep",
+      "name": "Preparar Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.geminiPayload }}"
+      },
+      "id": "http-gemini",
+      "name": "Gemini · Prompt Engineering",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const prev = $node['Preparar Prompt'].json;\nconst geminiRes = $input.first().json;\n\nlet cleanText = '';\ntry {\n  cleanText = geminiRes.candidates[0].content.parts[0].text;\n} catch (e) {\n  cleanText = '{}';\n}\n\ncleanText = cleanText.trim();\nif (cleanText.startsWith('```json')) cleanText = cleanText.substring(7);\nif (cleanText.startsWith('```')) cleanText = cleanText.substring(3);\nif (cleanText.endsWith('```')) cleanText = cleanText.substring(0, cleanText.length - 3);\ncleanText = cleanText.trim();\n\nlet parsed = {};\ntry {\n  parsed = JSON.parse(cleanText);\n} catch (e) {\n  parsed = {\n    flux_prompt: `luxury ${prev.category} footwear, high fashion editorial lighting, crimson aesthetic, 8k, sharp focus`,\n    nano_banana_prompt: `Editorial fashion photo of a model wearing ${prev.name}, studio lighting, high resolution`,\n    tiktok: `Descubre ${prev.name} en Flores Store.`,\n    instagram: `${prev.name} — Calzado con stock real en Bolivia. Precio: ${prev.price}`,\n    whatsapp: `¡Nuevo ingreso! ${prev.name} a ${prev.price}. Pide el tuyo por WhatsApp.`\n  };\n}\n\nconst fluxEncoded = encodeURIComponent(parsed.flux_prompt);\nconst randomSeed = Math.floor(Math.random() * 100000);\nconst pollinationsUrl = `https://image.pollinations.ai/prompt/${fluxEncoded}?width=800&height=1000&model=flux-realism&nologo=true&seed=${randomSeed}`;\n\nreturn {\n  name: prev.name,\n  category: prev.category,\n  price: prev.price,\n  imageUrl: prev.imageUrl,\n  flux_prompt: parsed.flux_prompt,\n  nano_banana_prompt: parsed.nano_banana_prompt,\n  tiktok: parsed.tiktok,\n  instagram: parsed.instagram,\n  whatsapp: parsed.whatsapp,\n  poster_url: pollinationsUrl\n};"
+      },
+      "id": "code-payload",
+      "name": "Armar Payload & Póster",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  content: '✨ **FLORES AI Studio — Nuevo Calzado Procesado**',\n  embeds: [{\n    title: `${$json.name} — ${$json.price}`,\n    description: `🖼️ **Póster Generado Automático (FLUX-Realism):**\\nGenerado con prompt editorial de alta fidelidad.\\n\\n🍌 **Prompt para Google Nano Banana (AI Studio):**\\n\\`\\`\\`text\\n${$json.nano_banana_prompt}\\n\\`\\`\\`\\n\\n📱 **Copies para Redes Sociales:**\\n• **Instagram:** ${$json.instagram}\\n• **TikTok:** ${$json.tiktok}\\n• **WhatsApp:** ${$json.whatsapp}`,\n    color: 10166572,\n    image: {\n      url: $json.poster_url\n    },\n    footer: {\n      text: 'Flores Store Automation · n8n + Gemini + Flux'\n    }\n  }]\n}) }}"
+      },
+      "id": "http-discord",
+      "name": "Discord · Notificar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook CMS": {
+      "main": [
+        [
+          {
+            "node": "Preparar Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Prompt": {
+      "main": [
+        [
+          {
+            "node": "Gemini · Prompt Engineering",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini · Prompt Engineering": {
+      "main": [
+        [
+          {
+            "node": "Armar Payload & Póster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar Payload & Póster": {
+      "main": [
+        [
+          {
+            "node": "Discord · Notificar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

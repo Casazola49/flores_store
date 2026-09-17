@@ -328,7 +328,7 @@ export const adminApi = {
       url: uploadResult.url,
       is_primary: false,
     });
-    return { data: addResult };
+    return { data: addResult, url: uploadResult.url };
   },
 
   setProductVideo: async (productId: number | string, file: File) => {

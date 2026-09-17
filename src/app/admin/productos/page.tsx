@@ -5,7 +5,7 @@ import { adminApi } from "@/lib/api";
 import type { Product } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { Plus, Search, Edit2, ToggleLeft, ToggleRight, Tag } from "lucide-react";
+import { Plus, Search, Edit2, ToggleLeft, ToggleRight, Tag, Sparkles } from "lucide-react";
 
 const GENDER_LABELS: Record<string, string> = {
   mujer: "Mujer", hombre: "Hombre", unisex: "Unisex", niño: "Niños",
@@ -17,6 +17,50 @@ export default function ProductosAdminPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [generatingId, setGeneratingId] = useState<string | number | null>(null);
+  const [n8nFeedback, setN8nFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const handleGeneratePoster = async (product: Product) => {
+    setGeneratingId(product.id);
+    setN8nFeedback(null);
+    try {
+      const primaryImg =
+        product.images?.find((i) => i.is_primary)?.url || product.images?.[0]?.url || "";
+
+      const res = await fetch("http://localhost:5678/webhook/nuevo-producto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: product.id,
+          name: product.name,
+          category: product.category_slug || product.category?.name || "calzado",
+          price: product.base_price,
+          imageUrl: primaryImg,
+        }),
+      });
+
+      if (res.ok) {
+        setN8nFeedback({
+          type: "success",
+          text: `✨ Solicitud enviada para "${product.name}". En ~5 segundos llega a tu Discord con el póster y copies.`,
+        });
+      } else {
+        setN8nFeedback({
+          type: "error",
+          text: "n8n respondió con error. Asegurate de que el contenedor esté corriendo.",
+        });
+      }
+    } catch {
+      setN8nFeedback({
+        type: "error",
+        text: "No se pudo conectar con n8n en localhost:5678. Verificá que Docker esté encendido.",
+      });
+    } finally {
+      setGeneratingId(null);
+      setTimeout(() => setN8nFeedback(null), 8000);
+    }
+  };
+
   const PER_PAGE = 20;
 
   const load = async (p = 1, q = "") => {
@@ -61,6 +105,19 @@ export default function ProductosAdminPage() {
           <Plus size={16} /> Nuevo Producto
         </Link>
       </div>
+
+      {/* Feedback Banner para n8n */}
+      {n8nFeedback && (
+        <div
+          className={`mb-6 p-4 rounded-none text-xs font-bold border transition-all ${
+            n8nFeedback.type === "success"
+              ? "bg-green-50 border-green-200 text-green-800"
+              : "bg-red-50 border-red-200 text-red-800"
+          }`}
+        >
+          {n8nFeedback.text}
+        </div>
+      )}
 
       {/* Search */}
       <form onSubmit={handleSearch} className="mb-6">
@@ -163,12 +220,24 @@ export default function ProductosAdminPage() {
                       </td>
                       {/* Actions */}
                       <td className="px-4 py-3 text-right">
-                        <Link
-                          href={`/admin/productos/${product.id}`}
-                          className="inline-flex items-center gap-1 text-xs font-bold text-[#9B1C1C] hover:underline"
-                        >
-                          <Edit2 size={12} /> Editar
-                        </Link>
+                        <div className="flex items-center justify-end gap-3">
+                          <button
+                            type="button"
+                            onClick={() => handleGeneratePoster(product)}
+                            disabled={generatingId === product.id}
+                            className="inline-flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-[var(--color-accent)] hover:underline cursor-pointer disabled:opacity-40"
+                            title="Generar póster y copys con IA (n8n + Discord)"
+                          >
+                            <Sparkles size={12} className="text-[var(--color-accent)]" />
+                            {generatingId === product.id ? "Enviando..." : "Póster IA"}
+                          </button>
+                          <Link
+                            href={`/admin/productos/${product.id}`}
+                            className="inline-flex items-center gap-1 text-xs font-bold text-[#9B1C1C] hover:underline"
+                          >
+                            <Edit2 size={12} /> Editar
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   );

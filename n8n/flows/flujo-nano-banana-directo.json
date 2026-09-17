@@ -1,0 +1,99 @@
+{
+  "id": "flores-nano-banana-directo",
+  "name": "Flores · [PREPARADO] Google Nano Banana Directo (Gemini Image API)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nano-banana-directo",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "wh-nb",
+      "name": "Webhook CMS",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.body.imageUrl || $json.imageUrl }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "http-dl",
+      "name": "Descargar Imagen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst b64 = item.binary?.data?.data || '';\nconst body = $node['Webhook CMS'].json.body || $node['Webhook CMS'].json;\n\nreturn {\n  name: body.name || 'Calzado',\n  price: body.price || '',\n  payload: {\n    contents: [{\n      parts: [\n        {\n          text: `Professional high-end fashion editorial photoshoot of a model wearing this exact footwear: ${body.name}. Photorealistic 8k, Vogue magazine style, studio dramatic lighting, elegant pose, perfectly integrated footwear.`\n        },\n        {\n          inlineData: {\n            mimeType: 'image/jpeg',\n            data: b64\n          }\n        }\n      ]\n    }]\n  }\n};"
+      },
+      "id": "code-nb-payload",
+      "name": "Armar Body Base64",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.payload) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "http-nb-api",
+      "name": "Gemini 2.5 Flash Image (Nano Banana)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrae el resultado Base64 generado por Google Nano Banana\nconst res = $input.first().json;\nconst parts = res.candidates?.[0]?.content?.parts || [];\nlet generatedB64 = '';\nfor (const p of parts) {\n  if (p.inlineData?.data) {\n    generatedB64 = p.inlineData.data;\n    break;\n  }\n}\n\nreturn {\n  has_image: Boolean(generatedB64),\n  generated_base64: generatedB64\n};"
+      },
+      "id": "code-extract-b64",
+      "name": "Extraer Imagen Base64",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 0]
+    }
+  ],
+  "connections": {
+    "Webhook CMS": {
+      "main": [
+        [{ "node": "Descargar Imagen", "type": "main", "index": 0 }]
+      ]
+    },
+    "Descargar Imagen": {
+      "main": [
+        [{ "node": "Armar Body Base64", "type": "main", "index": 0 }]
+      ]
+    },
+    "Armar Body Base64": {
+      "main": [
+        [{ "node": "Gemini 2.5 Flash Image (Nano Banana)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Gemini 2.5 Flash Image (Nano Banana)": {
+      "main": [
+        [{ "node": "Extraer Imagen Base64", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
