@@ -1,0 +1,8 @@
+.codegraph
+.git
+n8n
+.pi
+.agents
+playwright-report
+test-results
+*.log
